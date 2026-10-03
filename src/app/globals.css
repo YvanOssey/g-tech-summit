@@ -1,0 +1,202 @@
+@import "tailwindcss";
+
+/*
+ * G-TECH SUMMER 2026 — design tokens
+ *
+ * Tailwind's default palette and font stacks are reset on purpose:
+ * only the colours below exist in the project, so no blue / cyan / violet
+ * utility can ever be used by accident.
+ */
+@theme {
+  --color-*: initial;
+  --font-*: initial;
+
+  /* Core palette */
+  --color-ink: #171717;
+  --color-paper: #fffdf8;
+  --color-signal: #f28c18;
+  /* Orange darkened for text on paper (5:1, WCAG AA). #F28C18 on paper is only 2.4:1. */
+  --color-signal-ink: #a65a00;
+
+  /* Neutral greys (warm-neutral, tuned for paper and ink) */
+  --color-grey-50: #f4f2ed;
+  --color-grey-100: #ebe8e1;
+  --color-grey-200: #dedad2;
+  --color-grey-400: #9c9a94; /* muted text on ink — 6.5:1 */
+  --color-grey-500: #6e6c67; /* muted text on paper — 5.1:1 */
+  --color-grey-700: #3a3a38; /* rules on ink */
+  --color-grey-800: #262625; /* raised surface on ink */
+
+  /* Semantic */
+  --color-success: #2e7d4f;
+  --color-danger: #b42318;
+
+  /* Typography */
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, "SFMono-Regular", monospace;
+
+  /* Fluid type scale — poster sizes are clamped to the viewport */
+  --text-meta: 0.75rem;
+  --text-meta--line-height: 1.4;
+  --text-meta--letter-spacing: 0.08em;
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.6;
+  --text-lead: clamp(1.1875rem, 1rem + 0.6vw, 1.5rem);
+  --text-lead--line-height: 1.45;
+  --text-title: clamp(1.75rem, 1.2rem + 2vw, 3rem);
+  --text-title--line-height: 1.02;
+  --text-display: clamp(3rem, 1.4rem + 7vw, 8.5rem);
+  --text-display--line-height: 0.88;
+  --text-poster: clamp(4.5rem, 1rem + 15vw, 17rem);
+  --text-poster--line-height: 0.8;
+
+  /* Shape language: sharp, signage-like. Radius is the exception, not the rule. */
+  --radius-none: 0;
+  --radius-xs: 2px;
+
+  /* Motion */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+
+  --breakpoint-xs: 26rem;
+}
+
+:root {
+  --gutter: 1rem;
+  --page-max: 90rem;
+  --duration-micro: 180ms;
+  --duration-component: 320ms;
+  --duration-section: 700ms;
+  color-scheme: light;
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --gutter: 1.5rem;
+  }
+}
+
+@media (min-width: 80rem) {
+  :root {
+    --gutter: 2.5rem;
+  }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: var(--color-signal);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-signal);
+    outline-offset: 3px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+@layer components {
+  /* Page container aligned on the 12-column grid */
+  .shell {
+    width: 100%;
+    max-width: var(--page-max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  .grid-12 {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    column-gap: var(--gutter);
+  }
+
+  @media (min-width: 48rem) {
+    .grid-12 {
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .grid-12 {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+  }
+
+  /* Condensed poster cut of Archivo (variable width axis) */
+  .type-condensed {
+    font-stretch: 72%;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+  }
+
+  .type-wide {
+    font-stretch: 112%;
+  }
+
+  /* Monospace metadata: dates, references, section indexes */
+  .type-meta {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    line-height: var(--text-meta--line-height);
+    letter-spacing: var(--text-meta--letter-spacing);
+    text-transform: uppercase;
+  }
+}
+
+/*
+ * Ticket notches — the punched half-circles that mark the perforation.
+ * --notch-at: position of the perforation along the cut axis.
+ * notch-y cuts the left/right edges (vertical ticket, stub at the bottom).
+ * notch-x cuts the top/bottom edges (horizontal ticket, stub on the right).
+ * Declared as utilities so responsive variants work (e.g. `notch-y lg:notch-x`).
+ */
+@utility notch-y {
+  --notch-r: 0.75rem;
+  mask:
+    radial-gradient(circle var(--notch-r) at 0 var(--notch-at), #0000 98%, #000) left / 50.5% 100% no-repeat,
+    radial-gradient(circle var(--notch-r) at 100% var(--notch-at), #0000 98%, #000) right / 50.5% 100% no-repeat;
+}
+
+@utility notch-x {
+  --notch-r: 0.75rem;
+  mask:
+    radial-gradient(circle var(--notch-r) at var(--notch-at) 0, #0000 98%, #000) top / 100% 50.5% no-repeat,
+    radial-gradient(circle var(--notch-r) at var(--notch-at) 100%, #0000 98%, #000) bottom / 100% 50.5% no-repeat;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
