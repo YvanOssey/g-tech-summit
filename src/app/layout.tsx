@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, IBM_Plex_Mono } from "next/font/google";
 import { EVENT } from "@/config/event";
+import { SITE_URL } from "@/config/site";
+import { MotionProvider } from "@/components/motion/MotionProvider";
 import "./globals.css";
 
 // Archivo carries both the poster headlines (condensed via the width axis) and the body text.
@@ -19,11 +21,13 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: `${EVENT.name} ${EVENT.year} — 18 & 19 décembre, ${EVENT.city}`,
     template: `%s — ${EVENT.name} ${EVENT.year}`,
   },
   description: `${EVENT.name} ${EVENT.year}, l’événement tech organisé par ${EVENT.organiser.name} à ${EVENT.city} les 18 et 19 décembre 2026. Thème : ${EVENT.theme}.`,
+  openGraph: { type: "website", locale: "fr_CI", siteName: `${EVENT.name} ${EVENT.year}` },
 };
 
 export const viewport: Viewport = {
@@ -33,7 +37,9 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="fr" className={`${archivo.variable} ${plexMono.variable}`}>
-      <body>{children}</body>
+      <body>
+        <MotionProvider>{children}</MotionProvider>
+      </body>
     </html>
   );
 }

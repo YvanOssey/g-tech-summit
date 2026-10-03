@@ -60,7 +60,7 @@ const MOTION_NO = [
   "Parallaxe, défilement détourné, boucles permanentes",
   "Glow, flou, ombres portées, dégradés",
   "Animations qui retardent la lecture d’une information",
-  "Tout mouvement quand « réduire les animations » est actif",
+  "Tout mouvement quand « réduire les animations » est actif",
 ];
 
 export default function DesignSystemPage() {
@@ -88,7 +88,7 @@ export default function DesignSystemPage() {
             {EVENT.city}, {EVENT.country}
           </p>
           <p className="text-lead col-span-4 md:col-span-5 lg:col-span-6 lg:col-start-5">
-            Thème — « {EVENT.theme} »
+            Thème — « {EVENT.theme} »
           </p>
         </div>
       </header>

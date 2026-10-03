@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import type { ElementType } from "react";
 
 interface RevealTextProps {
@@ -11,6 +11,7 @@ interface RevealTextProps {
   delay?: number;
   /** Reveal when scrolled into view instead of on mount. */
   inView?: boolean;
+  id?: string;
 }
 
 const EASE = [0.25, 1, 0.5, 1] as const;
@@ -18,30 +19,33 @@ const EASE = [0.25, 1, 0.5, 1] as const;
 /**
  * Typographic reveal: each line slides up from behind its own baseline mask.
  * Reserved for a few key headlines — not a generic entrance effect.
+ * Reduced motion: the CSS path is neutralised by the global media query, the
+ * in-view path by <MotionConfig reducedMotion="user"> (see MotionProvider).
  */
-export function RevealText({ lines, as: Tag = "h2", className, delay = 0, inView = false }: RevealTextProps) {
-  const reduce = useReducedMotion();
+export function RevealText({ lines, as: Tag = "h2", className, delay = 0, inView = false, id }: RevealTextProps) {
   const label = lines.join(" ");
 
-  if (reduce) {
+  // On-mount reveals run in CSS so the headline animates on first paint,
+  // without waiting for hydration (and stays visible if JavaScript fails).
+  if (!inView) {
     return (
-      <Tag className={className}>
-        {lines.map((line, i) => (
-          <span key={i} className="block">
-            {line}
-          </span>
-        ))}
+      <Tag id={id} className={className} aria-label={label}>
+        <span className="block" aria-hidden="true">
+          {lines.map((line, i) => (
+            <span key={i} className="block overflow-hidden pb-[0.06em] -mb-[0.06em]">
+              <span className="reveal-line block" style={{ animationDelay: `${delay + i * 0.09}s` }}>
+                {line}
+              </span>
+            </span>
+          ))}
+        </span>
       </Tag>
     );
   }
 
-  const trigger = inView
-    ? { whileInView: "shown", viewport: { once: true, amount: 0.6 } }
-    : { animate: "shown" };
-
   return (
-    <Tag className={className} aria-label={label}>
-      <motion.span className="block" initial="hidden" {...trigger} aria-hidden="true">
+    <Tag id={id} className={className} aria-label={label}>
+      <motion.span className="block" initial="hidden" whileInView="shown" viewport={{ once: true, amount: 0.6 }} aria-hidden="true">
         {lines.map((line, i) => (
           <span key={i} className="block overflow-hidden pb-[0.06em] -mb-[0.06em]">
             <motion.span

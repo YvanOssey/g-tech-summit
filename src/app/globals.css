@@ -190,6 +190,20 @@
     radial-gradient(circle var(--notch-r) at var(--notch-at) 100%, #0000 98%, #000) bottom / 100% 50.5% no-repeat;
 }
 
+/* Typographic reveal for on-mount headlines (see RevealText) */
+@keyframes reveal-up {
+  from {
+    transform: translateY(105%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.reveal-line {
+  animation: reveal-up 0.9s var(--ease-out-quart) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

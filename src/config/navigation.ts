@@ -1,0 +1,19 @@
+export interface NavItem {
+  href: string;
+  label: string;
+}
+
+export const MAIN_NAV: readonly NavItem[] = [
+  { href: "/programme", label: "Programme" },
+  { href: "/hackathon", label: "Hackathon" },
+  { href: "/infos-pratiques", label: "Infos pratiques" },
+  { href: "/partenaires", label: "Partenaires" },
+];
+
+export const TICKETING: NavItem = { href: "/billetterie", label: "Billetterie" };
+
+export const LEGAL_NAV: readonly NavItem[] = [
+  { href: "/mentions-legales", label: "Mentions légales" },
+  { href: "/cgv", label: "Conditions de vente" },
+  { href: "/confidentialite", label: "Confidentialité" },
+];
