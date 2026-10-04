@@ -30,7 +30,7 @@ export function MobileTicketBar() {
     <AnimatePresence>
       {visible && (
         <motion.div
-          className="fixed inset-x-0 bottom-0 z-30 border-t border-ink bg-paper pb-[env(safe-area-inset-bottom)] lg:hidden"
+          className="fixed inset-x-0 bottom-0 z-(--z-sticky) border-t border-ink bg-paper pb-[env(safe-area-inset-bottom)] lg:hidden"
           initial={reduce ? false : { y: "100%" }}
           animate={{ y: 0 }}
           exit={reduce ? undefined : { y: "100%" }}
@@ -38,10 +38,10 @@ export function MobileTicketBar() {
         >
           <Link href="/billetterie" className="shell flex h-16 items-center justify-between gap-4">
             <span>
-              <span className="type-meta block text-grey-500">18—19.12.2026</span>
+              <span className="type-meta block text-grey">18—19.12.2026</span>
               <span className="font-semibold">Pass dès {formatFCFA(PASSES.event.price)}</span>
             </span>
-            <span className="flex min-h-11 items-center gap-2 rounded-full bg-signal px-5 font-semibold">
+            <span className="flex min-h-11 items-center gap-2 rounded-pill bg-signal px-5 font-semibold">
               Billetterie <ArrowRight className="size-4" />
             </span>
           </Link>

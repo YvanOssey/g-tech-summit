@@ -22,7 +22,7 @@ export default function PartnersPage() {
         lead="G-TECH SUMMER se construit avec des structures qui partagent l’envie de rendre la tech accessible à tous en Afrique."
       />
 
-      <Section tone="paper" aria-label="Partenaires" className="py-20 md:py-28">
+      <Section tone="paper" aria-label="Partenaires" className="section-compact">
         <div className="shell">
           <div className="panel px-2 sm:px-6">
             <PartnerLogos />
@@ -30,11 +30,11 @@ export default function PartnersPage() {
         </div>
       </Section>
 
-      <Section tone="grey" aria-labelledby="devenir" className="py-20 md:py-28">
+      <Section tone="stone" aria-labelledby="devenir" className="section-compact">
         <div className="shell grid-12 gap-y-8">
           <div className="col-span-4 md:col-span-8 lg:col-span-6">
             <SectionLabel>Devenir partenaire</SectionLabel>
-            <h2 id="devenir" className="type-headline text-display mt-8">
+            <h2 id="devenir" className="type-headline text-title mt-8">
               Soutenir G-TECH SUMMER
             </h2>
           </div>
@@ -47,7 +47,7 @@ export default function PartnersPage() {
               <ButtonLink href={`mailto:${EVENT.contact.email}?subject=Partenariat%20G-TECH%20SUMMER%202026`} arrow>
                 Écrire à l’équipe
               </ButtonLink>
-              <ButtonLink href={whatsappUrl} variant="secondary">
+              <ButtonLink href={whatsappUrl} variant="link">
                 WhatsApp
               </ButtonLink>
             </div>

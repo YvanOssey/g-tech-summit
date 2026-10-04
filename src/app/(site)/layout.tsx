@@ -7,7 +7,7 @@ export default function SiteLayout({ children }: Readonly<{ children: React.Reac
     <>
       <a
         href="#contenu"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:bg-signal focus:px-4 focus:py-3 focus:font-semibold"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-(--z-skip) focus:bg-signal focus:px-4 focus:py-3 focus:font-semibold"
       >
         Aller au contenu
       </a>

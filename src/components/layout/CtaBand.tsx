@@ -12,7 +12,7 @@ export function CtaBand({ title, href = "/billetterie", cta = "Prendre mon pass"
   return (
     <Section tone="signal" aria-label={title}>
       <div className="shell flex flex-col gap-8 py-14 md:flex-row md:items-center md:justify-between md:py-16">
-        <p className="type-headline text-title max-w-2xl">{title}</p>
+        <p className="type-headline text-heading max-w-2xl">{title}</p>
         <ButtonLink href={href} arrow className="self-start md:self-auto">
           {cta}
         </ButtonLink>

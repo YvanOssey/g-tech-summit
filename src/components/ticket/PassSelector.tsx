@@ -52,7 +52,7 @@ export function PassSelector({ initial = ["event"], onChange }: PassSelectorProp
                 className="transition-transform duration-(--duration-micro) ease-out-quart group-hover:-translate-y-0.5"
               >
                 <span
-                  className={`flex size-11 items-center justify-center rounded-xl border outline-offset-4 transition-colors duration-(--duration-micro) group-has-[input:focus-visible]:outline-2 group-has-[input:focus-visible]:outline-signal ${
+                  className={`flex size-11 items-center justify-center rounded-input border outline-offset-4 transition-colors duration-(--duration-micro) group-has-[input:focus-visible]:outline-2 group-has-[input:focus-visible]:outline-signal ${
                     checked
                       ? "border-signal bg-signal text-ink"
                       : dark
@@ -84,7 +84,7 @@ export function PassSelector({ initial = ["event"], onChange }: PassSelectorProp
             <AnimatePresence mode="popLayout" initial={false}>
               <motion.span
                 key={total}
-                className="type-condensed text-title tabular-nums"
+                className="type-condensed text-heading tabular-nums"
                 initial={reduce ? false : { y: "100%" }}
                 animate={{ y: "0%" }}
                 exit={reduce ? undefined : { y: "-100%" }}

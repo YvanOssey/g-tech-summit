@@ -33,13 +33,13 @@ export default async function TicketingPage({
       <Section tone="signal">
         <div className="shell pt-14 pb-12 md:pt-20 md:pb-16">
           <SectionLabel>Billetterie · G-TECH SUMMER 2026</SectionLabel>
-          <h1 className="type-headline text-hero mt-6 md:mt-8">
+          <h1 className="type-headline text-display mt-6 md:mt-8">
             Choisissez <Accent>votre pass</Accent>
           </h1>
           <ol className="mt-10 flex flex-wrap gap-x-6 gap-y-3 border-t border-rule-strong pt-5" aria-label="Étapes de l’inscription">
             {STEPS.map((step, i) => (
-              <li key={step} className={`flex items-center gap-2 text-[0.9375rem] ${i === 0 ? "font-semibold" : "text-muted"}`} aria-current={i === 0 ? "step" : undefined}>
-                <span className={`type-meta flex size-6 items-center justify-center rounded-full ${i === 0 ? "bg-ink text-paper" : "border border-rule-strong"}`}>
+              <li key={step} className={`flex items-center gap-2 text-small ${i === 0 ? "font-semibold" : "text-muted"}`} aria-current={i === 0 ? "step" : undefined}>
+                <span className={`type-meta flex size-6 items-center justify-center ${i === 0 ? "bg-ink text-paper" : "border border-rule-strong"}`}>
                   {i + 1}
                 </span>
                 {step}
@@ -56,7 +56,7 @@ export default async function TicketingPage({
           <div className="mt-12 grid gap-8 border-t border-rule-strong pt-8 lg:grid-cols-[1fr_auto] lg:items-start">
             {!settings.registrationOpen && (
               <div className="max-w-2xl">
-                <p className="type-headline text-title">Les inscriptions en ligne ouvrent prochainement</p>
+                <p className="type-headline text-heading">Les inscriptions en ligne ouvrent prochainement</p>
                 <p className="mt-4 text-muted">
                   Le paiement se fera directement sur ce site via Wave, sans frais ajoutés au prix affiché. Votre billet
                   nominatif vous sera envoyé par e-mail dès la confirmation du paiement. Pour être informé de l’ouverture,
@@ -69,11 +69,11 @@ export default async function TicketingPage({
                 type="button"
                 disabled
                 aria-disabled="true"
-                className="min-h-12 cursor-not-allowed rounded-full bg-grey-200 px-6 font-semibold text-grey-500"
+                className="min-h-12 cursor-not-allowed rounded-pill bg-stone px-6 font-semibold text-grey"
               >
                 Continuer — bientôt disponible
               </button>
-              <ButtonLink href={whatsappUrl} variant="secondary">
+              <ButtonLink href={whatsappUrl} variant="link">
                 Être prévenu sur WhatsApp
               </ButtonLink>
             </div>

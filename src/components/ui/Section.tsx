@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
 
-export type Tone = "ink" | "paper" | "grey" | "signal";
+export type Tone = "ink" | "paper" | "stone" | "signal";
 
 type SectionProps = ComponentProps<"section"> & { tone: Tone };
 

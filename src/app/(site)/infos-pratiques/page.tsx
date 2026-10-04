@@ -88,11 +88,11 @@ export default async function PracticalPage() {
         </dl>
       </Section>
 
-      <Section tone="paper" aria-labelledby="sur-place" className="py-20 md:py-28">
+      <Section tone="paper" aria-labelledby="sur-place" className="section-compact">
         <div className="shell grid-12 gap-y-10">
           <div className="col-span-4 md:col-span-8 lg:col-span-5">
             <SectionLabel index="01">Sur place</SectionLabel>
-            <h2 id="sur-place" className="type-headline text-display mt-8">
+            <h2 id="sur-place" className="type-headline text-title mt-8">
               Le jour J
             </h2>
           </div>
@@ -111,11 +111,11 @@ export default async function PracticalPage() {
         </div>
       </Section>
 
-      <Section tone="grey" id="faq" aria-labelledby="titre-faq" className="scroll-mt-16 py-20 md:py-28">
+      <Section tone="stone" id="faq" aria-labelledby="titre-faq" className="section-compact">
         <div className="shell grid-12 gap-y-10">
           <div className="col-span-4 md:col-span-8 lg:col-span-5">
             <SectionLabel index="02">Questions fréquentes</SectionLabel>
-            <h2 id="titre-faq" className="type-headline text-display mt-8">
+            <h2 id="titre-faq" className="type-headline text-title mt-8">
               FAQ
             </h2>
           </div>
@@ -125,11 +125,11 @@ export default async function PracticalPage() {
         </div>
       </Section>
 
-      <Section tone="ink" id="contact" aria-labelledby="titre-contact" className="scroll-mt-16 py-20 md:py-28">
+      <Section tone="ink" id="contact" aria-labelledby="titre-contact" className="section-compact">
         <div className="shell grid-12 gap-y-10">
           <div className="col-span-4 md:col-span-8 lg:col-span-5">
             <SectionLabel index="03">Contact</SectionLabel>
-            <h2 id="titre-contact" className="type-headline text-display mt-8">
+            <h2 id="titre-contact" className="type-headline text-title mt-8">
               Une <Accent>question</Accent> ?
             </h2>
           </div>
@@ -142,7 +142,7 @@ export default async function PracticalPage() {
               <li key={c.k} className="border-t border-rule">
                 <a href={c.href} className="group flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-5">
                   <span className="type-label">{c.k}</span>
-                  <span className="text-[clamp(1.125rem,1rem+0.8vw,1.75rem)] font-semibold break-all underline decoration-transparent underline-offset-[6px] transition-colors group-hover:decoration-mark">
+                  <span className="text-lead font-semibold break-all underline decoration-transparent underline-offset-[6px] transition-colors group-hover:decoration-mark">
                     {c.v}
                   </span>
                 </a>

@@ -72,7 +72,7 @@ export function HomeHero({ venue }: { venue: Venue | null }) {
               </span>,
               "et de demain",
             ]}
-            className="type-headline mt-6 text-[clamp(2.5rem,1.2rem+4vw,5.5rem)] leading-[0.98] md:mt-8"
+            className="type-headline mt-6 text-display leading-[0.98] md:mt-8"
           />
           <p className="enter mt-8 max-w-xl text-lead text-paper/80" style={d(0.55)}>
             Deux jours de conférences, de panels, de formations, d’ateliers et un hackathon, organisés à {EVENT.city} par{" "}
@@ -82,7 +82,7 @@ export function HomeHero({ venue }: { venue: Venue | null }) {
             <ButtonLink href="/billetterie" arrow>
               Prendre mon pass
             </ButtonLink>
-            <ButtonLink href="/programme" variant="secondary">
+            <ButtonLink href="/programme" variant="link">
               Le programme
             </ButtonLink>
           </div>
@@ -95,11 +95,11 @@ export function HomeHero({ venue }: { venue: Venue | null }) {
           <dl className="flex flex-wrap gap-x-10 gap-y-5">
             <div>
               <dt className="type-label">Dates</dt>
-              <dd className="mt-1.5 text-[1.125rem] font-semibold">18 — 19 décembre 2026</dd>
+              <dd className="mt-1.5 text-body font-semibold">18 — 19 décembre 2026</dd>
             </div>
             <div className="sm:border-l sm:border-rule sm:pl-10">
               <dt className="type-label">Lieu</dt>
-              <dd className="mt-1.5 text-[1.125rem] font-semibold">
+              <dd className="mt-1.5 text-body font-semibold">
                 {venue ? (
                   venue.name
                 ) : (
@@ -130,8 +130,8 @@ export function HomeHero({ venue }: { venue: Venue | null }) {
                 i % 2 === 1 ? "border-l pl-4 sm:border-l-0 sm:pl-0" : ""
               }`}
             >
-              <span className="type-condensed text-[2.5rem] leading-none text-accent">{item.count}</span>
-              <span className="text-[0.9375rem] leading-tight font-medium">{item.label}</span>
+              <span className="type-condensed text-heading leading-none text-accent">{item.count}</span>
+              <span className="text-small leading-tight font-medium">{item.label}</span>
             </Link>
           ))}
         </div>

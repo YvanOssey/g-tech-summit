@@ -48,7 +48,7 @@ export function DaySchedule({ slots, compact = false }: DayScheduleProps) {
               {strong && <span aria-hidden="true" className="inline-block size-2 bg-mark md:mt-1" />}
               {SESSION_TYPE_LABEL[slot.type]}
             </p>
-            <div className="text-[1.0625rem] leading-snug">
+            <div className="text-body leading-snug">
               {slot.ref ? (
                 <Link href={`/programme#${slot.ref}`} className="hover:underline hover:decoration-mark hover:underline-offset-4">
                   {title}
@@ -56,7 +56,7 @@ export function DaySchedule({ slots, compact = false }: DayScheduleProps) {
               ) : (
                 title
               )}
-              {slot.detail && <p className="mt-1 text-[0.9375rem] text-muted">{slot.detail}</p>}
+              {slot.detail && <p className="mt-1 text-small text-muted">{slot.detail}</p>}
             </div>
             <p className="type-meta hidden pt-1 text-muted md:block">{slot.zone}</p>
           </li>

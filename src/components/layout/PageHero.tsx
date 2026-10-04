@@ -19,7 +19,7 @@ export function PageHero({ label, lines, title, lead, tone = "ink", children }: 
     <Section tone={tone}>
       <div className="shell pt-14 pb-16 md:pt-20 md:pb-24">
         <SectionLabel>{label}</SectionLabel>
-        <RevealText as="h1" lines={lines} label={title} className="type-headline text-hero mt-6 md:mt-8" />
+        <RevealText as="h1" lines={lines} label={title} className="type-headline text-display mt-6 md:mt-8" />
         {(lead || children) && (
           <div className="grid-12 mt-10 gap-y-8 md:mt-14">
             {lead && <div className="text-lead col-span-4 text-muted md:col-span-6 lg:col-span-7">{lead}</div>}

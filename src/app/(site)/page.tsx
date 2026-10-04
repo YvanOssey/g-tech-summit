@@ -52,7 +52,7 @@ export default async function HomePage() {
       <HomeHero venue={settings.venue} />
 
       {/* ── L'événement — light, editorial, generous space ───────────── */}
-      <Section tone="paper" aria-labelledby="evenement" className="py-24 md:py-36">
+      <Section tone="paper" aria-labelledby="evenement" className="section-standard">
         <div className="shell">
           <div className="grid-12 gap-y-12">
             <div className="col-span-4 md:col-span-8 lg:col-span-6">
@@ -62,7 +62,7 @@ export default async function HomePage() {
                 id="evenement"
                 label="Deux jours pour apprendre, échanger et construire."
                 lines={["Deux jours pour", "apprendre, échanger", <span key="c">et <Accent>construire</Accent>.</span>]}
-                className="type-headline text-display mt-8"
+                className="type-headline text-title mt-8"
               />
               <Reveal delay={0.15} className="mt-10 space-y-8">
                 <p className="text-lead">
@@ -71,7 +71,7 @@ export default async function HomePage() {
                 </p>
                 <div className="panel flex items-start gap-5 p-5 sm:p-6">
                   <GhostechLogo width={88} className="shrink-0" />
-                  <p className="text-[0.9375rem] text-muted">
+                  <p className="text-small text-muted">
                     Organisé par <span className="font-semibold text-fg">{EVENT.organiser.name}</span>, communauté tech
                     fondée à l’Institut Universitaire d’Abidjan. Cette première édition marque aussi sa première année.
                   </p>
@@ -88,8 +88,8 @@ export default async function HomePage() {
           <RevealGroup as="ul" className="mt-20 grid gap-3 sm:grid-cols-2 lg:mt-28 lg:grid-cols-3 lg:gap-4">
             {PROFILES.map((p, i) => (
               <RevealItem as="li" key={p.who} className="panel flex flex-col p-6 sm:p-8">
-                <span className="type-condensed text-[2rem] leading-none text-accent">{String(i + 1).padStart(2, "0")}</span>
-                <h3 className="type-headline mt-6 text-[1.5rem] leading-tight">{p.who}</h3>
+                <span className="type-condensed text-heading leading-none text-accent">{String(i + 1).padStart(2, "0")}</span>
+                <h3 className="type-headline mt-6 text-heading leading-tight">{p.who}</h3>
                 <p className="mt-3 text-muted">{p.what}</p>
               </RevealItem>
             ))}
@@ -98,7 +98,7 @@ export default async function HomePage() {
       </Section>
 
       {/* ── Hackathon — dark, immersive ───────────────────────────────── */}
-      <Section tone="ink" aria-labelledby="hackathon" className="py-24 md:py-36">
+      <Section tone="ink" aria-labelledby="hackathon" className="section-standard">
         <div className="shell grid-12 gap-y-14">
           <div className="col-span-4 md:col-span-8 lg:col-span-6">
             <SectionLabel>{`${HACKATHON.name} · ${HACKATHON.edition}`}</SectionLabel>
@@ -107,7 +107,7 @@ export default async function HomePage() {
               id="hackathon"
               label="Quatre thématiques, une finale sur scène."
               lines={["Quatre thématiques,", <span key="f">une <Accent>finale</Accent> sur scène.</span>]}
-              className="type-headline text-display mt-8"
+              className="type-headline text-title mt-8"
             />
             <p className="mt-8 max-w-xl text-muted">{HACKATHON.intro}</p>
 
@@ -128,7 +128,7 @@ export default async function HomePage() {
               <ButtonLink href="/hackathon" arrow>
                 Découvrir le hackathon
               </ButtonLink>
-              <ButtonLink href="/billetterie?pass=hackathon" variant="secondary">
+              <ButtonLink href="/billetterie?pass=hackathon" variant="link">
                 Pass Hackathon
               </ButtonLink>
             </div>
@@ -139,9 +139,9 @@ export default async function HomePage() {
             <RevealGroup as="ol" className="grid gap-3 sm:grid-cols-2">
               {TRACKS.map((t) => (
                 <RevealItem as="li" key={t.code} className="panel p-6">
-                  <span className="type-condensed text-[2rem] leading-none text-accent">{t.code}</span>
-                  <h3 className="type-headline mt-4 text-[1.375rem] leading-tight">{t.name}</h3>
-                  <p className="mt-1 text-[0.9375rem] text-muted">{t.claim}</p>
+                  <span className="type-condensed text-heading leading-none text-accent">{t.code}</span>
+                  <h3 className="type-headline mt-4 text-heading leading-tight">{t.name}</h3>
+                  <p className="mt-1 text-small text-muted">{t.claim}</p>
                 </RevealItem>
               ))}
             </RevealGroup>
@@ -150,7 +150,7 @@ export default async function HomePage() {
       </Section>
 
       {/* ── Formats — grey, index rows ────────────────────────────────── */}
-      <Section tone="grey" aria-labelledby="formats" className="py-24 md:py-36">
+      <Section tone="stone" aria-labelledby="formats" className="section-standard">
         <div className="shell">
           <div className="flex flex-wrap items-end justify-between gap-8">
             <div>
@@ -160,10 +160,10 @@ export default async function HomePage() {
                 id="formats"
                 label="Apprendre, pratiquer, rencontrer."
                 lines={["Apprendre, pratiquer,", <Accent key="r">rencontrer.</Accent>]}
-                className="type-headline text-display mt-8"
+                className="type-headline text-title mt-8"
               />
             </div>
-            <ButtonLink href="/programme" variant="tertiary" arrow>
+            <ButtonLink href="/programme" variant="link" arrow>
               Programme détaillé
             </ButtonLink>
           </div>
@@ -176,7 +176,7 @@ export default async function HomePage() {
                   className="group grid grid-cols-[3rem_1fr_auto] items-baseline gap-x-4 gap-y-2 py-7 md:grid-cols-[5rem_minmax(0,1fr)_minmax(0,1.4fr)_auto] md:gap-x-(--gutter) md:py-9"
                 >
                   <span className="type-meta text-muted">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="type-headline text-[clamp(1.5rem,1.15rem+1.4vw,2.5rem)] leading-none transition-colors duration-(--duration-micro) group-hover:text-accent">
+                  <span className="type-headline text-heading leading-none transition-colors duration-(--duration-micro) group-hover:text-accent">
                     {f.name}
                   </span>
                   <span className="col-span-3 col-start-2 row-start-2 text-muted md:col-span-1 md:col-start-3 md:row-start-1">{f.text}</span>
@@ -189,7 +189,7 @@ export default async function HomePage() {
       </Section>
 
       {/* ── Two days — dark, dense ─────────────────────────────────────── */}
-      <Section tone="ink" aria-labelledby="deux-jours" className="py-24 md:py-36">
+      <Section tone="ink" aria-labelledby="deux-jours" className="section-standard">
         <div className="shell">
           <div className="flex flex-wrap items-end justify-between gap-8">
             <div>
@@ -199,10 +199,10 @@ export default async function HomePage() {
                 id="deux-jours"
                 label="Vendredi 18 et samedi 19 décembre."
                 lines={["Vendredi 18 &", <span key="s">samedi <Accent>19 décembre</Accent></span>]}
-                className="type-headline text-display mt-8"
+                className="type-headline text-title mt-8"
               />
             </div>
-            <ButtonLink href="/programme" variant="tertiary" arrow>
+            <ButtonLink href="/programme" variant="link" arrow>
               Voir le programme complet
             </ButtonLink>
           </div>
@@ -210,7 +210,7 @@ export default async function HomePage() {
             {DAYS.map((d) => (
               <RevealItem key={d.id} className="panel p-6 sm:p-8">
                 <div className="flex items-baseline justify-between gap-4">
-                  <h3 className="type-headline text-title">{d.label}</h3>
+                  <h3 className="type-headline text-heading">{d.label}</h3>
                   <span className="type-label">Jour {d.index}</span>
                 </div>
                 <p className="mt-2 mb-6 text-muted">{d.theme}</p>
@@ -222,7 +222,7 @@ export default async function HomePage() {
       </Section>
 
       {/* ── Billetterie — the single orange band ──────────────────────── */}
-      <Section tone="signal" aria-labelledby="pass" className="py-24 md:py-32">
+      <Section tone="signal" aria-labelledby="pass" className="section-standard">
         <div className="shell">
           <div className="grid-12 gap-y-8">
             <div className="col-span-4 md:col-span-8 lg:col-span-7">
@@ -232,7 +232,7 @@ export default async function HomePage() {
                 id="pass"
                 label="Deux pass, un billet nominatif."
                 lines={["Deux pass,", <span key="b">un <Accent>billet nominatif</Accent>.</span>]}
-                className="type-headline text-display mt-8"
+                className="type-headline text-title mt-8"
               />
             </div>
             <p className="col-span-4 self-end text-muted md:col-span-6 lg:col-span-4 lg:col-start-9">
@@ -258,16 +258,16 @@ export default async function HomePage() {
       </Section>
 
       {/* ── Partners — light, institutional ───────────────────────────── */}
-      <Section tone="paper" aria-labelledby="partenaires" className="py-24 md:py-32">
+      <Section tone="paper" aria-labelledby="partenaires" className="section-standard">
         <div className="shell">
           <div className="flex flex-wrap items-end justify-between gap-8">
             <div>
               <SectionLabel>Partenaires</SectionLabel>
-              <h2 id="partenaires" className="type-headline text-display mt-8">
+              <h2 id="partenaires" className="type-headline text-title mt-8">
                 Ils nous accompagnent
               </h2>
             </div>
-            <ButtonLink href="/partenaires" variant="tertiary" arrow>
+            <ButtonLink href="/partenaires" variant="link" arrow>
               Devenir partenaire
             </ButtonLink>
           </div>
@@ -278,11 +278,11 @@ export default async function HomePage() {
       </Section>
 
       {/* ── Practical + FAQ — grey, calm reading ──────────────────────── */}
-      <Section tone="grey" aria-labelledby="infos" className="py-24 md:py-32">
+      <Section tone="stone" aria-labelledby="infos" className="section-standard">
         <div className="shell grid-12 gap-y-14">
           <div className="col-span-4 md:col-span-3 lg:col-span-4">
             <SectionLabel>Infos pratiques</SectionLabel>
-            <h2 id="infos" className="type-headline text-display mt-8">
+            <h2 id="infos" className="type-headline text-title mt-8">
               Questions fréquentes
             </h2>
             <dl className="mt-10 space-y-6 border-t border-rule-strong pt-6">
@@ -312,7 +312,7 @@ export default async function HomePage() {
               <FaqList items={FAQ.slice(0, 5)} />
             </div>
             <div className="mt-6">
-              <ButtonLink href="/infos-pratiques#faq" variant="tertiary" arrow>
+              <ButtonLink href="/infos-pratiques#faq" variant="link" arrow>
                 Toutes les questions
               </ButtonLink>
             </div>
@@ -321,11 +321,11 @@ export default async function HomePage() {
       </Section>
 
       {/* ── Closing ────────────────────────────────────────────────────── */}
-      <Section tone="ink" aria-labelledby="cloture" className="py-20 md:py-28">
+      <Section tone="ink" aria-labelledby="cloture" className="section-compact">
         <div className="shell grid-12 items-end gap-y-12">
           <div className="col-span-4 md:col-span-8 lg:col-span-6">
             <SectionLabel>{`Rendez-vous à ${EVENT.city}`}</SectionLabel>
-            <h2 id="cloture" className="type-headline text-display mt-8">
+            <h2 id="cloture" className="type-headline text-title mt-8">
               Vendredi 18 décembre, <Accent>08:00</Accent>
             </h2>
             <p className="mt-6 max-w-md text-lead text-muted">{EVENT.organiser.tagline}</p>

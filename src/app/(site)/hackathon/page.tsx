@@ -69,7 +69,7 @@ export default async function HackathonPage() {
               className={`border-t border-rule py-6 pr-4 ${i % 2 ? "border-l pl-4" : ""} ${i > 0 ? "lg:border-l lg:pl-6" : ""}`}
             >
               <dt className="type-label">{item.k}</dt>
-              <dd className="mt-2 text-[1.125rem] font-semibold">{item.v ?? <Pending label={item.k} />}</dd>
+              <dd className="mt-2 text-body font-semibold">{item.v ?? <Pending label={item.k} />}</dd>
             </div>
           ))}
         </dl>
@@ -81,11 +81,11 @@ export default async function HackathonPage() {
       </Section>
 
       {/* Tracks */}
-      <Section tone="paper" aria-labelledby="thematiques" className="py-20 md:py-28">
+      <Section tone="paper" aria-labelledby="thematiques" className="section-compact">
         <div className="shell">
           <SectionLabel index="01">Thématiques officielles</SectionLabel>
           <div className="grid-12 mt-8 gap-y-6">
-            <h2 id="thematiques" className="type-headline text-display col-span-4 md:col-span-8 lg:col-span-6">
+            <h2 id="thematiques" className="type-headline text-title col-span-4 md:col-span-8 lg:col-span-6">
               Quatre défis
             </h2>
             <p className="col-span-4 self-end text-muted md:col-span-6 lg:col-span-5 lg:col-start-8">
@@ -96,8 +96,8 @@ export default async function HackathonPage() {
           <RevealGroup as="ol" className="mt-14 grid gap-4 md:grid-cols-2">
             {TRACKS.map((t) => (
               <RevealItem as="li" key={t.code} className="panel flex min-w-0 flex-col gap-5 p-6 sm:p-8 lg:min-h-72">
-                <span className="type-condensed text-[3rem] leading-none text-accent">{t.code}</span>
-                <h3 className="type-headline break-words text-[clamp(1.875rem,1.4rem+1.8vw,3rem)] leading-none hyphens-auto">{t.name}</h3>
+                <span className="type-condensed text-title leading-none text-accent">{t.code}</span>
+                <h3 className="type-headline break-words text-title leading-none hyphens-auto">{t.name}</h3>
                 <div className="mt-auto">
                   <p className="font-semibold">{t.claim}</p>
                   <p className="mt-2 text-muted">{t.description}</p>
@@ -109,16 +109,16 @@ export default async function HackathonPage() {
       </Section>
 
       {/* Who & rules */}
-      <Section tone="grey" aria-labelledby="qui" className="py-20 md:py-28">
+      <Section tone="stone" aria-labelledby="qui" className="section-compact">
         <div className="shell grid-12 gap-y-12">
           <div className="col-span-4 md:col-span-4 lg:col-span-5">
             <SectionLabel index="02">Qui peut participer</SectionLabel>
-            <h2 id="qui" className="type-headline text-display mt-8">
+            <h2 id="qui" className="type-headline text-title mt-8">
               Ouvert à tous les profils
             </h2>
             <ul className="mt-8 flex flex-wrap gap-2">
               {ELIGIBLE.map((e) => (
-                <li key={e} className="rounded-full border border-rule-strong px-4 py-1.5 text-[0.9375rem]">
+                <li key={e} className="border border-rule-strong px-3 py-1.5 text-small">
                   {e}
                 </li>
               ))}
@@ -139,10 +139,10 @@ export default async function HackathonPage() {
       </Section>
 
       {/* Timeline */}
-      <Section tone="ink" aria-labelledby="deroule" className="py-20 md:py-28">
+      <Section tone="ink" aria-labelledby="deroule" className="section-compact">
         <div className="shell">
           <SectionLabel index="03">Déroulé</SectionLabel>
-          <h2 id="deroule" className="type-headline text-display mt-8">
+          <h2 id="deroule" className="type-headline text-title mt-8">
             Du code <Accent>à la scène</Accent>
           </h2>
           <ol className="mt-14 grid border-t border-rule lg:grid-cols-3">
@@ -151,7 +151,7 @@ export default async function HackathonPage() {
                 <span className="type-label">Étape {i + 1}</span>
                 <p className="type-meta">{step.when ?? <Pending label="Date" />}</p>
                 <div className="mt-auto">
-                  <h3 className="type-headline text-title">{step.what}</h3>
+                  <h3 className="type-headline text-heading">{step.what}</h3>
                   <p className="mt-3 text-muted">{step.detail}</p>
                 </div>
               </li>
@@ -167,25 +167,25 @@ export default async function HackathonPage() {
       </Section>
 
       {/* Criteria / jury / rewards */}
-      <Section tone="paper" aria-labelledby="evaluation" className="py-20 md:py-28">
+      <Section tone="paper" aria-labelledby="evaluation" className="section-compact">
         <div className="shell grid-12 gap-y-14">
           <div className="col-span-4 md:col-span-8 lg:col-span-5">
             <SectionLabel index="04">Évaluation</SectionLabel>
-            <h2 id="evaluation" className="type-headline text-display mt-8">
+            <h2 id="evaluation" className="type-headline text-title mt-8">
               Six critères
             </h2>
             <ol className="mt-10 border-b border-rule-strong">
               {CRITERIA.map((c, i) => (
                 <li key={c} className="grid grid-cols-[3rem_1fr] border-t border-rule-strong py-4">
                   <span className="type-meta pt-1 text-accent">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="text-[1.125rem] font-semibold">{c}</span>
+                  <span className="text-body font-semibold">{c}</span>
                 </li>
               ))}
             </ol>
           </div>
           <div className="col-span-4 space-y-14 md:col-span-8 lg:col-span-6 lg:col-start-7">
             <div>
-              <h3 className="type-headline text-title">Jury</h3>
+              <h3 className="type-headline text-heading">Jury</h3>
               <div className="mt-6">
                 {s.jury?.length ? (
                   <ul className="space-y-2">
@@ -201,7 +201,7 @@ export default async function HackathonPage() {
               </div>
             </div>
             <div>
-              <h3 className="type-headline text-title">Récompenses</h3>
+              <h3 className="type-headline text-heading">Récompenses</h3>
               <p className="mt-3 text-muted">Les meilleures équipes bénéficieront :</p>
               <ul className="mt-4 space-y-3">
                 {REWARDS.map((r) => (
@@ -217,11 +217,11 @@ export default async function HackathonPage() {
       </Section>
 
       {/* Registration — orange band */}
-      <Section tone="signal" aria-labelledby="inscription" className="py-20 md:py-28">
+      <Section tone="signal" aria-labelledby="inscription" className="section-compact">
         <div className="shell grid-12 gap-y-10">
           <div className="col-span-4 md:col-span-8 lg:col-span-6">
             <SectionLabel index="05">Inscription</SectionLabel>
-            <h2 id="inscription" className="type-headline text-display mt-8">
+            <h2 id="inscription" className="type-headline text-title mt-8">
               Chaque membre prend <Accent>son pass</Accent>
             </h2>
           </div>

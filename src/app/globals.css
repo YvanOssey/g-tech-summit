@@ -1,60 +1,63 @@
 @import "tailwindcss";
 
 /*
- * G-TECH SUMMER 2026 — design tokens
+ * G-TECH SUMMER 2026 — design tokens · "Le programme et le billet"
  *
- * Tailwind's default palette and font stacks are reset on purpose:
- * only the colours below exist in the project, so no blue / cyan / violet
- * utility can ever be used by accident.
+ * Tailwind's default colours, fonts and radii are reset on purpose: only the
+ * tokens below exist, so no blue / cyan / violet utility (and no stray radius)
+ * can be used by accident. Components never use raw hex values.
  */
 @theme {
   --color-*: initial;
   --font-*: initial;
+  --radius-*: initial;
 
-  /* Core palette */
+  /* ── Palette ─────────────────────────────────────────────────────────── */
   --color-ink: #171717;
   --color-paper: #fffdf8;
   --color-signal: #f28c18;
-  /* Orange darkened for small text on paper (5:1). #F28C18 on paper is only 2.4:1. */
-  --color-signal-ink: #a65a00;
+  --color-grey: #6b6b6b; /* secondary text on paper only — 5.2:1 */
+  --color-stone: #e8e5df; /* secondary background, hairlines on paper */
 
-  /* Neutral greys */
-  --color-grey-50: #f4f2ed;
-  --color-grey-100: #ebe8e1;
-  --color-grey-200: #dedad2;
-  --color-grey-400: #9c9a94;
-  --color-grey-500: #6e6c67;
-  --color-grey-600: #5e5c58; /* muted text on grey-100 — 5.2:1 */
-  --color-grey-700: #3a3a38;
-  --color-grey-800: #262625;
+  /*
+   * Accessibility derivatives — used only where the palette fails WCAG AA:
+   *   #6B6B6B on ink = 3.4:1 · on stone = 4.2:1 · #F28C18 text on paper = 2.4:1
+   */
+  --color-mist: #9c9a94; /* secondary text on ink — 6.5:1 */
+  --color-smoke: #5e5c58; /* secondary text on stone — 5.3:1 */
+  --color-signal-text: #a65a00; /* orange as text on paper — 5.0:1 (never on stone) */
+  --color-umber: #432e17; /* secondary text on signal — 5.1:1 */
+  --color-graphite: #3a3a38; /* hairlines on ink */
 
-  /* Semantic */
-  --color-success: #2e7d4f;
-  --color-danger: #b42318;
-
-  /* Typography */
+  /* ── Typography ──────────────────────────────────────────────────────── */
   --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, "SFMono-Regular", monospace;
 
-  --text-meta: 0.75rem;
-  --text-meta--line-height: 1.4;
-  --text-meta--letter-spacing: 0.06em;
-  --text-body: 1.0625rem;
+  /* Eight levels, 12 px minimum. No arbitrary sizes in components. */
+  --text-caption: 0.75rem; /* 12 */
+  --text-caption--line-height: 1.4;
+  --text-small: 0.875rem; /* 14 */
+  --text-small--line-height: 1.5;
+  --text-body: 1.0625rem; /* 17 */
   --text-body--line-height: 1.6;
-  --text-lead: clamp(1.1875rem, 1rem + 0.6vw, 1.5rem);
+  --text-lead: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem); /* 20 → 24 */
   --text-lead--line-height: 1.45;
-  --text-title: clamp(1.625rem, 1.2rem + 1.6vw, 2.625rem);
-  --text-title--line-height: 1.08;
-  --text-display: clamp(2.375rem, 1.3rem + 4.4vw, 5.75rem);
-  --text-display--line-height: 0.98;
-  --text-hero: clamp(2.625rem, 1.2rem + 5.4vw, 7rem);
-  --text-hero--line-height: 0.96;
-  --text-poster: clamp(4.5rem, 1rem + 15vw, 17rem);
-  --text-poster--line-height: 0.8;
+  --text-heading: clamp(1.5rem, 1.3rem + 0.7vw, 2rem); /* 24 → 32 · block titles */
+  --text-heading--line-height: 1.12;
+  --text-title: clamp(2rem, 1.4rem + 2.4vw, 4rem); /* 32 → 64 · section titles */
+  --text-title--line-height: 1;
+  --text-display: clamp(2.75rem, 1.5rem + 4.6vw, 6rem); /* 44 → 96 · page titles */
+  --text-display--line-height: 0.96;
+  --text-poster: clamp(4rem, 1rem + 12vw, 13rem); /* 64 → 208 · figures only */
+  --text-poster--line-height: 0.82;
 
+  /* ── Shape ───────────────────────────────────────────────────────────── */
   --radius-none: 0;
-  --radius-xs: 2px;
+  --radius-input: 0.75rem; /* form controls */
+  --radius-object: 1.25rem; /* tickets — the only rounded objects */
+  --radius-pill: 999px; /* buttons only */
 
+  /* ── Motion ──────────────────────────────────────────────────────────── */
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
 
@@ -63,7 +66,7 @@
 
 /*
  * Section themes. A section sets its theme once (`.theme-ink`, `.theme-paper`…);
- * every component inside reads these variables through the utilities below
+ * everything inside reads these variables through the utilities below
  * (bg-canvas, text-fg, text-muted, border-rule, text-accent…), so the same
  * component works on any background without tone props.
  */
@@ -80,64 +83,70 @@
 
 :root,
 .theme-paper {
-  --canvas: #fffdf8;
-  --fg: #171717;
-  --muted: #6e6c67; /* 5.1:1 */
-  --rule: #dedad2;
-  --rule-strong: #171717;
-  --accent: #a65a00; /* orange text, 5:1 */
-  --mark: #f28c18; /* non-text orange: rules, squares, highlight band */
-  --surface: #f4f2ed;
-  --pass-surface: #ebe8e1; /* light ticket (Pass Event) */
-  --btn-bg: #f28c18;
-  --btn-fg: #171717;
-  --btn-hover-bg: #171717;
-  --btn-hover-fg: #f28c18;
+  --canvas: var(--color-paper);
+  --fg: var(--color-ink);
+  --muted: var(--color-grey);
+  --rule: var(--color-stone);
+  --rule-strong: var(--color-ink);
+  --accent: var(--color-signal-text);
+  --mark: var(--color-signal); /* non-text orange: rules, squares, highlight band */
+  --surface: var(--color-stone);
+  --surface-muted: var(--color-smoke); /* secondary text when sitting on --surface */
+  --surface-accent: var(--color-ink); /* orange text fails on stone */
+  --pass-surface: var(--color-stone); /* light ticket (Pass Event) */
+  --btn-bg: var(--color-signal);
+  --btn-fg: var(--color-ink);
+  --btn-hover-bg: var(--color-ink);
+  --btn-hover-fg: var(--color-signal);
   /* accent words: ink text on an orange highlight band */
-  --aw-color: #171717;
-  --aw-band: #f28c18;
+  --aw-color: var(--color-ink);
+  --aw-band: var(--color-signal);
   --aw-h: 0.3em;
   --aw-pos: 0 90%;
   --aw-animate: 1;
 }
 
-.theme-grey {
-  --canvas: #ebe8e1;
-  --fg: #171717;
-  --muted: #5e5c58; /* grey-600, 5.2:1 */
-  --rule: #d2cec5;
-  --rule-strong: #171717;
-  --accent: #8a4b00; /* 5.5:1 */
-  --mark: #f28c18;
-  --surface: #fffdf8;
-  --pass-surface: #fffdf8; /* light ticket (Pass Event) */
-  --btn-bg: #f28c18;
-  --btn-fg: #171717;
-  --btn-hover-bg: #171717;
-  --btn-hover-fg: #f28c18;
-  --aw-color: #171717;
-  --aw-band: #f28c18;
+.theme-stone {
+  --canvas: var(--color-stone);
+  --fg: var(--color-ink);
+  --muted: var(--color-smoke);
+  --rule: rgb(23 23 23 / 0.16); /* ink at 16 % */
+  --rule-strong: var(--color-ink);
+  --accent: var(--color-ink); /* orange text fails on stone */
+  --mark: var(--color-signal);
+  --surface: var(--color-paper);
+  --surface-muted: var(--color-grey);
+  --surface-accent: var(--color-signal-text);
+  --pass-surface: var(--color-paper);
+  --btn-bg: var(--color-signal);
+  --btn-fg: var(--color-ink);
+  --btn-hover-bg: var(--color-ink);
+  --btn-hover-fg: var(--color-signal);
+  --aw-color: var(--color-ink);
+  --aw-band: var(--color-signal);
   --aw-h: 0.3em;
   --aw-pos: 0 90%;
   --aw-animate: 1;
 }
 
 .theme-ink {
-  --canvas: #171717;
-  --fg: #fffdf8;
-  --muted: #9c9a94; /* 6.5:1 */
-  --rule: #3a3a38;
-  --rule-strong: rgb(255 253 248 / 0.4);
-  --accent: #f28c18; /* 7.3:1 */
-  --mark: #f28c18;
-  --surface: #262625;
-  --pass-surface: #fffdf8; /* light ticket (Pass Event) */
-  --btn-bg: #f28c18;
-  --btn-fg: #171717;
-  --btn-hover-bg: #fffdf8;
-  --btn-hover-fg: #171717;
+  --canvas: var(--color-ink);
+  --fg: var(--color-paper);
+  --muted: var(--color-mist);
+  --rule: var(--color-graphite);
+  --rule-strong: rgb(255 253 248 / 0.4); /* paper at 40 % */
+  --accent: var(--color-signal);
+  --mark: var(--color-signal);
+  --surface: var(--color-ink); /* panels on ink are outlined, not filled */
+  --surface-muted: var(--color-mist);
+  --surface-accent: var(--color-signal);
+  --pass-surface: var(--color-paper);
+  --btn-bg: var(--color-signal);
+  --btn-fg: var(--color-ink);
+  --btn-hover-bg: var(--color-paper);
+  --btn-hover-fg: var(--color-ink);
   /* accent words: plain orange */
-  --aw-color: #f28c18;
+  --aw-color: var(--color-signal);
   --aw-band: transparent;
   --aw-h: 0;
   --aw-pos: 0 90%;
@@ -145,39 +154,66 @@
 }
 
 .theme-signal {
-  --canvas: #f28c18;
-  --fg: #171717;
-  --muted: #432e17; /* 5.1:1 on orange */
-  --rule: rgb(23 23 23 / 0.25);
-  --rule-strong: #171717;
-  --accent: #171717;
-  --mark: #171717;
-  --surface: #fffdf8;
-  --pass-surface: #fffdf8; /* light ticket (Pass Event) */
-  --btn-bg: #171717;
-  --btn-fg: #fffdf8;
-  --btn-hover-bg: #fffdf8;
-  --btn-hover-fg: #171717;
+  --canvas: var(--color-signal);
+  --fg: var(--color-ink);
+  --muted: var(--color-umber);
+  --rule: rgb(23 23 23 / 0.25); /* ink at 25 % */
+  --rule-strong: var(--color-ink);
+  --accent: var(--color-ink);
+  --mark: var(--color-ink);
+  --surface: var(--color-paper);
+  --surface-muted: var(--color-grey);
+  --surface-accent: var(--color-ink);
+  --pass-surface: var(--color-paper);
+  --btn-bg: var(--color-ink);
+  --btn-fg: var(--color-paper);
+  --btn-hover-bg: var(--color-paper);
+  --btn-hover-fg: var(--color-ink);
   /* accent words: orange text on an ink band (never white on orange) */
-  --aw-color: #f28c18;
-  --aw-band: #171717;
+  --aw-color: var(--color-signal);
+  --aw-band: var(--color-ink);
   --aw-h: 100%;
   --aw-pos: 0 50%;
   --aw-animate: 0;
 }
 
 :root {
+  /* Layout */
   --gutter: 1rem;
   --page-max: 90rem;
-  --duration-micro: 180ms;
-  --duration-component: 320ms;
-  --duration-section: 700ms;
+  --header-h: 4rem;
+
+  /* Section rhythm — three tiers */
+  --section-compact: 4rem;
+  --section-standard: 5rem;
+  --section-feature: 6rem;
+
+  /* Rules */
+  --rule-hairline: 1px;
+  --rule-strong-w: 2px;
+  --rule-signal-w: 4px;
+
+  /* Layers */
+  --z-raised: 10;
+  --z-sticky: 30;
+  --z-header: 40;
+  --z-menu: 45;
+  --z-skip: 50;
+
+  /* Motion */
+  --duration-micro: 160ms;
+  --duration-component: 280ms;
+  --duration-reveal: 800ms;
+
   color-scheme: light;
 }
 
 @media (min-width: 48rem) {
   :root {
     --gutter: 1.5rem;
+    --section-compact: 6rem;
+    --section-standard: 8rem;
+    --section-feature: 10rem;
   }
 }
 
@@ -191,6 +227,8 @@
   html {
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
+    /* Anchors land below the sticky header */
+    scroll-padding-top: calc(var(--header-h) + 1rem);
   }
 
   body {
@@ -208,6 +246,7 @@
     color: var(--color-ink);
   }
 
+  /* Focus appears instantly — never transitioned. */
   :focus-visible {
     outline: 2px solid var(--color-signal);
     outline-offset: 3px;
@@ -255,44 +294,45 @@
     }
   }
 
-  /* Institutional headline: sentence case, bold, slightly narrowed, tight. */
+  /* Words: sentence case, bold, slightly narrowed, tight. */
   .type-headline {
     font-weight: 700;
     font-stretch: 92%;
     letter-spacing: -0.03em;
   }
 
-  /* Condensed poster cut — reserved for dates, figures and the ticket. */
+  /* Figures: dates, times, prices, numbers — condensed poster cut. */
   .type-condensed {
     font-stretch: 72%;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
   }
 
-  /* Section label: tracked capitals in the theme's accent colour. */
+  /* Small tracked capitals, in the theme accent. Used sparingly (ordinal data). */
   .type-label {
-    font-size: 0.75rem;
+    font-size: var(--text-caption);
     font-weight: 600;
-    line-height: 1.3;
-    letter-spacing: 0.2em;
+    line-height: var(--text-caption--line-height);
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--accent);
   }
 
-  /* Monospace data: times, rooms, references. */
+  /* Codes and references (IBM Plex Mono). */
   .type-meta {
     font-family: var(--font-mono);
-    font-size: var(--text-meta);
-    line-height: var(--text-meta--line-height);
-    letter-spacing: var(--text-meta--letter-spacing);
+    font-size: var(--text-caption);
+    line-height: var(--text-caption--line-height);
+    letter-spacing: 0.06em;
     text-transform: uppercase;
   }
 
   /*
-   * Strategic words in headlines. The look depends on the section theme:
-   * orange on ink, ink on an orange band on light, orange on an ink band on orange.
-   * The band can be drawn once on entry (see <Accent />); without JS it is simply shown.
+   * Strategic words in headlines — one or two per page. The look follows the
+   * section theme: orange on ink, ink on an orange band on light, orange on an
+   * ink band on orange. See <Accent />.
    */
   .accent-word {
     color: var(--aw-color);
@@ -302,7 +342,7 @@
     background-size: 100% var(--aw-h);
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
-    transition: background-size 0.9s var(--ease-out-quart);
+    transition: background-size var(--duration-reveal) var(--ease-out-quart);
   }
 
   .theme-signal .accent-word {
@@ -313,16 +353,25 @@
     background-size: 0% var(--aw-h);
   }
 
-  /* Rounded framed block (cards, panels) — surface colour follows the theme. */
+  /*
+   * Framed block. Square (structure, not object); filled on light themes,
+   * outlined on ink. Secondary text inside switches to the tint that passes
+   * on the surface colour.
+   */
   .panel {
-    border-radius: 1.5rem;
+    --muted: var(--surface-muted);
+    --accent: var(--surface-accent);
     background: var(--surface);
+    border: var(--rule-hairline) solid var(--rule);
   }
 
-  /* Primary / secondary buttons follow the section theme. */
+  /* ── Actions ───────────────────────────────────────────────────────── */
+
+  /* Primary: the only pill. One signal on hover — the fill swaps. */
   .btn-primary {
     background: var(--btn-bg);
     color: var(--btn-fg);
+    border-radius: var(--radius-pill);
   }
 
   .btn-primary:hover {
@@ -330,16 +379,35 @@
     color: var(--btn-hover-fg);
   }
 
-  .btn-secondary {
-    border: 1px solid var(--rule-strong);
-    color: var(--fg);
+  .btn-primary:active {
+    transform: translateY(1px);
   }
 
-  .btn-secondary:hover {
-    border-color: var(--fg);
-    background: var(--fg);
-    color: var(--canvas);
+  /* Secondary action = a text link with an arrow. */
+  .link-arrow {
+    color: var(--fg);
+    text-decoration-line: underline;
+    text-decoration-thickness: var(--rule-hairline);
+    text-underline-offset: 6px;
+    text-decoration-color: var(--rule-strong);
   }
+
+  .link-arrow:hover {
+    text-decoration-color: var(--mark);
+  }
+}
+
+/* Section rhythm */
+@utility section-compact {
+  padding-block: var(--section-compact);
+}
+
+@utility section-standard {
+  padding-block: var(--section-standard);
+}
+
+@utility section-feature {
+  padding-block: var(--section-feature);
 }
 
 /* Ticket notches — see PassCard / TicketSpecimen. */
@@ -357,7 +425,7 @@
     radial-gradient(circle var(--notch-r) at var(--notch-at) 100%, #0000 98%, #000) bottom / 100% 50.5% no-repeat;
 }
 
-/* Typographic reveal for on-mount headlines (see RevealText) */
+/* Typographic reveal for the hero headline (see RevealText). */
 @keyframes reveal-up {
   from {
     transform: translateY(105%);
@@ -368,10 +436,10 @@
 }
 
 .reveal-line {
-  animation: reveal-up 0.9s var(--ease-out-quart) both;
+  animation: reveal-up var(--duration-reveal) var(--ease-out-quart) both;
 }
 
-/* Staggered entrance for hero content — runs on first paint, no JS needed. */
+/* Legacy entrance helpers — removed with the hero rebuild (step 3). */
 @keyframes enter-up {
   from {
     opacity: 0;
@@ -384,11 +452,10 @@
 }
 
 .enter {
-  animation: enter-up 0.8s var(--ease-out-quart) both;
+  animation: enter-up var(--duration-reveal) var(--ease-out-quart) both;
   animation-delay: var(--d, 0s);
 }
 
-/* One-time settle of the hero photograph */
 @keyframes settle {
   from {
     transform: scale(1.04);

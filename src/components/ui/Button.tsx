@@ -2,7 +2,13 @@ import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 import { ArrowRight } from "./icons";
 
-type Variant = "primary" | "secondary" | "tertiary";
+/**
+ * Two kinds of action, nothing more:
+ * - `primary` — the pill. One per screen.
+ * - `link`    — every secondary action: an underlined text link, optionally with an arrow.
+ * Colours come from the surrounding section theme (see .btn-primary / .link-arrow in globals.css).
+ */
+type Variant = "primary" | "link";
 
 interface StyleProps {
   variant?: Variant;
@@ -15,15 +21,13 @@ interface BaseProps extends StyleProps {
 }
 
 const base =
-  "group inline-flex items-center justify-center gap-3 font-sans font-semibold leading-none " +
-  "transition-[background-color,color,border-color,text-decoration-color] duration-(--duration-micro) ease-out-quart " +
-  "disabled:pointer-events-none disabled:opacity-40";
+  "group inline-flex items-center gap-3 font-sans font-semibold leading-none whitespace-nowrap " +
+  "transition-[background-color,color,text-decoration-color] duration-(--duration-micro) ease-out-quart " +
+  "disabled:cursor-not-allowed disabled:opacity-40 aria-disabled:cursor-not-allowed aria-disabled:opacity-40";
 
-// Colours come from the surrounding section theme (see .btn-* in globals.css).
 const variants: Record<Variant, string> = {
-  primary: "btn-primary min-h-12 rounded-full px-6",
-  secondary: "btn-secondary min-h-12 rounded-full px-6",
-  tertiary: "min-h-11 text-fg underline decoration-1 underline-offset-[6px] decoration-rule-strong hover:decoration-mark",
+  primary: "btn-primary min-h-12 justify-center px-6",
+  link: "link-arrow min-h-11",
 };
 
 function classes({ variant = "primary", className }: StyleProps) {

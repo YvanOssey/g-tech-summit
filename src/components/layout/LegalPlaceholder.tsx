@@ -19,10 +19,10 @@ export function LegalPlaceholder({ title, covers }: LegalPlaceholderProps) {
       <Section tone="ink">
         <div className="shell pt-14 pb-14 md:pt-20 md:pb-20">
           <SectionLabel>Informations légales</SectionLabel>
-          <h1 className="type-headline text-hero mt-6 md:mt-8">{title}</h1>
+          <h1 className="type-headline text-display mt-6 md:mt-8">{title}</h1>
         </div>
       </Section>
-      <Section tone="paper" className="py-16 md:py-24">
+      <Section tone="paper" className="section-compact">
         <div className="shell grid-12 gap-y-10">
           <div className="col-span-4 md:col-span-5 lg:col-span-6">
             <Pending variant="block" label={title}>

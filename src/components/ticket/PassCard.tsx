@@ -20,12 +20,12 @@ interface PassCardProps {
 export function PassCard({ pass, index, children, selected, className = "" }: PassCardProps) {
   const dark = pass.id === "hackathon";
   const surface = dark ? "bg-ink text-paper" : "bg-(--pass-surface) text-ink";
-  const muted = dark ? "text-grey-400" : "text-grey-600";
+  const muted = dark ? "text-mist" : "text-smoke";
   const perforation = dark ? "border-paper/25" : "border-ink/25";
 
   return (
     <article
-      className={`notch-y relative flex h-full flex-col overflow-hidden rounded-3xl [--notch-at:calc(100%_-_var(--stub-h))] [--stub-h:7.5rem] ${surface} ${className}`}
+      className={`notch-y relative flex h-full flex-col overflow-hidden rounded-object [--notch-at:calc(100%_-_var(--stub-h))] [--stub-h:7.5rem] ${surface} ${className}`}
     >
       {/* Selection band — the signal colour only appears when it carries meaning */}
       <div
@@ -41,11 +41,11 @@ export function PassCard({ pass, index, children, selected, className = "" }: Pa
           <span>18—19.12.2026</span>
         </div>
 
-        <h3 className="type-headline text-title">{pass.name}</h3>
+        <h3 className="type-headline text-heading">{pass.name}</h3>
 
         <div className="mt-auto space-y-2">
           <p className="font-semibold">{pass.access}</p>
-          <p className={`text-[0.9375rem] leading-normal ${muted}`}>{pass.summary}</p>
+          <p className={`text-small leading-normal ${muted}`}>{pass.summary}</p>
         </div>
       </div>
 
@@ -53,7 +53,7 @@ export function PassCard({ pass, index, children, selected, className = "" }: Pa
         className={`flex h-(--stub-h) items-end justify-between gap-4 border-t border-dashed px-6 pb-6 sm:px-8 ${perforation}`}
       >
         <p className="flex items-baseline gap-2">
-          <span className="type-condensed text-[clamp(2.5rem,2rem+2vw,3.5rem)] leading-none">
+          <span className="type-condensed text-title leading-none">
             {formatAmount(pass.price)}
           </span>
           <span className={`type-meta ${muted}`}>FCFA</span>

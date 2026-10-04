@@ -15,7 +15,7 @@ export function Pending({ label, children = "À annoncer", variant = "inline" }:
   if (variant === "block") {
     return (
       <div
-        className="flex min-h-24 items-center justify-center rounded-2xl border border-dashed border-muted/60 px-4 py-6 text-center text-muted"
+        className="flex min-h-24 items-center justify-center border border-dashed border-muted/60 px-4 py-6 text-center text-muted"
         style={{
           backgroundImage:
             "repeating-linear-gradient(135deg, transparent 0 9px, color-mix(in srgb, currentColor 9%, transparent) 9px 10px)",

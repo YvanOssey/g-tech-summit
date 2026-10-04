@@ -43,13 +43,13 @@ export function SiteHeader() {
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <header className="theme-ink sticky top-0 z-40 border-b border-rule bg-canvas text-fg">
-      <div className="shell flex h-16 items-center justify-between gap-6">
+    <header className="theme-ink sticky top-0 z-(--z-header) border-b border-rule bg-canvas text-fg">
+      <div className="shell flex h-(--header-h) items-center justify-between gap-6">
         <Link href="/" className="flex items-center gap-4" aria-label={`${EVENT.name} ${EVENT.year} — accueil`}>
           <GhostechLogo width={64} variant="light" priority />
           <span className="hidden border-l border-rule pl-4 leading-none xs:block">
-            <span className="type-headline block text-[1.0625rem]">G-TECH SUMMER</span>
-            <span className="type-label mt-1 block text-[0.625rem]">18—19.12.2026</span>
+            <span className="type-headline block text-body">G-TECH SUMMER</span>
+            <span className="type-label mt-1 block text-caption">18—19.12.2026</span>
           </span>
         </Link>
 
@@ -59,7 +59,7 @@ export function SiteHeader() {
               key={item.href}
               href={item.href}
               aria-current={isActive(item.href) ? "page" : undefined}
-              className="relative py-2 text-[0.9375rem] font-medium after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:origin-left after:scale-x-0 after:bg-mark after:transition-transform after:duration-(--duration-micro) after:ease-out-quart hover:after:scale-x-100 aria-[current=page]:after:scale-x-100"
+              className="relative py-2 text-small font-medium after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:origin-left after:scale-x-0 after:bg-mark after:transition-transform after:duration-(--duration-micro) after:ease-out-quart hover:after:scale-x-100 aria-[current=page]:after:scale-x-100"
             >
               {item.label}
             </Link>
@@ -70,7 +70,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-3 lg:hidden">
-          <ButtonLink href={TICKETING.href} className="min-h-10! px-4! text-[0.9375rem]">
+          <ButtonLink href={TICKETING.href} className="min-h-10! px-4! text-small">
             {TICKETING.label}
           </ButtonLink>
           <button
@@ -82,7 +82,7 @@ export function SiteHeader() {
               setOpenedAt(pathname);
               setOpen((v) => !v);
             }}
-            className="type-meta flex min-h-10 items-center gap-2 rounded-full border border-rule-strong px-4"
+            className="type-meta flex min-h-10 items-center gap-2 rounded-pill border border-rule-strong px-4"
           >
             <span aria-hidden="true" className="flex w-4 flex-col gap-1">
               <span className={`h-px bg-fg transition-transform ${open ? "translate-y-[2.5px] rotate-45" : ""}`} />
@@ -97,7 +97,7 @@ export function SiteHeader() {
         {open && (
           <motion.div
             id="menu-mobile"
-            className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto border-t border-rule bg-canvas text-fg lg:hidden"
+            className="fixed inset-x-0 top-(--header-h) bottom-0 z-(--z-menu) overflow-y-auto border-t border-rule bg-canvas text-fg lg:hidden"
             initial={reduce ? false : { clipPath: "inset(0 0 100% 0)" }}
             animate={{ clipPath: "inset(0 0 0% 0)" }}
             exit={reduce ? undefined : { clipPath: "inset(0 0 100% 0)" }}
@@ -120,7 +120,7 @@ export function SiteHeader() {
                       onClick={() => setOpen(false)}
                     >
                       <span className="type-meta text-muted">{String(i).padStart(2, "0")}</span>
-                      <span className="type-headline text-[clamp(2rem,8vw,3rem)] leading-none">
+                      <span className="type-headline text-title leading-none">
                         {item.label}
                       </span>
                     </Link>

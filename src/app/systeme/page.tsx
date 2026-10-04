@@ -19,32 +19,46 @@ export const metadata: Metadata = {
 };
 
 const SWATCHES = [
-  { name: "Noir", token: "ink", hex: "#171717", role: "Texte, fonds forts, hackathon", className: "bg-ink text-paper" },
-  { name: "Blanc cassé", token: "paper", hex: "#FFFDF8", role: "Fond principal", className: "bg-paper text-ink ring-1 ring-inset ring-grey-200" },
-  { name: "Orange", token: "signal", hex: "#F28C18", role: "Signal : action, état actif, repère", className: "bg-signal text-ink" },
-  { name: "Orange texte", token: "signal-ink", hex: "#A65A00", role: "Orange lisible sur fond clair", className: "bg-signal-ink text-paper" },
-  { name: "Gris 100", token: "grey-100", hex: "#EBE8E1", role: "Surface secondaire", className: "bg-grey-100 text-ink" },
-  { name: "Gris 500", token: "grey-500", hex: "#6E6C67", role: "Texte secondaire sur clair", className: "bg-grey-500 text-paper" },
-  { name: "Gris 400", token: "grey-400", hex: "#9C9A94", role: "Texte secondaire sur noir", className: "bg-grey-400 text-ink" },
-  { name: "Gris 800", token: "grey-800", hex: "#262625", role: "Surface sur noir", className: "bg-grey-800 text-paper" },
+  { name: "Ink", token: "ink", hex: "#171717", role: "Texte, fonds forts", className: "bg-ink text-paper" },
+  { name: "Paper", token: "paper", hex: "#FFFDF8", role: "Fond principal", className: "bg-paper text-ink ring-1 ring-inset ring-stone" },
+  { name: "Signal", token: "signal", hex: "#F28C18", role: "Action, rupture hackathon, repère", className: "bg-signal text-ink" },
+  { name: "Grey", token: "grey", hex: "#6B6B6B", role: "Texte secondaire sur paper", className: "bg-grey text-paper" },
+  { name: "Stone", token: "stone", hex: "#E8E5DF", role: "Fond secondaire, filets", className: "bg-stone text-ink" },
+] as const;
+
+/** Accessibility derivatives — only where the palette fails AA. */
+const DERIVED = [
+  { token: "mist", hex: "#9C9A94", role: "Texte secondaire sur ink", className: "bg-mist text-ink" },
+  { token: "smoke", hex: "#5E5C58", role: "Texte secondaire sur stone", className: "bg-smoke text-paper" },
+  { token: "signal-text", hex: "#A65A00", role: "Orange en texte sur paper", className: "bg-signal-text text-paper" },
+  { token: "umber", hex: "#432E17", role: "Texte secondaire sur signal", className: "bg-umber text-paper" },
+  { token: "graphite", hex: "#3A3A38", role: "Filets sur ink", className: "bg-graphite text-paper" },
 ] as const;
 
 const CONTRASTS = [
-  { pair: "Noir sur blanc cassé", ratio: "17,6 : 1", ok: true },
-  { pair: "Noir sur orange (bouton)", ratio: "7,3 : 1", ok: true },
-  { pair: "Orange sur noir", ratio: "7,3 : 1", ok: true },
-  { pair: "Orange texte sur blanc cassé", ratio: "5,0 : 1", ok: true },
-  { pair: "Orange sur blanc cassé", ratio: "2,4 : 1", ok: false, note: "jamais pour du texte" },
-  { pair: "Blanc sur orange", ratio: "2,4 : 1", ok: false, note: "proscrit" },
+  { pair: "Ink sur paper", ratio: "17,6 : 1", ok: true },
+  { pair: "Ink sur signal (bouton)", ratio: "7,3 : 1", ok: true },
+  { pair: "Signal sur ink", ratio: "7,3 : 1", ok: true },
+  { pair: "Grey sur paper", ratio: "5,2 : 1", ok: true },
+  { pair: "Signal-text sur paper", ratio: "5,0 : 1", ok: true },
+  { pair: "Mist sur ink", ratio: "6,5 : 1", ok: true },
+  { pair: "Smoke sur stone", ratio: "5,3 : 1", ok: true },
+  { pair: "Umber sur signal", ratio: "5,1 : 1", ok: true },
+  { pair: "Grey sur stone", ratio: "4,2 : 1", ok: false, note: "utiliser smoke" },
+  { pair: "Grey sur ink", ratio: "3,4 : 1", ok: false, note: "utiliser mist" },
+  { pair: "Signal sur paper", ratio: "2,4 : 1", ok: false, note: "jamais pour du texte" },
+  { pair: "Paper sur signal", ratio: "2,4 : 1", ok: false, note: "proscrit" },
 ];
 
 const TYPE_SCALE = [
-  { name: "Affiche", spec: "Archivo condensé 800 · clamp 72→272 px", className: "type-condensed text-poster", sample: "18—19" },
-  { name: "Display", spec: "Archivo condensé 800 · clamp 48→136 px", className: "type-condensed text-display", sample: "Hackathon" },
-  { name: "Titre", spec: "Archivo condensé 800 · clamp 28→48 px", className: "type-condensed text-title", sample: "Formations express" },
-  { name: "Chapô", spec: "Archivo 400 · clamp 19→24 px", className: "text-lead", sample: "Deux jours de conférences, de panels, d’ateliers et un hackathon, à Abidjan." },
-  { name: "Texte", spec: "Archivo 400 · 17 px / 1,6", className: "text-body max-w-[62ch]", sample: "Accessibles aux débutants comme aux initiés, les formations express durent trois heures et donnent lieu à une attestation de participation." },
-  { name: "Méta", spec: "IBM Plex Mono 400 · 12 px · capitales", className: "type-meta", sample: "Ven. 18.12 · 09:45 · Salle principale" },
+  { name: "Poster", spec: "Archivo condensé 800 · 64 → 208 px · chiffres uniquement", className: "type-condensed text-poster", sample: "18—19" },
+  { name: "Display", spec: "Archivo 700 · 44 → 96 px · titres de page", className: "type-headline text-display", sample: "G-TECH SUMMER 2026" },
+  { name: "Title", spec: "Archivo 700 · 32 → 64 px · titres de section", className: "type-headline text-title", sample: "Le programme" },
+  { name: "Heading", spec: "Archivo 700 · 24 → 32 px · titres de bloc", className: "type-headline text-heading", sample: "Formations express" },
+  { name: "Lead", spec: "Archivo 400 · 20 → 24 px", className: "text-lead", sample: "Conférences, panels, formations, ateliers et un hackathon, organisés par Ghostech." },
+  { name: "Body", spec: "Archivo 400 · 17 px / 1,6", className: "text-body max-w-[62ch]", sample: "Accessibles aux débutants comme aux initiés, les formations express durent trois heures et donnent lieu à une attestation de participation." },
+  { name: "Small", spec: "Archivo 400 · 14 px", className: "text-small", sample: "Par personne. Participation en équipe, une thématique par équipe." },
+  { name: "Caption", spec: "IBM Plex Mono 400 · 12 px · codes et références", className: "type-meta", sample: "Ven. 18.12 · 09:45 · Conférence #1" },
 ];
 
 const MOTION_YES = [
@@ -70,7 +84,7 @@ export default function DesignSystemPage() {
       <header className="shell pt-6">
         <div className="type-meta flex flex-wrap items-center justify-between gap-4 border-b border-ink pb-4">
           <GhostechLogo width={88} />
-          <span className="text-grey-500">Système de design · v0.1 · document interne</span>
+          <span className="text-grey">Système de design · v0.1 · document interne</span>
         </div>
 
         <RevealText
@@ -88,7 +102,7 @@ export default function DesignSystemPage() {
             {EVENT.city}, {EVENT.country}
           </p>
           <p className="text-lead col-span-4 md:col-span-5 lg:col-span-6 lg:col-start-5">
-            Thème — « {EVENT.theme} »
+            {EVENT.organiser.tagline}
           </p>
         </div>
       </header>
@@ -98,10 +112,10 @@ export default function DesignSystemPage() {
         <SectionLabel index="01">Couleurs</SectionLabel>
         <div className="grid-12 mt-8 gap-y-10">
           <div className="col-span-4 md:col-span-3">
-            <h2 id="couleurs" className="type-condensed text-title">
+            <h2 id="couleurs" className="type-condensed text-heading">
               Peu de couleurs, bien utilisées
             </h2>
-            <p className="mt-4 text-grey-500">
+            <p className="mt-4 text-grey">
               L’orange est un signal : il désigne une action, un état actif ou une donnée clé. Il n’occupe jamais une
               surface de fond. Aucun bleu, cyan ou violet n’existe dans le projet.
             </p>
@@ -110,14 +124,14 @@ export default function DesignSystemPage() {
           <div className="col-span-4 md:col-span-8 lg:col-span-9">
             {/* Usage proportion */}
             <div className="flex h-10 w-full" role="img" aria-label="Proportions d’usage : blanc cassé 62 %, noir 28 %, gris 8 %, orange 2 %">
-              <div className="w-[62%] bg-paper ring-1 ring-inset ring-grey-200" />
+              <div className="w-[62%] bg-paper ring-1 ring-inset ring-stone" />
               <div className="w-[28%] bg-ink" />
-              <div className="w-[8%] bg-grey-400" />
+              <div className="w-[8%] bg-mist" />
               <div className="w-[2%] bg-signal" />
             </div>
-            <p className="type-meta mt-2 text-grey-500">Proportions d’usage visées — 62 / 28 / 8 / 2</p>
+            <p className="type-meta mt-2 text-grey">Proportions d’usage visées — 62 / 28 / 8 / 2</p>
 
-            <ul className="mt-8 grid grid-cols-2 gap-px bg-grey-200 ring-1 ring-grey-200 sm:grid-cols-4">
+            <ul className="mt-8 grid grid-cols-2 gap-px bg-stone ring-1 ring-stone sm:grid-cols-5">
               {SWATCHES.map((s) => (
                 <li key={s.token} className="bg-paper">
                   <div className={`flex aspect-[4/3] items-end p-3 ${s.className}`}>
@@ -125,20 +139,35 @@ export default function DesignSystemPage() {
                   </div>
                   <div className="p-3">
                     <p className="font-semibold">{s.name}</p>
-                    <p className="text-[0.875rem] leading-snug text-grey-500">{s.role}</p>
+                    <p className="text-small leading-snug text-grey">{s.role}</p>
                   </div>
                 </li>
               ))}
             </ul>
 
-            <table className="mt-10 w-full text-left text-[0.9375rem]">
-              <caption className="type-meta mb-3 text-left text-grey-500">Contrastes (WCAG 2.2)</caption>
+            <p className="type-meta mt-8 text-grey">Teintes d’accessibilité dérivées</p>
+            <ul className="mt-3 grid grid-cols-2 gap-px bg-stone ring-1 ring-stone sm:grid-cols-5">
+              {DERIVED.map((s) => (
+                <li key={s.token} className="bg-paper">
+                  <div className={`flex aspect-[4/3] items-end p-3 ${s.className}`}>
+                    <span className="type-meta">{s.hex}</span>
+                  </div>
+                  <div className="p-3">
+                    <p className="font-semibold">{s.token}</p>
+                    <p className="text-small leading-snug text-grey">{s.role}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            <table className="mt-10 w-full text-left text-small">
+              <caption className="type-meta mb-3 text-left text-grey">Contrastes (WCAG 2.2)</caption>
               <tbody>
                 {CONTRASTS.map((c) => (
-                  <tr key={c.pair} className="border-t border-grey-200">
+                  <tr key={c.pair} className="border-t border-stone">
                     <td className="py-2.5 pr-4">{c.pair}</td>
                     <td className="type-meta py-2.5 pr-4 whitespace-nowrap">{c.ratio}</td>
-                    <td className={`py-2.5 text-right ${c.ok ? "text-success" : "text-danger"}`}>
+                    <td className={`py-2.5 text-right ${c.ok ? "font-semibold" : "text-grey"}`}>
                       {c.ok ? "AA" : `Échec — ${c.note}`}
                     </td>
                   </tr>
@@ -154,10 +183,10 @@ export default function DesignSystemPage() {
         <SectionLabel index="02">Typographie</SectionLabel>
         <div className="grid-12 mt-8">
           <div className="col-span-4 md:col-span-3">
-            <h2 id="typo" className="type-condensed text-title">
+            <h2 id="typo" className="type-condensed text-heading">
               Une famille, deux largeurs, une voix technique
             </h2>
-            <p className="mt-4 text-grey-500">
+            <p className="mt-4 text-grey">
               Archivo porte tout : condensée et grasse pour l’affiche, normale pour la lecture. IBM Plex Mono
               signe les métadonnées — dates, horaires, salles, références.
             </p>
@@ -166,10 +195,10 @@ export default function DesignSystemPage() {
 
         <ol className="mt-12">
           {TYPE_SCALE.map((t) => (
-            <li key={t.name} className="grid-12 gap-y-3 border-t border-grey-200 py-6">
+            <li key={t.name} className="grid-12 gap-y-3 border-t border-stone py-6">
               <div className="col-span-4 md:col-span-2 lg:col-span-3">
                 <p className="type-meta">{t.name}</p>
-                <p className="type-meta mt-1 text-grey-500 normal-case tracking-normal">{t.spec}</p>
+                <p className="type-meta mt-1 text-grey normal-case tracking-normal">{t.spec}</p>
               </div>
               <p className={`col-span-4 min-w-0 break-words md:col-span-6 lg:col-span-9 ${t.className}`}>{t.sample}</p>
             </li>
@@ -182,10 +211,10 @@ export default function DesignSystemPage() {
         <SectionLabel index="03">Grille</SectionLabel>
         <div className="grid-12 mt-8">
           <div className="col-span-4 md:col-span-4">
-            <h2 id="grille" className="type-condensed text-title">
+            <h2 id="grille" className="type-condensed text-heading">
               4 · 8 · 12 colonnes
             </h2>
-            <p className="mt-4 text-grey-500">
+            <p className="mt-4 text-grey">
               Mobile 4 colonnes, tablette 8, desktop 12. Marges de 16, 24 puis 40 px. Les filets d’un pixel
               rendent la structure visible, comme sur une signalétique.
             </p>
@@ -195,7 +224,7 @@ export default function DesignSystemPage() {
           {Array.from({ length: 12 }, (_, i) => (
             <div
               key={i}
-              className={`type-meta flex items-start justify-center border-x border-signal/40 bg-signal/10 pt-2 text-signal-ink ${
+              className={`type-meta flex items-start justify-center border-x border-signal/40 bg-signal/10 pt-2 text-signal-text ${
                 i >= 4 ? "hidden md:flex" : ""
               } ${i >= 8 ? "md:hidden lg:flex" : ""}`}
             >
@@ -209,30 +238,30 @@ export default function DesignSystemPage() {
       <section className="mt-32" aria-labelledby="actions">
         <div className="shell">
           <SectionLabel index="04">Actions</SectionLabel>
-          <h2 id="actions" className="type-condensed text-title mt-8 max-w-xl">
+          <h2 id="actions" className="type-condensed text-heading mt-8 max-w-xl">
             Une action principale par écran
           </h2>
         </div>
 
         <div className="shell mt-10 grid gap-px bg-ink md:grid-cols-2">
           <div className="flex flex-col gap-6 bg-paper p-8 ring-1 ring-inset ring-ink">
-            <p className="type-meta text-grey-500">Sur fond clair</p>
+            <p className="type-meta text-grey">Sur fond clair</p>
             <div className="flex flex-wrap items-center gap-4">
               <Button arrow>Prendre mon pass</Button>
-              <Button variant="secondary">Voir le programme</Button>
-              <Button variant="tertiary">Lire le règlement</Button>
+              <Button variant="link">Voir le programme</Button>
+              <Button variant="link">Lire le règlement</Button>
             </div>
           </div>
           <div className="theme-ink flex flex-col gap-6 bg-canvas p-8 text-fg">
-            <p className="type-meta text-grey-400">Sur fond noir</p>
+            <p className="type-meta text-mist">Sur fond noir</p>
             <div className="flex flex-wrap items-center gap-4">
               <Button arrow>
                 S’inscrire au hackathon
               </Button>
-              <Button variant="secondary">
+              <Button variant="link">
                 Les thématiques
               </Button>
-              <Button variant="tertiary">
+              <Button variant="link">
                 Critères
               </Button>
             </div>
@@ -245,16 +274,16 @@ export default function DesignSystemPage() {
         <SectionLabel index="05">Informations non confirmées</SectionLabel>
         <div className="grid-12 mt-8 gap-y-10">
           <div className="col-span-4 md:col-span-3">
-            <h2 id="etats" className="type-condensed text-title">
+            <h2 id="etats" className="type-condensed text-heading">
               Ne rien inventer
             </h2>
-            <p className="mt-4 text-grey-500">
+            <p className="mt-4 text-grey">
               Une information absente s’affiche comme telle. Le lieu, les intervenants, la taille des équipes ou
               la date limite apparaissent dès qu’ils sont saisis dans l’administration.
             </p>
           </div>
           <div className="col-span-4 space-y-8 md:col-span-5 md:col-start-4 lg:col-span-6 lg:col-start-5">
-            <dl className="divide-y divide-grey-200 border-y border-grey-200">
+            <dl className="divide-y divide-stone border-y border-stone">
               <div className="flex items-baseline justify-between gap-6 py-4">
                 <dt className="font-semibold">Lieu</dt>
                 <dd>
@@ -280,10 +309,10 @@ export default function DesignSystemPage() {
         <SectionLabel index="06">Pass</SectionLabel>
         <div className="grid-12 mt-8">
           <div className="col-span-4 md:col-span-5">
-            <h2 id="pass" className="type-condensed text-title">
+            <h2 id="pass" className="type-condensed text-heading">
               Le pass est un billet
             </h2>
-            <p className="mt-4 text-grey-500">
+            <p className="mt-4 text-grey">
               Pass Event sur papier, Pass Hackathon sur noir : les deux se distinguent au premier regard, à l’écran
               comme à l’impression. Une commande correspond à un participant, avec un ou deux pass.
             </p>
@@ -308,10 +337,10 @@ export default function DesignSystemPage() {
         <SectionLabel index="07">Billet</SectionLabel>
         <div className="grid-12 mt-8">
           <div className="col-span-4 md:col-span-5">
-            <h2 id="billet" className="type-condensed text-title">
+            <h2 id="billet" className="type-condensed text-heading">
               Le billet envoyé par e-mail
             </h2>
-            <p className="mt-4 text-grey-500">
+            <p className="mt-4 text-grey">
               Nominatif, émis uniquement après confirmation réelle du paiement. Son QR code contient un jeton
               aléatoire, sans donnée personnelle ; chaque accès n’est validé qu’une fois par jour.
             </p>
@@ -327,23 +356,23 @@ export default function DesignSystemPage() {
         <SectionLabel index="08">Logos</SectionLabel>
         <div className="grid-12 mt-8 gap-y-10">
           <div className="col-span-4 md:col-span-3">
-            <h2 id="logos" className="type-condensed text-title">
+            <h2 id="logos" className="type-condensed text-heading">
               Organisateur & partenaires
             </h2>
-            <p className="mt-4 text-grey-500">
+            <p className="mt-4 text-grey">
               Chaque logo garde ses couleurs d’origine. Ils sont posés sur des cases neutres, alignés sur la grille.
             </p>
           </div>
           <div className="col-span-4 md:col-span-8 lg:col-span-9">
             <div className="flex items-center gap-6 border-y border-ink py-6">
               <GhostechLogo width={120} />
-              <p className="type-meta text-grey-500">
+              <p className="type-meta text-grey">
                 Organisé par {EVENT.organiser.name}
                 <br />
                 {EVENT.organiser.motto}
               </p>
             </div>
-            <ul className="mt-6 grid grid-cols-2 gap-px bg-grey-200 ring-1 ring-grey-200 md:grid-cols-4">
+            <ul className="mt-6 grid grid-cols-2 gap-px bg-stone ring-1 ring-stone md:grid-cols-4">
               {PARTNERS.map((p) => (
                 <li key={p.name} className="flex aspect-[3/2] items-center justify-center bg-paper p-6">
                   <Image
@@ -367,14 +396,14 @@ export default function DesignSystemPage() {
           <RevealText
             inView
             lines={["Le mouvement", "sert le contenu"]}
-            className="type-condensed text-display mt-10"
+            className="type-condensed text-title mt-10"
           />
           <div className="grid-12 mt-14 gap-y-10">
             <div className="col-span-4">
               <p className="type-meta text-signal">Oui</p>
               <ul className="mt-4 space-y-3">
                 {MOTION_YES.map((m) => (
-                  <li key={m} className="flex gap-3 border-t border-grey-700 pt-3">
+                  <li key={m} className="flex gap-3 border-t border-graphite pt-3">
                     <SignalSquare className="mt-2" />
                     <span>{m}</span>
                   </li>
@@ -382,17 +411,17 @@ export default function DesignSystemPage() {
               </ul>
             </div>
             <div className="col-span-4 md:col-start-5 lg:col-start-7">
-              <p className="type-meta text-grey-400">Non</p>
-              <ul className="mt-4 space-y-3 text-grey-400">
+              <p className="type-meta text-mist">Non</p>
+              <ul className="mt-4 space-y-3 text-mist">
                 {MOTION_NO.map((m) => (
-                  <li key={m} className="border-t border-grey-700 pt-3">
+                  <li key={m} className="border-t border-graphite pt-3">
                     {m}
                   </li>
                 ))}
               </ul>
             </div>
           </div>
-          <p className="type-meta mt-14 text-grey-400">
+          <p className="type-meta mt-14 text-mist">
             Durées — micro 180 ms · composant 320 ms · section 700–900 ms · courbe ease-out-quart
           </p>
         </div>

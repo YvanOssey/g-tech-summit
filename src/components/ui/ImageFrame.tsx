@@ -21,9 +21,9 @@ interface ImageFrameProps {
 export function ImageFrame({ photo, aspect = "aspect-[4/3]", sizes = "(min-width: 1024px) 45vw, 100vw", className = "" }: ImageFrameProps) {
   return (
     <motion.figure
-      className={`relative overflow-hidden rounded-3xl bg-grey-800 ${aspect} ${className}`}
-      initial={{ clipPath: "inset(18% 0% 0% 0% round 1.5rem)" }}
-      whileInView={{ clipPath: "inset(0% 0% 0% 0% round 1.5rem)" }}
+      className={`relative overflow-hidden rounded-object bg-ink ${aspect} ${className}`}
+      initial={{ clipPath: "inset(18% 0% 0% 0% round 1.25rem)" }}
+      whileInView={{ clipPath: "inset(0% 0% 0% 0% round 1.25rem)" }}
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 1.1, ease: EASE }}
     >
@@ -50,7 +50,7 @@ export function ImageFrame({ photo, aspect = "aspect-[4/3]", sizes = "(min-width
 
 export function TestBadge({ className = "absolute top-4 left-4" }: { className?: string }) {
   return (
-    <span className={`type-meta rounded-full bg-ink/75 px-3 py-1.5 text-[0.6875rem] text-paper ${className}`}>
+    <span className={`type-meta bg-ink/75 px-3 py-1.5 text-caption text-paper ${className}`}>
       Visuel test
     </span>
   );
