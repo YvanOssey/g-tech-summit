@@ -1,48 +1,36 @@
 /**
  * Editorial images.
  *
- * The current files are TEST VISUALS (illustrations generated for the mock-up,
- * flagged `placeholder: true` and badged "Visuel test" on the site). They must be
- * replaced by real photos of Ghostech / G-TECH events — with usage rights and the
- * consent of recognisable people — before launch: drop the file in /public/photos,
- * update the slot and remove `placeholder`.
- * A slot set to `null` makes its section fall back to a typographic composition.
+ * - `hero` and `auditorium` are atmosphere visuals supplied by Ghostech. They are
+ *   not photos of G-TECH SUMMER: never caption them as the event or its venue.
+ * - A slot set to `null` makes its section rely on typography alone — every
+ *   section must hold without an image.
+ * - The former illustrated test visuals (public/photos/*-test.webp) are no longer used.
  */
 export interface Photo {
   src: string;
+  /** Empty string when the image is purely atmospheric (its content is said in text). */
   alt: string;
   width: number;
   height: number;
   /** CSS object-position, keeps the subject visible on narrow crops. */
   focus?: string;
-  /** Test visual: shows a "Visuel test" badge. */
-  placeholder?: boolean;
   credit?: string;
 }
 
-export const PHOTOS: { hero: Photo | null; hackathon: Photo | null; atelier: Photo | null } = {
+export const PHOTOS: { hero: Photo | null; auditorium: Photo | null; hackathon: Photo | null; atelier: Photo | null } = {
   hero: {
-    src: "/photos/hero-test.webp",
-    alt: "Visuel test : salle de conférence, scène et public",
-    width: 2400,
-    height: 1350,
-    focus: "72% 50%",
-    placeholder: true,
+    src: "/photos/hero.webp",
+    alt: "",
+    width: 2000,
+    height: 857,
   },
-  hackathon: {
-    src: "/photos/hackathon-test.webp",
-    alt: "Visuel test : salle de hackathon, équipes devant leurs ordinateurs",
-    width: 1800,
-    height: 1350,
-    focus: "50% 60%",
-    placeholder: true,
+  auditorium: {
+    src: "/photos/auditorium.webp",
+    alt: "",
+    width: 2000,
+    height: 1125,
   },
-  atelier: {
-    src: "/photos/atelier-test.webp",
-    alt: "Visuel test : atelier pratique, un intervenant présente du code",
-    width: 1800,
-    height: 1350,
-    focus: "55% 50%",
-    placeholder: true,
-  },
+  hackathon: null,
+  atelier: null,
 };

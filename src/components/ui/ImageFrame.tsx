@@ -16,7 +16,7 @@ interface ImageFrameProps {
 
 /**
  * Rounded image frame with a one-time curtain reveal: the frame opens from the
- * bottom while the picture settles from a slight zoom. Test visuals get a badge.
+ * bottom while the picture settles from a slight zoom.
  */
 export function ImageFrame({ photo, aspect = "aspect-[4/3]", sizes = "(min-width: 1024px) 45vw, 100vw", className = "" }: ImageFrameProps) {
   return (
@@ -43,15 +43,6 @@ export function ImageFrame({ photo, aspect = "aspect-[4/3]", sizes = "(min-width
           style={{ objectPosition: photo.focus ?? "center" }}
         />
       </motion.div>
-      {photo.placeholder && <TestBadge />}
     </motion.figure>
-  );
-}
-
-export function TestBadge({ className = "absolute top-4 left-4" }: { className?: string }) {
-  return (
-    <span className={`type-meta bg-ink/75 px-3 py-1.5 text-caption text-paper ${className}`}>
-      Visuel test
-    </span>
   );
 }

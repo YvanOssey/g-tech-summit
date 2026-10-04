@@ -181,7 +181,7 @@
   /* Layout */
   --gutter: 1rem;
   --page-max: 90rem;
-  --header-h: 4rem;
+  --header-h: 5rem; /* fixed pill navigation: 3rem pills + 1rem above and below */
 
   /* Section rhythm — three tiers */
   --section-compact: 4rem;
@@ -197,7 +197,6 @@
   --z-raised: 10;
   --z-sticky: 30;
   --z-header: 40;
-  --z-menu: 45;
   --z-skip: 50;
 
   /* Motion */
@@ -437,36 +436,6 @@
 
 .reveal-line {
   animation: reveal-up var(--duration-reveal) var(--ease-out-quart) both;
-}
-
-/* Legacy entrance helpers — removed with the hero rebuild (step 3). */
-@keyframes enter-up {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.enter {
-  animation: enter-up var(--duration-reveal) var(--ease-out-quart) both;
-  animation-delay: var(--d, 0s);
-}
-
-@keyframes settle {
-  from {
-    transform: scale(1.04);
-  }
-  to {
-    transform: scale(1);
-  }
-}
-
-.settle {
-  animation: settle 1.6s var(--ease-out-quart) both;
 }
 
 @media (prefers-reduced-motion: reduce) {

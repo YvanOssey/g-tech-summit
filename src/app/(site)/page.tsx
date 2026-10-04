@@ -331,7 +331,7 @@ export default async function HomePage() {
             <p className="mt-6 max-w-md text-lead text-muted">{EVENT.organiser.tagline}</p>
           </div>
           <div className="col-span-4 space-y-8 md:col-span-8 lg:col-span-6">
-            <Countdown size="lg" />
+            <Countdown />
             <ButtonLink href="/billetterie" arrow>
               Prendre mon pass
             </ButtonLink>

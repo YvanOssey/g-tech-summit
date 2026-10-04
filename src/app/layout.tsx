@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     default: `${EVENT.name} ${EVENT.year} — 18 & 19 décembre, ${EVENT.city}`,
     template: `%s — ${EVENT.name} ${EVENT.year}`,
   },
-  description: `${EVENT.name} ${EVENT.year}, l’événement tech organisé par ${EVENT.organiser.name} à ${EVENT.city} les 18 et 19 décembre 2026. Thème : ${EVENT.theme}.`,
+  description: `${EVENT.name} ${EVENT.year}, à ${EVENT.city} les 18 et 19 décembre 2026. ${EVENT.summary}`,
   openGraph: { type: "website", locale: "fr_CI", siteName: `${EVENT.name} ${EVENT.year}` },
 };
 

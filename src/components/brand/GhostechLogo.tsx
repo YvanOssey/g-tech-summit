@@ -10,12 +10,12 @@ export function GhostechLogo({
   width = 112,
   variant = "dark",
   className,
-  priority,
+  preload,
 }: {
   width?: number;
   variant?: "dark" | "light";
   className?: string;
-  priority?: boolean;
+  preload?: boolean;
 }) {
   return (
     <Image
@@ -24,7 +24,7 @@ export function GhostechLogo({
       width={width}
       height={Math.round((width * 174) / 250)}
       className={className}
-      priority={priority}
+      preload={preload}
     />
   );
 }
