@@ -10,7 +10,7 @@ import { PassSelector } from "@/components/ticket/PassSelector";
 import { TicketSpecimen } from "@/components/ticket/TicketSpecimen";
 import { Button } from "@/components/ui/Button";
 import { Pending } from "@/components/ui/Pending";
-import { SectionIndex } from "@/components/ui/SectionIndex";
+import { SectionLabel } from "@/components/ui/SectionLabel";
 import { SignalSquare } from "@/components/ui/icons";
 
 export const metadata: Metadata = {
@@ -95,7 +95,7 @@ export default function DesignSystemPage() {
 
       {/* ── 01 Colours ─────────────────────────────────────────── */}
       <section className="shell mt-32" aria-labelledby="couleurs">
-        <SectionIndex index="01" label="Couleurs" />
+        <SectionLabel index="01">Couleurs</SectionLabel>
         <div className="grid-12 mt-8 gap-y-10">
           <div className="col-span-4 md:col-span-3">
             <h2 id="couleurs" className="type-condensed text-title">
@@ -151,7 +151,7 @@ export default function DesignSystemPage() {
 
       {/* ── 02 Typography ──────────────────────────────────────── */}
       <section className="shell mt-32" aria-labelledby="typo">
-        <SectionIndex index="02" label="Typographie" />
+        <SectionLabel index="02">Typographie</SectionLabel>
         <div className="grid-12 mt-8">
           <div className="col-span-4 md:col-span-3">
             <h2 id="typo" className="type-condensed text-title">
@@ -179,7 +179,7 @@ export default function DesignSystemPage() {
 
       {/* ── 03 Grid ────────────────────────────────────────────── */}
       <section className="shell mt-32" aria-labelledby="grille">
-        <SectionIndex index="03" label="Grille" />
+        <SectionLabel index="03">Grille</SectionLabel>
         <div className="grid-12 mt-8">
           <div className="col-span-4 md:col-span-4">
             <h2 id="grille" className="type-condensed text-title">
@@ -208,7 +208,7 @@ export default function DesignSystemPage() {
       {/* ── 04 Actions ─────────────────────────────────────────── */}
       <section className="mt-32" aria-labelledby="actions">
         <div className="shell">
-          <SectionIndex index="04" label="Actions" />
+          <SectionLabel index="04">Actions</SectionLabel>
           <h2 id="actions" className="type-condensed text-title mt-8 max-w-xl">
             Une action principale par écran
           </h2>
@@ -223,16 +223,16 @@ export default function DesignSystemPage() {
               <Button variant="tertiary">Lire le règlement</Button>
             </div>
           </div>
-          <div className="flex flex-col gap-6 bg-ink p-8 text-paper">
+          <div className="theme-ink flex flex-col gap-6 bg-canvas p-8 text-fg">
             <p className="type-meta text-grey-400">Sur fond noir</p>
             <div className="flex flex-wrap items-center gap-4">
-              <Button tone="dark" arrow>
+              <Button arrow>
                 S’inscrire au hackathon
               </Button>
-              <Button tone="dark" variant="secondary">
+              <Button variant="secondary">
                 Les thématiques
               </Button>
-              <Button tone="dark" variant="tertiary">
+              <Button variant="tertiary">
                 Critères
               </Button>
             </div>
@@ -242,7 +242,7 @@ export default function DesignSystemPage() {
 
       {/* ── 05 Pending states ──────────────────────────────────── */}
       <section className="shell mt-32" aria-labelledby="etats">
-        <SectionIndex index="05" label="Informations non confirmées" />
+        <SectionLabel index="05">Informations non confirmées</SectionLabel>
         <div className="grid-12 mt-8 gap-y-10">
           <div className="col-span-4 md:col-span-3">
             <h2 id="etats" className="type-condensed text-title">
@@ -277,7 +277,7 @@ export default function DesignSystemPage() {
 
       {/* ── 06 Passes ──────────────────────────────────────────── */}
       <section className="shell mt-32" aria-labelledby="pass">
-        <SectionIndex index="06" label="Pass" />
+        <SectionLabel index="06">Pass</SectionLabel>
         <div className="grid-12 mt-8">
           <div className="col-span-4 md:col-span-5">
             <h2 id="pass" className="type-condensed text-title">
@@ -305,7 +305,7 @@ export default function DesignSystemPage() {
 
       {/* ── 07 Ticket ──────────────────────────────────────────── */}
       <section className="shell mt-32" aria-labelledby="billet">
-        <SectionIndex index="07" label="Billet" />
+        <SectionLabel index="07">Billet</SectionLabel>
         <div className="grid-12 mt-8">
           <div className="col-span-4 md:col-span-5">
             <h2 id="billet" className="type-condensed text-title">
@@ -324,7 +324,7 @@ export default function DesignSystemPage() {
 
       {/* ── 08 Logos ───────────────────────────────────────────── */}
       <section className="shell mt-32" aria-labelledby="logos">
-        <SectionIndex index="08" label="Logos" />
+        <SectionLabel index="08">Logos</SectionLabel>
         <div className="grid-12 mt-8 gap-y-10">
           <div className="col-span-4 md:col-span-3">
             <h2 id="logos" className="type-condensed text-title">
@@ -361,9 +361,9 @@ export default function DesignSystemPage() {
       </section>
 
       {/* ── 09 Motion ──────────────────────────────────────────── */}
-      <section className="mt-32 bg-ink py-24 text-paper" aria-labelledby="mouvement">
+      <section className="theme-ink mt-32 bg-canvas py-24 text-fg" aria-labelledby="mouvement">
         <div className="shell">
-          <SectionIndex index="09" label="Mouvement" tone="dark" />
+          <SectionLabel index="09">Mouvement</SectionLabel>
           <RevealText
             inView
             lines={["Le mouvement", "sert le contenu"]}

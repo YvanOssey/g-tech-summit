@@ -19,13 +19,13 @@ interface PassCardProps {
  */
 export function PassCard({ pass, index, children, selected, className = "" }: PassCardProps) {
   const dark = pass.id === "hackathon";
-  const surface = dark ? "bg-ink text-paper" : "bg-grey-100 text-ink";
-  const muted = dark ? "text-grey-400" : "text-grey-500";
+  const surface = dark ? "bg-ink text-paper" : "bg-(--pass-surface) text-ink";
+  const muted = dark ? "text-grey-400" : "text-grey-600";
   const perforation = dark ? "border-paper/25" : "border-ink/25";
 
   return (
     <article
-      className={`notch-y relative flex h-full flex-col [--notch-at:calc(100%_-_var(--stub-h))] [--stub-h:7.5rem] ${surface} ${className}`}
+      className={`notch-y relative flex h-full flex-col overflow-hidden rounded-3xl [--notch-at:calc(100%_-_var(--stub-h))] [--stub-h:7.5rem] ${surface} ${className}`}
     >
       {/* Selection band — the signal colour only appears when it carries meaning */}
       <div
@@ -41,7 +41,7 @@ export function PassCard({ pass, index, children, selected, className = "" }: Pa
           <span>18—19.12.2026</span>
         </div>
 
-        <h3 className="type-condensed text-title">{pass.name}</h3>
+        <h3 className="type-headline text-title">{pass.name}</h3>
 
         <div className="mt-auto space-y-2">
           <p className="font-semibold">{pass.access}</p>

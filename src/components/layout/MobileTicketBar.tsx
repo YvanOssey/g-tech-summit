@@ -41,7 +41,7 @@ export function MobileTicketBar() {
               <span className="type-meta block text-grey-500">18—19.12.2026</span>
               <span className="font-semibold">Pass dès {formatFCFA(PASSES.event.price)}</span>
             </span>
-            <span className="flex min-h-11 items-center gap-2 bg-signal px-5 font-semibold">
+            <span className="flex min-h-11 items-center gap-2 rounded-full bg-signal px-5 font-semibold">
               Billetterie <ArrowRight className="size-4" />
             </span>
           </Link>

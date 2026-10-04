@@ -43,12 +43,13 @@ export function SiteHeader() {
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-ink bg-paper">
+    <header className="theme-ink sticky top-0 z-40 border-b border-rule bg-canvas text-fg">
       <div className="shell flex h-16 items-center justify-between gap-6">
         <Link href="/" className="flex items-center gap-4" aria-label={`${EVENT.name} ${EVENT.year} — accueil`}>
-          <GhostechLogo width={64} />
-          <span className="type-condensed hidden text-xl leading-none xs:inline">
-            G-Tech Summer <span className="text-signal-ink">26</span>
+          <GhostechLogo width={64} variant="light" priority />
+          <span className="hidden border-l border-rule pl-4 leading-none xs:block">
+            <span className="type-headline block text-[1.0625rem]">G-TECH SUMMER</span>
+            <span className="type-label mt-1 block text-[0.625rem]">18—19.12.2026</span>
           </span>
         </Link>
 
@@ -58,7 +59,7 @@ export function SiteHeader() {
               key={item.href}
               href={item.href}
               aria-current={isActive(item.href) ? "page" : undefined}
-              className="relative py-2 text-[0.9375rem] font-medium after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:origin-left after:scale-x-0 after:bg-signal after:transition-transform after:duration-(--duration-micro) after:ease-out-quart hover:after:scale-x-100 aria-[current=page]:after:scale-x-100"
+              className="relative py-2 text-[0.9375rem] font-medium after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:origin-left after:scale-x-0 after:bg-mark after:transition-transform after:duration-(--duration-micro) after:ease-out-quart hover:after:scale-x-100 aria-[current=page]:after:scale-x-100"
             >
               {item.label}
             </Link>
@@ -81,11 +82,11 @@ export function SiteHeader() {
               setOpenedAt(pathname);
               setOpen((v) => !v);
             }}
-            className="type-meta flex min-h-10 items-center gap-2 border border-ink px-3"
+            className="type-meta flex min-h-10 items-center gap-2 rounded-full border border-rule-strong px-4"
           >
             <span aria-hidden="true" className="flex w-4 flex-col gap-1">
-              <span className={`h-px bg-ink transition-transform ${open ? "translate-y-[2.5px] rotate-45" : ""}`} />
-              <span className={`h-px bg-ink transition-transform ${open ? "-translate-y-[2.5px] -rotate-45" : ""}`} />
+              <span className={`h-px bg-fg transition-transform ${open ? "translate-y-[2.5px] rotate-45" : ""}`} />
+              <span className={`h-px bg-fg transition-transform ${open ? "-translate-y-[2.5px] -rotate-45" : ""}`} />
             </span>
             {open ? "Fermer" : "Menu"}
           </button>
@@ -96,7 +97,7 @@ export function SiteHeader() {
         {open && (
           <motion.div
             id="menu-mobile"
-            className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto bg-ink text-paper lg:hidden"
+            className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto border-t border-rule bg-canvas text-fg lg:hidden"
             initial={reduce ? false : { clipPath: "inset(0 0 100% 0)" }}
             animate={{ clipPath: "inset(0 0 0% 0)" }}
             exit={reduce ? undefined : { clipPath: "inset(0 0 100% 0)" }}
@@ -107,7 +108,7 @@ export function SiteHeader() {
                 {[{ href: "/", label: "Accueil" }, ...MAIN_NAV, TICKETING].map((item, i) => (
                   <motion.li
                     key={item.href}
-                    className="border-b border-grey-700"
+                    className="border-b border-rule"
                     initial={reduce ? false : { opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, ease: EASE, delay: 0.15 + i * 0.04 }}
@@ -115,26 +116,26 @@ export function SiteHeader() {
                     <Link
                       href={item.href}
                       aria-current={pathname === item.href ? "page" : undefined}
-                      className="flex items-baseline gap-4 py-4"
+                      className="flex items-baseline gap-4 py-4 aria-[current=page]:text-accent"
                       onClick={() => setOpen(false)}
                     >
-                      <span className="type-meta text-grey-400">{String(i).padStart(2, "0")}</span>
-                      <span className="type-condensed text-[clamp(2.25rem,9vw,3.5rem)] leading-none aria-[current=page]:text-signal">
+                      <span className="type-meta text-muted">{String(i).padStart(2, "0")}</span>
+                      <span className="type-headline text-[clamp(2rem,8vw,3rem)] leading-none">
                         {item.label}
                       </span>
                     </Link>
                   </motion.li>
                 ))}
               </ul>
-              <div className="type-meta space-y-1 text-grey-400">
+              <div className="type-meta space-y-1 text-muted">
                 <p>18—19.12.2026 · {EVENT.city}</p>
                 <p>
-                  <a href={`mailto:${EVENT.contact.email}`} className="text-paper underline underline-offset-4">
+                  <a href={`mailto:${EVENT.contact.email}`} className="text-fg underline underline-offset-4">
                     {EVENT.contact.email}
                   </a>
                 </p>
                 <p>
-                  <a href={whatsappUrl} className="text-paper underline underline-offset-4">
+                  <a href={whatsappUrl} className="text-fg underline underline-offset-4">
                     WhatsApp {EVENT.contact.phoneDisplay}
                   </a>
                 </p>

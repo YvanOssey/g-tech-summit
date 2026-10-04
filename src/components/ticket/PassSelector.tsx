@@ -52,7 +52,7 @@ export function PassSelector({ initial = ["event"], onChange }: PassSelectorProp
                 className="transition-transform duration-(--duration-micro) ease-out-quart group-hover:-translate-y-0.5"
               >
                 <span
-                  className={`flex size-11 items-center justify-center border outline-offset-4 transition-colors duration-(--duration-micro) group-has-[input:focus-visible]:outline-2 group-has-[input:focus-visible]:outline-signal ${
+                  className={`flex size-11 items-center justify-center rounded-xl border outline-offset-4 transition-colors duration-(--duration-micro) group-has-[input:focus-visible]:outline-2 group-has-[input:focus-visible]:outline-signal ${
                     checked
                       ? "border-signal bg-signal text-ink"
                       : dark
@@ -70,16 +70,16 @@ export function PassSelector({ initial = ["event"], onChange }: PassSelectorProp
       </div>
 
       <div
-        className="mt-6 flex flex-wrap items-end justify-between gap-x-8 gap-y-3 border-t border-ink pt-4"
+        className="mt-6 flex flex-wrap items-end justify-between gap-x-8 gap-y-3 border-t border-rule-strong pt-4"
         aria-live="polite"
       >
-        <p className="type-meta text-grey-500">
+        <p className="type-meta text-muted">
           {selection.length === 0
             ? "Aucun pass sélectionné"
             : selection.map((id) => PASSES[id].name).join(" + ")}
         </p>
         <p className="flex items-baseline gap-3">
-          <span className="type-meta text-grey-500">Total</span>
+          <span className="type-meta text-muted">Total</span>
           <span className="relative inline-flex overflow-hidden">
             <AnimatePresence mode="popLayout" initial={false}>
               <motion.span

@@ -1,11 +1,13 @@
 "use client";
 
 import { motion } from "motion/react";
-import type { ElementType } from "react";
+import type { ElementType, ReactNode } from "react";
 
 interface RevealTextProps {
   /** Lines are revealed one after another; words inside a line rise together. */
-  lines: readonly string[];
+  lines: readonly ReactNode[];
+  /** Accessible text — required when a line is not a plain string. */
+  label?: string;
   as?: ElementType;
   className?: string;
   delay?: number;
@@ -22,8 +24,8 @@ const EASE = [0.25, 1, 0.5, 1] as const;
  * Reduced motion: the CSS path is neutralised by the global media query, the
  * in-view path by <MotionConfig reducedMotion="user"> (see MotionProvider).
  */
-export function RevealText({ lines, as: Tag = "h2", className, delay = 0, inView = false, id }: RevealTextProps) {
-  const label = lines.join(" ");
+export function RevealText({ lines, label: labelProp, as: Tag = "h2", className, delay = 0, inView = false, id }: RevealTextProps) {
+  const label = labelProp ?? lines.filter((l): l is string => typeof l === "string").join(" ");
 
   // On-mount reveals run in CSS so the headline animates on first paint,
   // without waiting for hydration (and stays visible if JavaScript fails).

@@ -1,6 +1,7 @@
 import { EVENT } from "@/config/event";
 import { Pending } from "@/components/ui/Pending";
-import { SectionIndex } from "@/components/ui/SectionIndex";
+import { Section } from "@/components/ui/Section";
+import { SectionLabel } from "@/components/ui/SectionLabel";
 
 interface LegalPlaceholderProps {
   title: string;
@@ -14,32 +15,38 @@ interface LegalPlaceholderProps {
  */
 export function LegalPlaceholder({ title, covers }: LegalPlaceholderProps) {
   return (
-    <div className="shell pt-10 pb-28 md:pt-14 md:pb-36">
-      <SectionIndex index="—" label="Informations légales" />
-      <h1 className="type-condensed text-display mt-8 md:mt-12">{title}</h1>
-      <div className="grid-12 mt-12 gap-y-10">
-        <div className="col-span-4 md:col-span-5 lg:col-span-6">
-          <Pending variant="block" label={title}>
-            Document en cours de rédaction
-          </Pending>
-          <p className="mt-6 text-grey-500">
-            Pour toute question en attendant sa publication :{" "}
-            <a href={`mailto:${EVENT.contact.email}`} className="text-ink underline underline-offset-4 hover:decoration-signal">
-              {EVENT.contact.email}
-            </a>
-          </p>
+    <>
+      <Section tone="ink">
+        <div className="shell pt-14 pb-14 md:pt-20 md:pb-20">
+          <SectionLabel>Informations légales</SectionLabel>
+          <h1 className="type-headline text-hero mt-6 md:mt-8">{title}</h1>
         </div>
-        <div className="col-span-4 md:col-span-3 md:col-start-6 lg:col-span-4 lg:col-start-8">
-          <p className="type-meta text-grey-500">Ce document précisera</p>
-          <ul className="mt-4 border-b border-grey-200">
-            {covers.map((c) => (
-              <li key={c} className="border-t border-grey-200 py-3">
-                {c}
-              </li>
-            ))}
-          </ul>
+      </Section>
+      <Section tone="paper" className="py-16 md:py-24">
+        <div className="shell grid-12 gap-y-10">
+          <div className="col-span-4 md:col-span-5 lg:col-span-6">
+            <Pending variant="block" label={title}>
+              Document en cours de rédaction
+            </Pending>
+            <p className="mt-6 text-muted">
+              Pour toute question en attendant sa publication :{" "}
+              <a href={`mailto:${EVENT.contact.email}`} className="text-fg underline underline-offset-4 hover:decoration-mark">
+                {EVENT.contact.email}
+              </a>
+            </p>
+          </div>
+          <div className="col-span-4 md:col-span-3 md:col-start-6 lg:col-span-4 lg:col-start-8">
+            <p className="type-label">Ce document précisera</p>
+            <ul className="mt-4 border-b border-rule">
+              {covers.map((c) => (
+                <li key={c} className="border-t border-rule py-3">
+                  {c}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-      </div>
-    </div>
+      </Section>
+    </>
   );
 }

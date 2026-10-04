@@ -24,7 +24,7 @@ export function TicketSpecimen({ passes }: TicketSpecimenProps) {
   return (
     <article
       aria-label="Spécimen de billet"
-      className="notch-y lg:notch-x relative grid overflow-hidden bg-paper text-ink ring-1 ring-ink ring-inset [--notch-at:calc(100%_-_var(--stub))] [--stub:19rem] lg:grid-cols-[1fr_var(--stub)] lg:[--stub:17rem]"
+      className="notch-y lg:notch-x relative grid overflow-hidden rounded-3xl bg-paper text-ink ring-1 ring-ink ring-inset [--notch-at:calc(100%_-_var(--stub))] [--stub:19rem] lg:grid-cols-[1fr_var(--stub)] lg:[--stub:17rem]"
     >
       <span
         aria-hidden="true"
@@ -76,7 +76,7 @@ export function TicketSpecimen({ passes }: TicketSpecimenProps) {
       </div>
 
       <div className="flex h-(--stub) flex-col items-center justify-center gap-4 border-t border-dashed border-ink/40 p-6 lg:h-auto lg:border-t-0 lg:border-l">
-        <div className="flex size-48 items-center justify-center border border-dashed border-ink/50 text-center">
+        <div className="flex size-48 items-center justify-center rounded-2xl border border-dashed border-ink/50 text-center">
           <span className="type-meta px-6 text-grey-500">QR code unique, généré à l’émission</span>
         </div>
         <p className="type-meta max-w-[14rem] text-center text-grey-500">

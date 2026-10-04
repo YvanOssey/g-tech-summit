@@ -2,17 +2,29 @@ import Image from "next/image";
 
 /**
  * Official Ghostech logo (original PNG, transparent margins trimmed).
- * Source is 250×174 px — keep the rendered width ≤ 125 px to stay sharp on 2× screens
- * until a vector master is supplied.
+ * `light` is a variant for dark backgrounds where only the neutral greys
+ * ("Ghos", circuit lines, motto) were lightened — the orange is untouched.
+ * Source is 250×174 px: keep the rendered width ≤ 125 px until a vector master exists.
  */
-export function GhostechLogo({ width = 112, className }: { width?: number; className?: string }) {
+export function GhostechLogo({
+  width = 112,
+  variant = "dark",
+  className,
+  priority,
+}: {
+  width?: number;
+  variant?: "dark" | "light";
+  className?: string;
+  priority?: boolean;
+}) {
   return (
     <Image
-      src="/brand/ghostech-logo.png"
+      src={variant === "light" ? "/brand/ghostech-logo-light.png" : "/brand/ghostech-logo.png"}
       alt="Ghostech"
       width={width}
       height={Math.round((width * 174) / 250)}
       className={className}
+      priority={priority}
     />
   );
 }

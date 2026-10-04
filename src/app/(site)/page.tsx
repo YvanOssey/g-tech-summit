@@ -1,32 +1,28 @@
-import Image from "next/image";
 import Link from "next/link";
 import { EVENT, whatsappUrl } from "@/config/event";
-import { PARTNERS } from "@/config/partners";
+import { PHOTOS } from "@/config/media";
 import { PASSES, orderTotal } from "@/config/passes";
 import { getEventSettings } from "@/config/settings";
 import { FAQ } from "@/content/faq";
 import { HACKATHON, TRACKS } from "@/content/hackathon";
 import { DAYS } from "@/content/programme";
 import { GhostechLogo } from "@/components/brand/GhostechLogo";
+import { HomeHero } from "@/components/home/HomeHero";
+import { PartnerLogos } from "@/components/home/PartnerLogos";
+import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { RevealText } from "@/components/motion/RevealText";
 import { DaySchedule } from "@/components/programme/DaySchedule";
 import { PassCard } from "@/components/ticket/PassCard";
+import { Accent } from "@/components/ui/Accent";
 import { ButtonLink } from "@/components/ui/Button";
 import { Countdown } from "@/components/ui/Countdown";
 import { FaqList } from "@/components/ui/FaqList";
-import { ArrowRight, SignalSquare } from "@/components/ui/icons";
+import { ImageFrame } from "@/components/ui/ImageFrame";
+import { ArrowRight } from "@/components/ui/icons";
 import { Pending } from "@/components/ui/Pending";
-import { SectionIndex } from "@/components/ui/SectionIndex";
+import { Section } from "@/components/ui/Section";
+import { SectionLabel } from "@/components/ui/SectionLabel";
 import { formatFCFA } from "@/lib/format";
-
-const FORMATS = [
-  { count: "3", name: "Conférences", text: "IA et avenir du travail, entrepreneuriat tech en Afrique, innovation numérique en Côte d’Ivoire.", href: "/programme#conferences" },
-  { count: "2", name: "Panels", text: "Des débats entre intervenants aux profils complémentaires, nourris par les questions du public.", href: "/programme#panels" },
-  { count: "4", name: "Formations express", text: "Trois heures de pratique et une attestation de participation : web, IA, design, personal branding.", href: "/programme#formations" },
-  { count: "6", name: "Ateliers pratiques", text: "Des sessions courtes et concrètes : outils IA, Git, UI/UX, API REST, data, cybersécurité.", href: "/programme#ateliers" },
-  { count: "—", name: "Stands & démos live", text: "Un espace d’exposition pour les startups, des démonstrations et un quiz tech avec des lots à gagner.", href: "/programme" },
-  { count: "—", name: "Networking", text: "Étudiants, professionnels, startups et recruteurs. Un cocktail clôt chacune des deux journées.", href: "/programme" },
-] as const;
 
 const PROFILES = [
   { who: "Vous découvrez la tech", what: "Initiation au développement web sans prérequis, introduction à l’IA, ateliers de découverte des outils IA." },
@@ -37,303 +33,274 @@ const PROFILES = [
   { who: "Professionnels & experts", what: "Conférences et panels sur l’IA, l’emploi, l’inclusion et le numérique ivoirien, et un réseau à rencontrer." },
 ] as const;
 
+const FORMATS = [
+  { name: "Conférences", text: "Intelligence artificielle et avenir du travail, entrepreneuriat tech en Afrique, innovation numérique en Côte d’Ivoire.", href: "/programme#conferences" },
+  { name: "Panels", text: "Des débats entre intervenants aux profils complémentaires, nourris par les questions du public.", href: "/programme#panels" },
+  { name: "Formations express", text: "Trois heures de pratique et une attestation de participation : web, IA, design, personal branding.", href: "/programme#formations" },
+  { name: "Ateliers pratiques", text: "Des sessions courtes et concrètes : outils IA, Git, UI/UX, API REST, data, cybersécurité.", href: "/programme#ateliers" },
+  { name: "Stands & démos live", text: "Un espace d’exposition pour les startups, des démonstrations et un quiz tech avec des lots à gagner.", href: "/programme" },
+  { name: "Networking", text: "Étudiants, professionnels, startups et recruteurs. Un cocktail clôt chacune des deux journées.", href: "/programme" },
+] as const;
+
 export default async function HomePage() {
   const settings = await getEventSettings();
+  const hackathonPhoto = PHOTOS.hackathon;
+  const atelierPhoto = PHOTOS.atelier;
 
   return (
     <>
-      {/* ── Hero: what, when, where, how much ─────────────────────── */}
-      <section className="shell pt-8 md:pt-12">
-        <div className="type-meta flex items-center justify-between gap-4 text-grey-500">
-          <span>
-            {EVENT.edition} · Organisé par {EVENT.organiser.name}
-          </span>
-          <Countdown className="text-ink" />
-        </div>
+      <HomeHero venue={settings.venue} />
 
-        <RevealText
-          as="h1"
-          lines={["G-Tech", "Summer 2026"]}
-          className="type-condensed text-poster mt-6 md:mt-10"
-        />
-
-        <div className="grid-12 mt-10 gap-y-8 md:mt-14">
-          <div className="col-span-4 md:col-span-3">
-            <p className="type-condensed text-[clamp(3rem,2rem+4vw,5.5rem)] leading-[0.85]">
-              18—19
-              <span className="block text-[0.5em] leading-tight">Décembre 2026</span>
-            </p>
-            <p className="type-meta mt-3">
-              {EVENT.city}, {EVENT.country}
-            </p>
+      {/* ── L'événement — light, editorial, generous space ───────────── */}
+      <Section tone="paper" aria-labelledby="evenement" className="py-24 md:py-36">
+        <div className="shell">
+          <div className="grid-12 gap-y-12">
+            <div className="col-span-4 md:col-span-8 lg:col-span-6">
+              <SectionLabel>L’événement</SectionLabel>
+              <RevealText
+                inView
+                id="evenement"
+                label="Deux jours pour apprendre, échanger et construire."
+                lines={["Deux jours pour", "apprendre, échanger", <span key="c">et <Accent>construire</Accent>.</span>]}
+                className="type-headline text-display mt-8"
+              />
+              <Reveal delay={0.15} className="mt-10 space-y-8">
+                <p className="text-lead">
+                  G-TECH SUMMER réunit étudiants, développeurs, designers, entrepreneurs et professionnels. Aucun niveau
+                  technique n’est requis pour venir.
+                </p>
+                <div className="panel flex items-start gap-5 p-5 sm:p-6">
+                  <GhostechLogo width={88} className="shrink-0" />
+                  <p className="text-[0.9375rem] text-muted">
+                    Organisé par <span className="font-semibold text-fg">{EVENT.organiser.name}</span>, communauté tech
+                    fondée à l’Institut Universitaire d’Abidjan. Cette première édition marque aussi sa première année.
+                  </p>
+                </div>
+              </Reveal>
+            </div>
+            {atelierPhoto && (
+              <div className="col-span-4 md:col-span-8 lg:col-span-5 lg:col-start-8 lg:self-end">
+                <ImageFrame photo={atelierPhoto} aspect="aspect-[4/5] md:aspect-[16/10] lg:aspect-[4/5]" />
+              </div>
+            )}
           </div>
-          <div className="col-span-4 md:col-span-5 lg:col-span-6 lg:col-start-6">
-            <p className="text-lead">
-              Deux jours de conférences, de panels, de formations, d’ateliers et un hackathon autour d’un thème :{" "}
-              <strong className="font-semibold">« {EVENT.theme} »</strong>
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <ButtonLink href="/billetterie" arrow>
-                Prendre mon pass
+
+          <RevealGroup as="ul" className="mt-20 grid gap-3 sm:grid-cols-2 lg:mt-28 lg:grid-cols-3 lg:gap-4">
+            {PROFILES.map((p, i) => (
+              <RevealItem as="li" key={p.who} className="panel flex flex-col p-6 sm:p-8">
+                <span className="type-condensed text-[2rem] leading-none text-accent">{String(i + 1).padStart(2, "0")}</span>
+                <h3 className="type-headline mt-6 text-[1.5rem] leading-tight">{p.who}</h3>
+                <p className="mt-3 text-muted">{p.what}</p>
+              </RevealItem>
+            ))}
+          </RevealGroup>
+        </div>
+      </Section>
+
+      {/* ── Hackathon — dark, immersive ───────────────────────────────── */}
+      <Section tone="ink" aria-labelledby="hackathon" className="py-24 md:py-36">
+        <div className="shell grid-12 gap-y-14">
+          <div className="col-span-4 md:col-span-8 lg:col-span-6">
+            <SectionLabel>{`${HACKATHON.name} · ${HACKATHON.edition}`}</SectionLabel>
+            <RevealText
+              inView
+              id="hackathon"
+              label="Quatre thématiques, une finale sur scène."
+              lines={["Quatre thématiques,", <span key="f">une <Accent>finale</Accent> sur scène.</span>]}
+              className="type-headline text-display mt-8"
+            />
+            <p className="mt-8 max-w-xl text-muted">{HACKATHON.intro}</p>
+
+            <dl className="mt-10 grid grid-cols-2 border-t border-rule">
+              {[
+                { k: "Format", v: "En équipe uniquement" },
+                { k: "Finale", v: `Sam. 19 déc. · ${HACKATHON.finale.pitch.time}` },
+                { k: "Pitch", v: "4 min + 2 min de questions" },
+                { k: "Pass", v: `${formatFCFA(PASSES.hackathon.price)} / pers.` },
+              ].map((item, i) => (
+                <div key={item.k} className={`border-b border-rule py-5 ${i % 2 ? "border-l pl-5" : "pr-5"}`}>
+                  <dt className="type-label">{item.k}</dt>
+                  <dd className="mt-1.5 font-semibold">{item.v}</dd>
+                </div>
+              ))}
+            </dl>
+            <div className="mt-10 flex flex-wrap gap-3">
+              <ButtonLink href="/hackathon" arrow>
+                Découvrir le hackathon
               </ButtonLink>
-              <ButtonLink href="/hackathon" variant="secondary">
-                Le hackathon
+              <ButtonLink href="/billetterie?pass=hackathon" variant="secondary">
+                Pass Hackathon
               </ButtonLink>
             </div>
           </div>
-        </div>
 
-        <dl className="mt-14 grid grid-cols-2 border-t border-ink md:mt-20 lg:grid-cols-4">
-          {[
-            { k: "Dates", v: <>Ven. 18 & sam. 19 déc.</> },
-            {
-              k: "Lieu",
-              v: settings.venue ? settings.venue.name : <Pending label="Lieu" />,
-            },
-            { k: PASSES.event.name, v: formatFCFA(PASSES.event.price) },
-            { k: PASSES.hackathon.name, v: <>{formatFCFA(PASSES.hackathon.price)} / pers.</> },
-          ].map((item, i) => (
-            <div
-              key={item.k}
-              className={`border-b border-ink py-4 pr-4 ${i % 2 === 1 ? "border-l pl-4" : ""} lg:border-b-0 ${
-                i > 0 ? "lg:border-l lg:pl-6" : ""
-              }`}
-            >
-              <dt className="type-meta text-grey-500">{item.k}</dt>
-              <dd className="mt-1 font-semibold">{item.v}</dd>
+          <div className="col-span-4 md:col-span-8 lg:col-span-5 lg:col-start-8">
+            {hackathonPhoto && <ImageFrame photo={hackathonPhoto} className="mb-4" />}
+            <RevealGroup as="ol" className="grid gap-3 sm:grid-cols-2">
+              {TRACKS.map((t) => (
+                <RevealItem as="li" key={t.code} className="panel p-6">
+                  <span className="type-condensed text-[2rem] leading-none text-accent">{t.code}</span>
+                  <h3 className="type-headline mt-4 text-[1.375rem] leading-tight">{t.name}</h3>
+                  <p className="mt-1 text-[0.9375rem] text-muted">{t.claim}</p>
+                </RevealItem>
+              ))}
+            </RevealGroup>
+          </div>
+        </div>
+      </Section>
+
+      {/* ── Formats — grey, index rows ────────────────────────────────── */}
+      <Section tone="grey" aria-labelledby="formats" className="py-24 md:py-36">
+        <div className="shell">
+          <div className="flex flex-wrap items-end justify-between gap-8">
+            <div>
+              <SectionLabel>Au programme</SectionLabel>
+              <RevealText
+                inView
+                id="formats"
+                label="Apprendre, pratiquer, rencontrer."
+                lines={["Apprendre, pratiquer,", <Accent key="r">rencontrer.</Accent>]}
+                className="type-headline text-display mt-8"
+              />
             </div>
-          ))}
-        </dl>
-      </section>
-
-      {/* ── 01 What it is ─────────────────────────────────────────── */}
-      <section className="shell mt-28 md:mt-40" aria-labelledby="evenement">
-        <SectionIndex index="01" label="L’événement" />
-        <div className="grid-12 mt-10 gap-y-12">
-          <h2
-            id="evenement"
-            className="col-span-4 text-[clamp(1.625rem,1.1rem+2.2vw,3rem)] leading-[1.1] font-medium tracking-[-0.015em] md:col-span-8 lg:col-span-9"
-          >
-            G-TECH SUMMER réunit à Abidjan étudiants, développeurs, designers, entrepreneurs et professionnels pour
-            apprendre, échanger et construire.{" "}
-            <span className="text-grey-500">
-              Que vous découvriez la tech ou que vous y travailliez depuis des années, vous y trouverez de quoi
-              progresser et des gens à rencontrer.
-            </span>
-          </h2>
-          <div className="col-span-4 flex items-start gap-5 md:col-span-5 lg:col-span-4 lg:col-start-9">
-            <GhostechLogo width={96} className="shrink-0" />
-            <p className="text-[0.9375rem] text-grey-500">
-              Organisé par <span className="text-ink">{EVENT.organiser.name}</span>, communauté tech fondée à
-              l’Institut Universitaire d’Abidjan. Cette première édition marque aussi sa première année.
-            </p>
+            <ButtonLink href="/programme" variant="tertiary" arrow>
+              Programme détaillé
+            </ButtonLink>
           </div>
-        </div>
-      </section>
 
-      {/* ── 02 What happens ───────────────────────────────────────── */}
-      <section className="shell mt-28 md:mt-40" aria-labelledby="au-programme">
-        <SectionIndex index="02" label="Au programme" />
-        <div className="mt-10 flex flex-wrap items-end justify-between gap-6">
-          <h2 id="au-programme" className="type-condensed text-display">
-            Ce qui vous attend
-          </h2>
-          <ButtonLink href="/programme" variant="tertiary" arrow>
-            Programme détaillé
-          </ButtonLink>
-        </div>
-
-        <ul className="mt-10 border-b border-ink">
-          {FORMATS.map((f) => (
-            <li key={f.name} className="border-t border-ink">
-              <Link
-                href={f.href}
-                className="group grid grid-cols-[3.5rem_1fr_auto] items-baseline gap-x-4 gap-y-2 py-6 transition-colors duration-(--duration-micro) hover:bg-grey-50 md:grid-cols-[6rem_minmax(0,1fr)_minmax(0,1.3fr)_auto] md:gap-x-(--gutter) md:py-8"
-              >
-                <span className="type-condensed text-[clamp(2rem,1.5rem+2vw,3.5rem)] leading-none text-grey-500 group-hover:text-signal-ink">
-                  {f.count}
-                </span>
-                <span className="type-condensed text-[clamp(1.5rem,1.1rem+1.5vw,2.5rem)] leading-none">{f.name}</span>
-                <span className="col-span-3 col-start-2 row-start-2 text-grey-500 md:col-span-1 md:col-start-3 md:row-start-1">
-                  {f.text}
-                </span>
-                <ArrowRight className="col-start-3 row-start-1 size-5 self-center transition-transform duration-(--duration-micro) ease-out-quart group-hover:translate-x-1 md:col-start-4" />
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {/* ── 03 For whom ───────────────────────────────────────────── */}
-      <section className="shell mt-28 md:mt-40" aria-labelledby="pour-qui">
-        <SectionIndex index="03" label="Pour qui" />
-        <div className="grid-12 mt-10 gap-y-10">
-          <div className="col-span-4 md:col-span-8 lg:col-span-4">
-            <h2 id="pour-qui" className="type-condensed text-display">
-              Quel que soit votre niveau
-            </h2>
-            <p className="mt-6 max-w-md text-grey-500">
-              Aucun niveau technique n’est requis pour venir. Voici par où commencer selon votre profil.
-            </p>
-          </div>
-          <ul className="col-span-4 grid gap-x-(--gutter) sm:grid-cols-2 md:col-span-8 lg:col-span-7 lg:col-start-6">
-            {PROFILES.map((p) => (
-              <li key={p.who} className="border-t border-ink pt-4 pb-8">
-                <h3 className="flex items-center gap-3 text-[1.125rem] font-semibold">
-                  <SignalSquare />
-                  {p.who}
-                </h3>
-                <p className="mt-2 text-grey-500">{p.what}</p>
+          <ul className="mt-16 border-b border-rule-strong">
+            {FORMATS.map((f, i) => (
+              <li key={f.name} className="border-t border-rule-strong">
+                <Link
+                  href={f.href}
+                  className="group grid grid-cols-[3rem_1fr_auto] items-baseline gap-x-4 gap-y-2 py-7 md:grid-cols-[5rem_minmax(0,1fr)_minmax(0,1.4fr)_auto] md:gap-x-(--gutter) md:py-9"
+                >
+                  <span className="type-meta text-muted">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="type-headline text-[clamp(1.5rem,1.15rem+1.4vw,2.5rem)] leading-none transition-colors duration-(--duration-micro) group-hover:text-accent">
+                    {f.name}
+                  </span>
+                  <span className="col-span-3 col-start-2 row-start-2 text-muted md:col-span-1 md:col-start-3 md:row-start-1">{f.text}</span>
+                  <ArrowRight className="col-start-3 row-start-1 size-5 self-center transition-transform duration-(--duration-micro) ease-out-quart group-hover:translate-x-1 md:col-start-4" />
+                </Link>
               </li>
             ))}
           </ul>
         </div>
-      </section>
+      </Section>
 
-      {/* ── 04 Hackathon ──────────────────────────────────────────── */}
-      <section className="mt-28 bg-ink py-20 text-paper md:mt-40 md:py-28" aria-labelledby="hackathon">
+      {/* ── Two days — dark, dense ─────────────────────────────────────── */}
+      <Section tone="ink" aria-labelledby="deux-jours" className="py-24 md:py-36">
         <div className="shell">
-          <SectionIndex index="04" label={`${HACKATHON.name} · ${HACKATHON.edition}`} tone="dark" />
-          <RevealText id="hackathon" inView as="h2" lines={["Hackathon"]} className="type-condensed mt-10 text-[clamp(3rem,15.5vw,16rem)] leading-[0.8]" />
-
-          <div className="grid-12 mt-12 gap-y-14">
-            <div className="col-span-4 md:col-span-8 lg:col-span-5">
-              <p className="text-lead">« {HACKATHON.theme} »</p>
-              <p className="mt-6 text-grey-400">{HACKATHON.intro}</p>
-              <dl className="mt-10 grid grid-cols-2 gap-px bg-grey-700">
-                {[
-                  { k: "Format", v: "En équipe uniquement" },
-                  { k: "Finale", v: `Sam. 19 déc. · ${HACKATHON.finale.pitch.time}` },
-                  { k: "Pitch", v: "4 min + 2 min de questions" },
-                  { k: "Pass", v: `${formatFCFA(PASSES.hackathon.price)} / pers.` },
-                ].map((item) => (
-                  <div key={item.k} className="bg-ink py-4 pr-4 [&:nth-child(even)]:pl-4">
-                    <dt className="type-meta text-grey-400">{item.k}</dt>
-                    <dd className="mt-1 font-semibold">{item.v}</dd>
-                  </div>
-                ))}
-              </dl>
-              <div className="mt-10 flex flex-wrap gap-3">
-                <ButtonLink href="/hackathon" tone="dark" arrow>
-                  Découvrir le hackathon
-                </ButtonLink>
-                <ButtonLink href="/billetterie?pass=hackathon" tone="dark" variant="secondary">
-                  Pass Hackathon
-                </ButtonLink>
-              </div>
+          <div className="flex flex-wrap items-end justify-between gap-8">
+            <div>
+              <SectionLabel>Deux jours</SectionLabel>
+              <RevealText
+                inView
+                id="deux-jours"
+                label="Vendredi 18 et samedi 19 décembre."
+                lines={["Vendredi 18 &", <span key="s">samedi <Accent>19 décembre</Accent></span>]}
+                className="type-headline text-display mt-8"
+              />
             </div>
-
-            <ol className="col-span-4 md:col-span-8 lg:col-span-6 lg:col-start-7">
-              <li className="type-meta pb-4 text-grey-400">4 thématiques — une par équipe</li>
-              {TRACKS.map((t) => (
-                <li key={t.code} className="grid grid-cols-[3rem_1fr] gap-4 border-t border-grey-700 py-6">
-                  <span className="type-meta pt-2 text-signal">{t.code}</span>
-                  <div>
-                    <h3 className="type-condensed text-[clamp(1.75rem,1.3rem+1.6vw,2.75rem)] leading-none">{t.name}</h3>
-                    <p className="mt-2 text-grey-400">{t.claim}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
+            <ButtonLink href="/programme" variant="tertiary" arrow>
+              Voir le programme complet
+            </ButtonLink>
           </div>
+          <RevealGroup className="mt-16 grid gap-4 md:grid-cols-2">
+            {DAYS.map((d) => (
+              <RevealItem key={d.id} className="panel p-6 sm:p-8">
+                <div className="flex items-baseline justify-between gap-4">
+                  <h3 className="type-headline text-title">{d.label}</h3>
+                  <span className="type-label">Jour {d.index}</span>
+                </div>
+                <p className="mt-2 mb-6 text-muted">{d.theme}</p>
+                <DaySchedule slots={d.slots} compact />
+              </RevealItem>
+            ))}
+          </RevealGroup>
         </div>
-      </section>
+      </Section>
 
-      {/* ── 05 Two days ───────────────────────────────────────────── */}
-      <section className="shell mt-28 md:mt-40" aria-labelledby="deux-jours">
-        <SectionIndex index="05" label="Deux jours" />
-        <div className="mt-10 flex flex-wrap items-end justify-between gap-6">
-          <h2 id="deux-jours" className="type-condensed text-display">
-            18 & 19 décembre
-          </h2>
-          <ButtonLink href="/programme" variant="tertiary" arrow>
-            Voir le programme complet
-          </ButtonLink>
-        </div>
-        <div className="mt-12 grid gap-12 md:grid-cols-2 md:gap-(--gutter)">
-          {DAYS.map((d) => (
-            <div key={d.id}>
-              <div className="flex items-baseline justify-between gap-4 border-t-4 border-ink pt-3">
-                <h3 className="type-condensed text-title">{d.label}</h3>
-                <span className="type-meta text-grey-500">Jour {d.index}</span>
-              </div>
-              <p className="mt-2 mb-6 text-grey-500">{d.theme}</p>
-              <DaySchedule slots={d.slots} compact />
+      {/* ── Billetterie — the single orange band ──────────────────────── */}
+      <Section tone="signal" aria-labelledby="pass" className="py-24 md:py-32">
+        <div className="shell">
+          <div className="grid-12 gap-y-8">
+            <div className="col-span-4 md:col-span-8 lg:col-span-7">
+              <SectionLabel>Billetterie</SectionLabel>
+              <RevealText
+                inView
+                id="pass"
+                label="Deux pass, un billet nominatif."
+                lines={["Deux pass,", <span key="b">un <Accent>billet nominatif</Accent>.</span>]}
+                className="type-headline text-display mt-8"
+              />
             </div>
-          ))}
+            <p className="col-span-4 self-end text-muted md:col-span-6 lg:col-span-4 lg:col-start-9">
+              Envoyé par e-mail après paiement via Wave, sans frais ajoutés. Pour l’événement et le hackathon, prenez les
+              deux : {formatFCFA(orderTotal(["event", "hackathon"]))}.
+            </p>
+          </div>
+          <RevealGroup className="mt-14 grid gap-4 md:grid-cols-2 md:gap-(--gutter)">
+            {(["event", "hackathon"] as const).map((id, i) => (
+              <RevealItem key={id}>
+                <Link href={`/billetterie?pass=${id}`} className="group block">
+                <PassCard pass={PASSES[id]} index={i + 1} className="transition-transform duration-(--duration-micro) ease-out-quart group-hover:-translate-y-1">
+                  <span className="flex size-11 items-center justify-center bg-signal text-ink">
+                    <ArrowRight className="size-5 transition-transform duration-(--duration-micro) group-hover:translate-x-0.5" />
+                    <span className="sr-only">Choisir le {PASSES[id].name}</span>
+                  </span>
+                </PassCard>
+                </Link>
+              </RevealItem>
+            ))}
+          </RevealGroup>
         </div>
-      </section>
+      </Section>
 
-      {/* ── 06 Passes ─────────────────────────────────────────────── */}
-      <section className="shell mt-28 md:mt-40" aria-labelledby="pass">
-        <SectionIndex index="06" label="Billetterie" />
-        <div className="grid-12 mt-10 gap-y-6">
-          <h2 id="pass" className="type-condensed text-display col-span-4 md:col-span-8 lg:col-span-6">
-            Deux pass
-          </h2>
-          <p className="col-span-4 self-end text-grey-500 md:col-span-6 lg:col-span-5 lg:col-start-8">
-            Un billet nominatif par participant, envoyé par e-mail après paiement via Wave. Pour l’événement et le
-            hackathon, prenez les deux : {formatFCFA(orderTotal(["event", "hackathon"]))}.
-          </p>
+      {/* ── Partners — light, institutional ───────────────────────────── */}
+      <Section tone="paper" aria-labelledby="partenaires" className="py-24 md:py-32">
+        <div className="shell">
+          <div className="flex flex-wrap items-end justify-between gap-8">
+            <div>
+              <SectionLabel>Partenaires</SectionLabel>
+              <h2 id="partenaires" className="type-headline text-display mt-8">
+                Ils nous accompagnent
+              </h2>
+            </div>
+            <ButtonLink href="/partenaires" variant="tertiary" arrow>
+              Devenir partenaire
+            </ButtonLink>
+          </div>
+          <Reveal className="panel mt-14 px-2 sm:px-6">
+            <PartnerLogos />
+          </Reveal>
         </div>
-        <div className="mt-12 grid gap-4 md:grid-cols-2 md:gap-(--gutter)">
-          {(["event", "hackathon"] as const).map((id, i) => (
-            <Link key={id} href={`/billetterie?pass=${id}`} className="group block">
-              <PassCard pass={PASSES[id]} index={i + 1} className="transition-transform duration-(--duration-micro) ease-out-quart group-hover:-translate-y-1">
-                <span className="flex size-11 items-center justify-center bg-signal text-ink">
-                  <ArrowRight className="size-5 transition-transform duration-(--duration-micro) group-hover:translate-x-0.5" />
-                  <span className="sr-only">Choisir le {PASSES[id].name}</span>
-                </span>
-              </PassCard>
-            </Link>
-          ))}
-        </div>
-      </section>
+      </Section>
 
-      {/* ── 07 Partners ───────────────────────────────────────────── */}
-      <section className="shell mt-28 md:mt-40" aria-labelledby="partenaires">
-        <SectionIndex index="07" label="Partenaires" />
-        <div className="mt-10 flex flex-wrap items-end justify-between gap-6">
-          <h2 id="partenaires" className="type-condensed text-title">
-            Ils accompagnent G-TECH SUMMER
-          </h2>
-          <ButtonLink href="/partenaires" variant="tertiary" arrow>
-            Devenir partenaire
-          </ButtonLink>
-        </div>
-        <ul className="mt-8 grid grid-cols-2 gap-px bg-grey-200 ring-1 ring-grey-200 md:grid-cols-4">
-          {PARTNERS.map((p) => (
-            <li key={p.name} className="flex aspect-[3/2] items-center justify-center bg-paper p-6 md:p-10">
-              <Image src={p.logo.src} alt={p.name} width={p.logo.width} height={p.logo.height} className="max-h-14 w-auto object-contain" />
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {/* ── 08 Practical ──────────────────────────────────────────── */}
-      <section className="shell mt-28 md:mt-40" aria-labelledby="infos">
-        <SectionIndex index="08" label="Infos pratiques" />
-        <div className="grid-12 mt-10 gap-y-12">
-          <div className="col-span-4 md:col-span-3">
-            <h2 id="infos" className="type-condensed text-title">
+      {/* ── Practical + FAQ — grey, calm reading ──────────────────────── */}
+      <Section tone="grey" aria-labelledby="infos" className="py-24 md:py-32">
+        <div className="shell grid-12 gap-y-14">
+          <div className="col-span-4 md:col-span-3 lg:col-span-4">
+            <SectionLabel>Infos pratiques</SectionLabel>
+            <h2 id="infos" className="type-headline text-display mt-8">
               Questions fréquentes
             </h2>
-            <dl className="mt-8 space-y-6">
+            <dl className="mt-10 space-y-6 border-t border-rule-strong pt-6">
               <div>
-                <dt className="type-meta text-grey-500">Lieu</dt>
-                <dd className="mt-1">{settings.venue ? settings.venue.name : <Pending label="Lieu" />}</dd>
+                <dt className="type-label">Lieu</dt>
+                <dd className="mt-1.5">{settings.venue ? settings.venue.name : <Pending label="Lieu" />}</dd>
               </div>
               <div>
-                <dt className="type-meta text-grey-500">Accueil</dt>
-                <dd className="mt-1">À partir de 08:00, les deux jours</dd>
+                <dt className="type-label">Accueil</dt>
+                <dd className="mt-1.5">À partir de 08:00, les deux jours</dd>
               </div>
               <div>
-                <dt className="type-meta text-grey-500">Contact</dt>
-                <dd className="mt-1 space-y-1">
-                  <a href={`mailto:${EVENT.contact.email}`} className="block break-words underline decoration-ink/30 underline-offset-4 hover:decoration-signal">
+                <dt className="type-label">Contact</dt>
+                <dd className="mt-1.5 space-y-1">
+                  <a href={`mailto:${EVENT.contact.email}`} className="block break-words underline decoration-rule-strong underline-offset-4 hover:decoration-mark">
                     {EVENT.contact.email}
                   </a>
-                  <a href={whatsappUrl} className="block underline decoration-ink/30 underline-offset-4 hover:decoration-signal">
+                  <a href={whatsappUrl} className="block underline decoration-rule-strong underline-offset-4 hover:decoration-mark">
                     WhatsApp {EVENT.contact.phoneDisplay}
                   </a>
                 </dd>
@@ -341,7 +308,9 @@ export default async function HomePage() {
             </dl>
           </div>
           <div className="col-span-4 md:col-span-5 md:col-start-4 lg:col-span-7 lg:col-start-6">
-            <FaqList items={FAQ.slice(0, 5)} />
+            <div className="panel px-6 py-2 sm:px-8">
+              <FaqList items={FAQ.slice(0, 5)} />
+            </div>
             <div className="mt-6">
               <ButtonLink href="/infos-pratiques#faq" variant="tertiary" arrow>
                 Toutes les questions
@@ -349,22 +318,26 @@ export default async function HomePage() {
             </div>
           </div>
         </div>
-      </section>
+      </Section>
 
-      {/* ── Closing poster ────────────────────────────────────────── */}
-      <section className="mt-28 bg-ink text-paper md:mt-40" aria-label="Inscription">
-        <div className="shell grid-12 gap-y-10 py-16 md:py-24">
-          <p className="type-condensed text-poster col-span-4 md:col-span-8 lg:col-span-8">18—19.12</p>
-          <div className="col-span-4 flex flex-col justify-end gap-6 md:col-span-6 lg:col-span-4">
-            <p className="text-lead">
-              {EVENT.city}. {EVENT.organiser.tagline}
-            </p>
-            <ButtonLink href="/billetterie" tone="dark" arrow className="self-start">
+      {/* ── Closing ────────────────────────────────────────────────────── */}
+      <Section tone="ink" aria-labelledby="cloture" className="py-20 md:py-28">
+        <div className="shell grid-12 items-end gap-y-12">
+          <div className="col-span-4 md:col-span-8 lg:col-span-6">
+            <SectionLabel>{`Rendez-vous à ${EVENT.city}`}</SectionLabel>
+            <h2 id="cloture" className="type-headline text-display mt-8">
+              Vendredi 18 décembre, <Accent>08:00</Accent>
+            </h2>
+            <p className="mt-6 max-w-md text-lead text-muted">{EVENT.organiser.tagline}</p>
+          </div>
+          <div className="col-span-4 space-y-8 md:col-span-8 lg:col-span-6">
+            <Countdown size="lg" />
+            <ButtonLink href="/billetterie" arrow>
               Prendre mon pass
             </ButtonLink>
           </div>
         </div>
-      </section>
+      </Section>
     </>
   );
 }

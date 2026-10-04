@@ -3,12 +3,9 @@ import type { ComponentProps, ReactNode } from "react";
 import { ArrowRight } from "./icons";
 
 type Variant = "primary" | "secondary" | "tertiary";
-type Tone = "light" | "dark";
 
 interface StyleProps {
   variant?: Variant;
-  /** Background the button sits on. */
-  tone?: Tone;
   className?: string;
 }
 
@@ -22,24 +19,15 @@ const base =
   "transition-[background-color,color,border-color,text-decoration-color] duration-(--duration-micro) ease-out-quart " +
   "disabled:pointer-events-none disabled:opacity-40";
 
-const variants: Record<Variant, Record<Tone, string>> = {
-  primary: {
-    light: "min-h-12 px-6 bg-signal text-ink hover:bg-ink hover:text-signal",
-    dark: "min-h-12 px-6 bg-signal text-ink hover:bg-paper hover:text-ink",
-  },
-  secondary: {
-    light: "min-h-12 px-6 border border-ink text-ink hover:bg-ink hover:text-paper",
-    dark: "min-h-12 px-6 border border-paper/60 text-paper hover:border-paper hover:bg-paper hover:text-ink",
-  },
-  tertiary: {
-    light:
-      "min-h-11 text-ink underline decoration-1 underline-offset-[6px] decoration-ink/30 hover:decoration-signal",
-    dark: "min-h-11 text-paper underline decoration-1 underline-offset-[6px] decoration-paper/30 hover:decoration-signal",
-  },
+// Colours come from the surrounding section theme (see .btn-* in globals.css).
+const variants: Record<Variant, string> = {
+  primary: "btn-primary min-h-12 rounded-full px-6",
+  secondary: "btn-secondary min-h-12 rounded-full px-6",
+  tertiary: "min-h-11 text-fg underline decoration-1 underline-offset-[6px] decoration-rule-strong hover:decoration-mark",
 };
 
-function classes({ variant = "primary", tone = "light", className }: StyleProps) {
-  return [base, variants[variant][tone], className].filter(Boolean).join(" ");
+function classes({ variant = "primary", className }: StyleProps) {
+  return [base, variants[variant], className].filter(Boolean).join(" ");
 }
 
 function Content({ children, arrow }: Pick<BaseProps, "children" | "arrow">) {
@@ -55,9 +43,9 @@ function Content({ children, arrow }: Pick<BaseProps, "children" | "arrow">) {
 
 type LinkProps = BaseProps & { href: string } & Omit<ComponentProps<typeof Link>, "href" | "className" | "children">;
 
-export function ButtonLink({ href, variant, tone, className, arrow, children, ...rest }: LinkProps) {
+export function ButtonLink({ href, variant, className, arrow, children, ...rest }: LinkProps) {
   return (
-    <Link href={href} className={classes({ variant, tone, className })} {...rest}>
+    <Link href={href} className={classes({ variant, className })} {...rest}>
       <Content arrow={arrow}>{children}</Content>
     </Link>
   );
@@ -65,9 +53,9 @@ export function ButtonLink({ href, variant, tone, className, arrow, children, ..
 
 type NativeButtonProps = BaseProps & Omit<ComponentProps<"button">, "className" | "children">;
 
-export function Button({ variant, tone, className, arrow, children, type = "button", ...rest }: NativeButtonProps) {
+export function Button({ variant, className, arrow, children, type = "button", ...rest }: NativeButtonProps) {
   return (
-    <button type={type} className={classes({ variant, tone, className })} {...rest}>
+    <button type={type} className={classes({ variant, className })} {...rest}>
       <Content arrow={arrow}>{children}</Content>
     </button>
   );

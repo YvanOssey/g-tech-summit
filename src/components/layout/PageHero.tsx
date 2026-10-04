@@ -1,33 +1,32 @@
 import type { ReactNode } from "react";
 import { RevealText } from "@/components/motion/RevealText";
+import { Section, type Tone } from "@/components/ui/Section";
+import { SectionLabel } from "@/components/ui/SectionLabel";
 
 interface PageHeroProps {
-  eyebrow: string;
-  lines: readonly string[];
+  label: string;
+  /** Title lines; may contain <Accent> words (then pass `title` for the accessible label). */
+  lines: readonly ReactNode[];
+  title?: string;
   lead?: ReactNode;
-  tone?: "light" | "dark";
+  tone?: Tone;
   children?: ReactNode;
 }
 
-/** Opening block of inner pages: index line, poster title, lead. */
-export function PageHero({ eyebrow, lines, lead, tone = "light", children }: PageHeroProps) {
-  const dark = tone === "dark";
+/** Opening band of inner pages: label, large institutional headline, lead. */
+export function PageHero({ label, lines, title, lead, tone = "ink", children }: PageHeroProps) {
   return (
-    <section className={dark ? "bg-ink text-paper" : undefined}>
-      <div className="shell pt-10 pb-16 md:pt-14 md:pb-24">
-        <p className={`type-meta border-t pt-3 ${dark ? "border-paper/40 text-grey-400" : "border-ink text-grey-500"}`}>
-          {eyebrow}
-        </p>
-        <RevealText as="h1" lines={lines} className="type-condensed text-display mt-8 md:mt-12" />
+    <Section tone={tone}>
+      <div className="shell pt-14 pb-16 md:pt-20 md:pb-24">
+        <SectionLabel>{label}</SectionLabel>
+        <RevealText as="h1" lines={lines} label={title} className="type-headline text-hero mt-6 md:mt-8" />
         {(lead || children) && (
           <div className="grid-12 mt-10 gap-y-8 md:mt-14">
-            {lead && (
-              <div className={`text-lead col-span-4 md:col-span-6 lg:col-span-7 ${dark ? "text-paper" : ""}`}>{lead}</div>
-            )}
+            {lead && <div className="text-lead col-span-4 text-muted md:col-span-6 lg:col-span-7">{lead}</div>}
             {children && <div className="col-span-4 md:col-span-8 lg:col-span-4 lg:col-start-9">{children}</div>}
           </div>
         )}
       </div>
-    </section>
+    </Section>
   );
 }

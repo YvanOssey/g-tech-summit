@@ -21,7 +21,7 @@ export function DayTabs({ days }: { days: readonly Day[] }) {
 
   return (
     <div>
-      <div role="tablist" aria-label="Jours" className="grid grid-cols-2 border border-ink">
+      <div role="tablist" aria-label="Jours" className="grid grid-cols-2 gap-1.5 rounded-2xl border border-rule p-1.5">
         {days.map((d, i) => (
           <button
             key={d.id}
@@ -38,23 +38,23 @@ export function DayTabs({ days }: { days: readonly Day[] }) {
                 document.getElementById(`tab-${days[next].id}`)?.focus();
               }
             }}
-            className={`relative px-4 py-4 text-left transition-colors duration-(--duration-component) md:px-6 md:py-5 ${
-              i === active ? "text-paper" : "text-ink hover:bg-grey-50"
-            } ${i > 0 ? "border-l border-ink" : ""}`}
+            className={`relative rounded-xl px-4 py-4 text-left transition-colors duration-(--duration-component) md:px-6 md:py-5 ${
+              i === active ? "text-canvas" : "text-fg hover:bg-surface"
+            }`}
           >
             {i === active && (
               <motion.span
                 layoutId="day-indicator"
-                className="absolute inset-0 bg-ink"
+                className="absolute inset-0 rounded-xl bg-fg"
                 transition={reduce ? { duration: 0 } : { duration: 0.4, ease: EASE }}
               />
             )}
             <span className="relative block">
-              <span className={`type-meta block ${i === active ? "text-signal" : "text-grey-500"}`}>Jour {d.index}</span>
-              <span className="type-condensed mt-1 block text-[clamp(1.375rem,1rem+1.5vw,2.25rem)] leading-none">
+              <span className={`type-meta block ${i === active ? "text-canvas/70" : "text-muted"}`}>Jour {d.index}</span>
+              <span className="type-headline mt-1 block text-[clamp(1.25rem,1rem+1.2vw,2rem)] leading-none">
                 {d.label}
               </span>
-              <span className={`mt-2 hidden text-[0.9375rem] sm:block ${i === active ? "text-grey-400" : "text-grey-500"}`}>
+              <span className={`mt-2 hidden text-[0.9375rem] sm:block ${i === active ? "text-canvas/70" : "text-muted"}`}>
                 {d.theme}
               </span>
             </span>
