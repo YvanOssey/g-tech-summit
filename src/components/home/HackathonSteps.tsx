@@ -21,7 +21,15 @@ const STEPS = [
  * Five steps on a rail. The orange rail fills as the block scrolls through
  * the window (horizontal on large screens, vertical below).
  */
-export function HackathonSteps({ className = "" }: { className?: string }) {
+export function HackathonSteps({
+  className = "",
+  headingLevel = 4,
+}: {
+  className?: string;
+  /** Level of the step titles, one below the section's own heading. */
+  headingLevel?: 3 | 4;
+}) {
+  const Heading = headingLevel === 3 ? "h3" : "h4";
   const ref = useRef<HTMLOListElement>(null);
   const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 85%", "end 55%"] });
@@ -46,6 +54,7 @@ export function HackathonSteps({ className = "" }: { className?: string }) {
       {STEPS.map((s, i) => (
         <motion.li
           key={s.title}
+          data-reveal=""
           className="relative pl-10 lg:pt-10 lg:pl-0"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -54,7 +63,7 @@ export function HackathonSteps({ className = "" }: { className?: string }) {
         >
           <span aria-hidden="true" className="absolute top-0 left-0 size-3.5 rounded-pill border-2 border-signal bg-ink" />
           <p className="type-meta text-muted">{String(i + 1).padStart(2, "0")}</p>
-          <h4 className="type-headline mt-2 text-heading">{s.title}</h4>
+          <Heading className="type-headline mt-2 text-heading">{s.title}</Heading>
           {s.when && <p className="type-label mt-2">{s.when}</p>}
           <p className="mt-3 text-small text-muted">{s.text}</p>
         </motion.li>

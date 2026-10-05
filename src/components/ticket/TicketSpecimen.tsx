@@ -43,7 +43,7 @@ export function TicketSpecimen({ passes }: TicketSpecimenProps) {
           <p className="type-condensed text-title">
             G-Tech
             <br />
-            Summer <span className="text-signal-text">26</span>
+            Summit <span className="text-signal-text">26</span>
           </p>
         </div>
 

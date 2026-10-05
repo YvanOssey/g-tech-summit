@@ -10,7 +10,7 @@ export interface FaqItem {
 export const FAQ: readonly FaqItem[] = [
   {
     q: "Faut-il avoir un niveau technique pour venir ?",
-    a: "Non. G-TECH SUMMER s’adresse aussi bien aux personnes qui découvrent la tech qu’aux professionnels. Les formations express sont accessibles aux débutants comme aux initiés, et l’initiation au développement web ne demande aucun prérequis.",
+    a: "Non. G-TECH SUMMIT s’adresse aussi bien aux personnes qui découvrent la tech qu’aux professionnels. Les formations express sont accessibles aux débutants comme aux initiés, et l’initiation au développement web ne demande aucun prérequis.",
   },
   {
     q: "Quelle est la différence entre le Pass Event et le Pass Hackathon ?",

@@ -21,12 +21,12 @@ interface HomeHeroProps {
 const at = (delay: number): CSSProperties => ({ animationDelay: `${delay}s` });
 
 /**
- * Headline words, revealed letter by letter. "SUMMER" joins "G-TECH" on one
+ * Headline words, revealed letter by letter. "SUMMIT" joins "G-TECH" on one
  * line from `sm`, and sits on its own line on phones.
  */
 const WORDS = [
   { text: "G-TECH", className: "inline-block text-signal" },
-  { text: "SUMMER", className: "block sm:ml-[0.25em] sm:inline-block" },
+  { text: "SUMMIT", className: "block sm:ml-[0.25em] sm:inline-block" },
   { text: "2026", className: "block text-outline-signal" },
 ] as const;
 
@@ -214,7 +214,7 @@ export function HomeHero({ venue }: HomeHeroProps) {
           </defs>
           <text className="fill-paper font-mono uppercase" style={{ fontSize: 8.5, letterSpacing: "0.18em" }}>
             <textPath href="#hero-badge-circle" textLength="296" lengthAdjust="spacing">
-              G-TECH SUMMER 2026 · 18—19 décembre · {EVENT.city} ·
+              G-TECH SUMMIT 2026 · 18—19 décembre · {EVENT.city} ·
             </textPath>
           </text>
         </svg>

@@ -28,7 +28,7 @@ export default function OpengraphImage() {
         </div>
         <div style={{ display: "flex", flexDirection: "column", fontSize: 150, fontWeight: 800, lineHeight: 0.9, letterSpacing: -4 }}>
           <span>G-TECH</span>
-          <span>SUMMER 2026</span>
+          <span>SUMMIT 2026</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 20, fontSize: 34 }}>
           <div style={{ width: 22, height: 22, background: "#F28C18" }} />

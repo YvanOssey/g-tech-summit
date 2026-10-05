@@ -37,6 +37,7 @@ export function Reveal({ as = "div", delay = 0, children, ...rest }: Props & { d
   const M = TAGS[as] as typeof motion.div;
   return (
     <M
+      data-reveal=""
       initial="hidden"
       whileInView="shown"
       viewport={VIEWPORT}
@@ -67,7 +68,7 @@ export function RevealGroup({ as = "div", stagger = 0.08, children, ...rest }: P
 export function RevealItem({ as = "div", effect = "rise", children, ...rest }: Props & { effect?: "rise" | "flip" }) {
   const M = TAGS[as] as typeof motion.div;
   return (
-    <M variants={effect === "flip" ? FLIP : ITEM} style={effect === "flip" ? { transformOrigin: "50% 100%" } : undefined} {...rest}>
+    <M data-reveal="" variants={effect === "flip" ? FLIP : ITEM} style={effect === "flip" ? { transformOrigin: "50% 100%" } : undefined} {...rest}>
       {children}
     </M>
   );

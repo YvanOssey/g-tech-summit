@@ -33,7 +33,7 @@ function TalkCard({ talk, index }: { talk: Talk; index: number }) {
   return (
     <article
       id={talk.id}
-      className="panel rounded-object p-6 shadow-[0_-12px_40px_-24px_rgb(23_23_23/0.35)] sm:p-8 lg:sticky lg:p-10"
+      className="panel p-6 shadow-[0_-12px_40px_-24px_rgb(23_23_23/0.35)] sm:p-8 lg:sticky lg:p-10"
       style={{ top: `calc(var(--header-h) + 1.5rem + ${index * 1.25}rem)` }}
     >
       <div className="grid-12 gap-y-6">
@@ -168,7 +168,7 @@ export default function ProgrammePage() {
                   as="article"
                   effect="flip"
                   key={f.id}
-                  className="panel card-interactive spotlight relative flex flex-col overflow-hidden rounded-object border-dashed p-6 sm:p-8"
+                  className="panel card-interactive spotlight relative flex flex-col overflow-hidden border-dashed p-6 sm:p-8"
                 >
                   {/* Rotating "attestation" stamp */}
                   <svg viewBox="0 0 120 120" aria-hidden="true" className="spin-slow absolute -top-6 -right-6 size-32 text-accent opacity-80">
@@ -240,7 +240,7 @@ export default function ProgrammePage() {
                         as="li"
                         effect="flip"
                         key={w.code}
-                        className="panel card-interactive spotlight group relative min-h-60 overflow-hidden rounded-object p-6"
+                        className="panel card-interactive spotlight group relative min-h-60 overflow-hidden p-6"
                       >
                         <span
                           aria-hidden="true"

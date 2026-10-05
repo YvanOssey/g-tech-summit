@@ -87,7 +87,7 @@ export default async function HackathonPage() {
                   as="li"
                   effect="flip"
                   key={t.code}
-                  className="group panel spotlight relative flex min-h-72 flex-col overflow-hidden rounded-object p-6 transition-colors duration-(--duration-component) hover:border-signal sm:p-8"
+                  className="group panel spotlight relative flex min-h-72 flex-col overflow-hidden p-6 transition-colors duration-(--duration-component) hover:border-signal sm:p-8"
                 >
                   {/* Orange fill rising on hover */}
                   <span
@@ -157,7 +157,7 @@ export default async function HackathonPage() {
           <p className="mt-6 max-w-xl text-muted">
             Début officiel des challenges : {s.challengesStart ? dateFr.format(new Date(s.challengesStart)) : <Pending label="Date" />}
           </p>
-          <HackathonSteps className="mt-14" />
+          <HackathonSteps className="mt-14" headingLevel={3} />
         </div>
       </Section>
 
@@ -179,7 +179,7 @@ export default async function HackathonPage() {
                   as="li"
                   effect="flip"
                   key={c}
-                  className="panel card-interactive spotlight flex min-h-40 flex-col justify-between rounded-object p-5 sm:p-6"
+                  className="panel card-interactive spotlight flex min-h-40 flex-col justify-between p-5 sm:p-6"
                 >
                   <span className="card-index type-condensed text-title leading-none text-accent">{String(i + 1).padStart(2, "0")}</span>
                   <span className="type-headline mt-6 text-body leading-tight sm:text-lead">{c}</span>

@@ -30,6 +30,9 @@ export const metadata: Metadata = {
   openGraph: { type: "website", locale: "fr_CI", siteName: `${EVENT.name} ${EVENT.year}` },
 };
 
+/** Elements that start hidden for an entrance animation carry `data-reveal`. */
+const NO_JS_CSS = "[data-reveal]{opacity:1!important;transform:none!important;clip-path:none!important;filter:none!important}";
+
 export const viewport: Viewport = {
   themeColor: "#171717",
 };
@@ -38,6 +41,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="fr" className={`${archivo.variable} ${plexMono.variable}`}>
       <body>
+        {/* Without JavaScript, entrance animations never run: show their content as is. */}
+        <noscript>
+          <style>{NO_JS_CSS}</style>
+        </noscript>
         <MotionProvider>{children}</MotionProvider>
       </body>
     </html>

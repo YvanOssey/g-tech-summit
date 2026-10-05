@@ -118,7 +118,7 @@ function DeckCard({
   );
 
   const face = (
-    <div className="panel card-interactive flex h-full min-h-60 flex-col rounded-object p-6">
+    <div className="panel card-interactive flex h-full min-h-60 flex-col p-6">
       <span className="flex size-12 items-center justify-center rounded-pill bg-signal text-ink">
         <Icon className="size-6" />
       </span>
@@ -131,6 +131,7 @@ function DeckCard({
   if (plain || offset === null) {
     return (
       <motion.li
+        data-reveal=""
         className="relative"
         initial={plain ? { opacity: 0, y: 40 } : false}
         whileInView={plain ? { opacity: 1, y: 0 } : undefined}
@@ -144,7 +145,7 @@ function DeckCard({
 
   return (
     <motion.li
-      className="relative rounded-object"
+      className="relative"
       style={{ x, scale, boxShadow: shadow, zIndex: index + 1, transformOrigin: "100% 50%" }}
     >
       {face}

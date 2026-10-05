@@ -73,7 +73,7 @@ export default async function HomePage() {
       {/* ── Figures + ribbon ─────────────────────────────────────────── */}
       <Section tone="ink" id="chiffres" aria-label="L’événement en chiffres" className="pt-4 pb-20 md:pb-28">
         <div className="shell">
-          <RevealGroup as="ul" className="grid grid-cols-2 rounded-object border border-rule lg:grid-cols-4">
+          <RevealGroup as="ul" className="grid grid-cols-2 border border-rule lg:grid-cols-4">
             {FIGURES.map((f, i) => (
               <RevealItem
                 as="li"
@@ -131,7 +131,7 @@ export default async function HomePage() {
               />
               <Reveal delay={0.15} className="mt-10">
                 <p className="text-lead">
-                  G-TECH SUMMER réunit étudiants, développeurs, designers, entrepreneurs et professionnels. Aucun niveau
+                  G-TECH SUMMIT réunit étudiants, développeurs, designers, entrepreneurs et professionnels. Aucun niveau
                   technique n’est requis pour venir.
                 </p>
                 <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-4">
@@ -214,7 +214,7 @@ export default async function HomePage() {
               <li key={f.name} className="w-[min(85vw,22rem)] shrink-0 snap-start md:w-[clamp(30rem,44vw,40rem)]">
                 <Link
                   href={f.href}
-                  className="group panel spotlight relative grid h-full min-h-56 grid-cols-[auto_1fr] gap-x-6 overflow-hidden rounded-object p-6 transition-[border-color,translate] duration-(--duration-component) hover:-translate-y-1 hover:border-signal sm:p-8 md:min-h-[min(20rem,42svh)] md:gap-x-10"
+                  className="group panel spotlight relative grid h-full min-h-56 grid-cols-[auto_1fr] gap-x-6 overflow-hidden p-6 transition-[border-color,translate] duration-(--duration-component) hover:-translate-y-1 hover:border-signal sm:p-8 md:min-h-[min(20rem,42svh)] md:gap-x-10"
                 >
                   {/* Index column */}
                   <span className="flex flex-col items-start justify-between border-r border-rule pr-6 md:pr-10">
@@ -463,7 +463,7 @@ export default async function HomePage() {
               <div className="lg:sticky lg:top-[calc(var(--header-h)+2rem)]">
                 <h3 className="type-headline text-heading">Questions fréquentes</h3>
                 <p className="mt-3 text-muted">Les réponses aux questions qu’on nous pose le plus.</p>
-                <div className="theme-ink mt-8 rounded-object bg-canvas p-6 text-fg">
+                <div className="theme-ink mt-8 bg-canvas p-6 text-fg">
                   <span className="flex size-10 items-center justify-center rounded-pill bg-signal text-ink">
                     <ChatBubble className="size-5" />
                   </span>
@@ -498,7 +498,7 @@ export default async function HomePage() {
       {/* ── Closing — poster panel ───────────────────────────────────── */}
       <Section tone="ink" aria-labelledby="cloture" className="sheet section-standard">
         <div className="shell">
-          <Reveal className="relative isolate overflow-hidden rounded-object border border-rule px-6 py-14 sm:px-10 md:py-20 lg:px-16">
+          <Reveal className="relative isolate overflow-hidden border border-rule px-6 py-14 sm:px-10 md:py-20 lg:px-16">
             <div aria-hidden="true" className="glow-signal top-0 left-1/4 -z-10 size-[44rem]" />
             <div className="grid-12 items-end gap-y-12">
               <div className="col-span-4 md:col-span-8 lg:col-span-7">

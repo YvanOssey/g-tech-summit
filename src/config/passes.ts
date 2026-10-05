@@ -20,7 +20,7 @@ export const PASSES: Record<PassId, Pass> = {
     id: "event",
     name: "Pass Event",
     price: 10_000,
-    access: "Accès à G-TECH SUMMER — 2 jours",
+    access: "Accès à G-TECH SUMMIT — 2 jours",
     summary: "Conférences, panels, formations express, ateliers, stands et networking.",
   },
   hackathon: {

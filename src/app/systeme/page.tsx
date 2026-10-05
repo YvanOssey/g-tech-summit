@@ -52,7 +52,7 @@ const CONTRASTS = [
 
 const TYPE_SCALE = [
   { name: "Poster", spec: "Archivo condensé 800 · 64 → 208 px · chiffres uniquement", className: "type-condensed text-poster", sample: "18—19" },
-  { name: "Display", spec: "Archivo 700 · 44 → 96 px · titres de page", className: "type-headline text-display", sample: "G-TECH SUMMER 2026" },
+  { name: "Display", spec: "Archivo 700 · 44 → 96 px · titres de page", className: "type-headline text-display", sample: "G-TECH SUMMIT 2026" },
   { name: "Title", spec: "Archivo 700 · 32 → 64 px · titres de section", className: "type-headline text-title", sample: "Le programme" },
   { name: "Heading", spec: "Archivo 700 · 24 → 32 px · titres de bloc", className: "type-headline text-heading", sample: "Formations express" },
   { name: "Lead", spec: "Archivo 400 · 20 → 24 px", className: "text-lead", sample: "Conférences, panels, formations, ateliers et un hackathon, organisés par Ghostech." },
@@ -89,7 +89,7 @@ export default function DesignSystemPage() {
 
         <RevealText
           as="h1"
-          lines={["G-Tech", "Summer 2026"]}
+          lines={["G-Tech", "Summit 2026"]}
           className="type-condensed text-poster mt-10 md:mt-16"
         />
 

@@ -16,7 +16,7 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
 
 export const metadata: Metadata = {
   title: "Partenaires",
-  description: "Les partenaires de G-TECH SUMMER 2026 et comment soutenir l’événement.",
+  description: "Les partenaires de G-TECH SUMMIT 2026 et comment soutenir l’événement.",
 };
 
 /** Optical balance: very wide logos get less height than square ones. */
@@ -42,7 +42,7 @@ export default function PartnersPage() {
         label="Partenaires"
         title="Ils nous accompagnent"
         lines={["Ils nous", <Accent key="a">accompagnent</Accent>]}
-        lead="G-TECH SUMMER se construit avec des structures qui partagent l’envie de rendre la tech accessible à tous en Afrique."
+        lead="G-TECH SUMMIT se construit avec des structures qui partagent l’envie de rendre la tech accessible à tous en Afrique."
         actions={
           <>
             <ButtonLink href="#devenir" arrow>
@@ -71,7 +71,7 @@ export default function PartnersPage() {
               {PARTNERS.map((p) => (
                 <RevealItem as="li" effect="flip" key={p.name}>
                   <Tilt max={6}>
-                    <div className="panel card-interactive spotlight flex aspect-[4/3] flex-col items-center justify-center gap-6 rounded-object bg-paper! p-6">
+                    <div className="panel card-interactive spotlight flex aspect-[4/3] flex-col items-center justify-center gap-6 bg-paper! p-6">
                       <PartnerLogo partner={p} base={64} />
                       <span className="type-meta text-muted">{p.name}</span>
                     </div>
@@ -106,10 +106,10 @@ export default function PartnersPage() {
           <div className="grid-12 mt-12 gap-y-8">
             <p className="col-span-4 text-lead text-muted md:col-span-6 lg:col-span-6">
               Contactez l’équipe {EVENT.organiser.name} pour échanger sur les possibilités de partenariat et soutenir
-              G-TECH SUMMER.
+              G-TECH SUMMIT.
             </p>
             <div className="col-span-4 flex flex-wrap items-center gap-x-6 gap-y-4 self-end md:col-span-8 lg:col-span-5 lg:col-start-8 lg:justify-end">
-              <ButtonLink href={`mailto:${EVENT.contact.email}?subject=Partenariat%20G-TECH%20SUMMER%202026`} arrow>
+              <ButtonLink href={`mailto:${EVENT.contact.email}?subject=Partenariat%20G-TECH%20SUMMIT%202026`} arrow>
                 Écrire à l’équipe
               </ButtonLink>
               <ButtonLink href={whatsappUrl} variant="link" arrow>

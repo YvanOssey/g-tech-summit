@@ -17,7 +17,7 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
 
 export const metadata: Metadata = {
   title: "Infos pratiques",
-  description: "Dates, lieu, horaires, tarifs, contact et questions fréquentes de G-TECH SUMMER 2026 à Abidjan.",
+  description: "Dates, lieu, horaires, tarifs, contact et questions fréquentes de G-TECH SUMMIT 2026 à Abidjan.",
 };
 
 /** The day itself, in three steps — validated facts only. */
@@ -127,7 +127,7 @@ export default async function PracticalPage() {
                 <RevealItem as="li" effect="flip" key={k}>
                   <a
                     href={href}
-                    className="group panel spotlight relative flex h-full min-h-52 flex-col justify-between overflow-hidden rounded-object p-6 transition-colors duration-(--duration-component) hover:border-signal sm:p-8"
+                    className="group panel spotlight relative flex h-full min-h-52 flex-col justify-between overflow-hidden p-6 transition-colors duration-(--duration-component) hover:border-signal sm:p-8"
                   >
                     <span
                       aria-hidden="true"

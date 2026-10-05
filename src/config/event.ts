@@ -4,7 +4,7 @@
  * admin-editable settings and rendered with the `Pending` component — never guessed.
  */
 export const EVENT = {
-  name: "G-TECH SUMMER",
+  name: "G-TECH SUMMIT",
   edition: "1ʳᵉ édition",
   year: 2026,
   /**

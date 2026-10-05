@@ -37,6 +37,7 @@ export function ImageFrame({
   return (
     <motion.figure
       ref={ref}
+      data-reveal=""
       className={`relative overflow-hidden rounded-object bg-ink ${aspect} ${className}`}
       initial={{ clipPath: "inset(18% 0% 0% 0% round 1.25rem)" }}
       whileInView={{ clipPath: "inset(0% 0% 0% 0% round 1.25rem)" }}
@@ -45,6 +46,7 @@ export function ImageFrame({
     >
       <motion.div className="absolute inset-x-0" style={{ top: `-${parallax}%`, bottom: `-${parallax}%`, y: reduce ? 0 : y }}>
         <motion.div
+          data-reveal=""
           className="absolute inset-0"
           initial={{ scale: 1.08 }}
           whileInView={{ scale: 1 }}

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion, useScroll, useSpring, useTransform, useVelocity } from "motion/react";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type FocusEvent, type ReactNode } from "react";
 
 type Mode = "pin" | "drift" | "native";
 
@@ -53,13 +53,28 @@ export function HorizontalRail({ header, children, count }: { header: ReactNode;
   const velocity = useSpring(useVelocity(scrollY), { stiffness: 300, damping: 50 });
   const skewX = useTransform(velocity, [-2500, 0, 2500], [4, 0, -4], { clamp: true });
 
+  // Keyboard: when a card receives focus, scroll the PAGE to the point where
+  // that card is centred. The container uses overflow: clip (not hidden), so
+  // the browser cannot scroll it sideways on focus and offset the track.
+  const viewport = useRef<HTMLDivElement>(null);
+  const onFocus = (e: FocusEvent<HTMLUListElement>) => {
+    const box = viewport.current;
+    const card = (e.target as HTMLElement).closest("li");
+    const el = outer.current;
+    if (!pinned || !card || !el || !box) return;
+    const target = Math.min(Math.max(card.offsetLeft + card.offsetWidth / 2 - box.clientWidth / 2, 0), distance);
+    const top = el.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({ top: top + target, behavior: reduce ? "auto" : "smooth" });
+  };
+
   return (
     <div ref={outer} style={pinned ? { height: `calc(100svh + ${distance}px)` } : undefined}>
-      <div className={pinned ? "sticky top-0 flex h-svh flex-col justify-center overflow-hidden" : "overflow-hidden"}>
+      <div ref={viewport} className={pinned ? "sticky top-0 flex h-svh flex-col justify-center overflow-x-clip" : "overflow-x-clip"}>
         {header}
         <div className={pinned ? "mt-10" : "mt-12"}>
           <motion.ul
             ref={track}
+            onFocus={onFocus}
             style={mode === "native" ? undefined : { x, skewX }}
             className={`flex gap-4 pr-(--gutter) pl-[max(var(--gutter),calc((100vw-var(--page-max))/2+var(--gutter)))] ${
               mode === "native" ? "snap-x snap-mandatory overflow-x-auto pb-4" : "w-max"

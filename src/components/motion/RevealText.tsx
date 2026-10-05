@@ -51,6 +51,7 @@ export function RevealText({ lines, label: labelProp, as: Tag = "h2", className,
         {lines.map((line, i) => (
           <span key={i} className="block overflow-hidden pb-[0.06em] -mb-[0.06em]">
             <motion.span
+              data-reveal=""
               className="block origin-bottom-left"
               variants={{
                 hidden: { y: "110%", rotate: 4 },

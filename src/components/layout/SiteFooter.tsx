@@ -64,7 +64,7 @@ export function SiteFooter() {
           aria-hidden="true"
           className="type-condensed mt-12 text-center text-[clamp(2.5rem,11vw,10rem)] leading-[0.8] tracking-tight whitespace-nowrap md:mt-16"
         >
-          G-TECH <span className="text-signal">SUMMER</span>
+          G-TECH <span className="text-signal">SUMMIT</span>
         </p>
 
         <div className="type-meta mt-8 flex flex-col gap-3 border-t border-rule pt-6 text-muted md:flex-row md:items-center md:justify-between">

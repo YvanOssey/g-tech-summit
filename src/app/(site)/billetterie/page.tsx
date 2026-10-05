@@ -32,7 +32,7 @@ export default async function TicketingPage({
     <>
       <Section tone="signal">
         <div className="shell pt-14 pb-12 md:pt-20 md:pb-16">
-          <SectionLabel>Billetterie · G-TECH SUMMER 2026</SectionLabel>
+          <SectionLabel>Billetterie · G-TECH SUMMIT 2026</SectionLabel>
           <h1 className="type-headline text-display mt-6 md:mt-8">
             Choisissez <Accent>votre pass</Accent>
           </h1>
@@ -51,6 +51,7 @@ export default async function TicketingPage({
 
       <Section tone="paper" className="pt-14 pb-24 md:pt-20 md:pb-32">
         <div className="shell">
+          <h2 className="sr-only">Les deux pass</h2>
           <PassSelector key={initial.join()} initial={initial} />
 
           <div className="mt-12 grid gap-8 border-t border-rule-strong pt-8 lg:grid-cols-[1fr_auto] lg:items-start">
