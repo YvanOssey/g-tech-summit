@@ -20,7 +20,7 @@ export function GhostechLogo({
 }) {
   return (
     <Image
-      src={variant === "light" ? "/brand/ghostech-logo-light.png" : "/brand/ghostech-logo.png"}
+      src={variant === "light" ? "/brand/ghostech-logo-2026-light.png" : "/brand/ghostech-logo-2026.png"}
       alt="Ghostech"
       width={width}
       height={Math.round((width * 386) / 362)}
