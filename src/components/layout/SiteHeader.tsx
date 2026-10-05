@@ -72,7 +72,7 @@ export function SiteHeader() {
         >
           {/* Pill 1 — logo */}
           <Link href="/" className={`${pill} px-4`} aria-label={`${EVENT.name} ${EVENT.year} — accueil`}>
-            <GhostechLogo width={56} variant="light" preload />
+            <GhostechLogo width={38} variant="light" preload />
           </Link>
 
           {/* Pill 2 — navigation (desktop) */}

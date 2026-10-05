@@ -67,12 +67,12 @@ export default function PartnersPage() {
           </div>
 
           <SpotlightGroup>
-            <RevealGroup as="ul" className="mt-12 grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
+            <RevealGroup as="ul" className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:gap-4">
               {PARTNERS.map((p) => (
                 <RevealItem as="li" effect="flip" key={p.name}>
                   <Tilt max={6}>
                     <div className="panel card-interactive spotlight flex aspect-[4/3] flex-col items-center justify-center gap-6 bg-paper! p-6">
-                      <PartnerLogo partner={p} base={64} />
+                      <PartnerLogo partner={p} base={90} />
                       <span className="type-meta text-muted">{p.name}</span>
                     </div>
                   </Tilt>

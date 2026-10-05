@@ -1,5 +1,5 @@
 /**
- * Partners confirmed by the organisers (logos supplied in /images).
+ * Partners confirmed by the organisers (logos supplied in /images; spellings confirmed, incl. Neddigi).
  * Logos are shown in their original colours — partner brands are never recoloured.
  */
 export interface Partner {
@@ -12,4 +12,9 @@ export const PARTNERS: readonly Partner[] = [
   { name: "AIESEC", logo: { src: "/partners/aiesec.png", width: 640, height: 91 } },
   { name: "H-Electro", logo: { src: "/partners/h-electro.png", width: 488, height: 488 } },
   { name: "Neddigi", logo: { src: "/partners/neddigi.png", width: 640, height: 348 } },
+  { name: "DigiFemmes Côte d’Ivoire", logo: { src: "/partners/digifemmes-ci.png", width: 640, height: 183 } },
+  { name: "FIRATEK", logo: { src: "/partners/firatek.png", width: 389, height: 227 } },
+  { name: "IT-LeadHER", logo: { src: "/partners/it-leadher.png", width: 640, height: 607 } },
+  { name: "Les Gos Créatives", logo: { src: "/partners/les-gos-creatives.png", width: 640, height: 640 } },
+  { name: "REDIS-IUA", logo: { src: "/partners/redis-iua.png", width: 640, height: 622 } },
 ];
