@@ -38,7 +38,7 @@ export function DaySchedule({ slots, compact = false }: DayScheduleProps) {
         return (
           <li
             key={slot.start + slot.title}
-            className="grid grid-cols-[5.5rem_1fr] gap-x-4 gap-y-2 border-t border-rule-strong py-5 md:grid-cols-[8rem_9rem_1fr_11rem] md:gap-x-(--gutter)"
+            className="grid grid-cols-[5.5rem_1fr] gap-x-4 gap-y-2 border-t border-rule-strong py-5 md:grid-cols-[8rem_9rem_1fr] md:gap-x-(--gutter)"
           >
             <p className={`type-meta pt-1 ${strong ? "text-accent" : ""}`}>
               {slot.start}
@@ -58,7 +58,6 @@ export function DaySchedule({ slots, compact = false }: DayScheduleProps) {
               )}
               {slot.detail && <p className="mt-1 text-small text-muted">{slot.detail}</p>}
             </div>
-            <p className="type-meta hidden pt-1 text-muted md:block">{slot.zone}</p>
           </li>
         );
       })}

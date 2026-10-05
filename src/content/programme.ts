@@ -7,8 +7,9 @@
  * - "formations certifiantes" → "attestation de participation" (the TDR's own exact term);
  * - durations are only stated when the source gives them unambiguously;
  * - speakers are "à confirmer" in the source → rendered as pending;
- * - Panel #2: the schedule says "Cybersécurité & Données", the panels section says
- *   "Tech & Emploi" — title kept pending until the organisers decide.
+ * - Panel 2: title confirmed by the organisers — "Cybersécurité & Données :
+ *   enjeux et bonnes pratiques" (description, format and speakers still to come).
+ * - Session numbering is written without "#" (Conférence 1, Panel 2…).
  */
 
 export type SessionType =
@@ -70,12 +71,12 @@ export const DAYS: readonly Day[] = [
     slots: [
       { start: "08:00", type: "accueil", title: "Accueil, enregistrement & visite des stands partenaires", zone: "Hall d’entrée" },
       { start: "09:00", type: "ouverture", title: "Cérémonie d’ouverture officielle", detail: "Mot de bienvenue de Ghostech", zone: "Salle principale" },
-      { start: "09:45", type: "conference", title: "Conférence #1", subtitle: "Intelligence artificielle & avenir du travail", detail: "45 min + questions", zone: "Salle principale", ref: "conference-1" },
-      { start: "11:00", type: "conference", title: "Conférence #2", subtitle: "Entrepreneuriat tech en Afrique", detail: "45 min + questions", zone: "Salle principale", ref: "conference-2" },
+      { start: "09:45", type: "conference", title: "Conférence 1", subtitle: "Intelligence artificielle & avenir du travail", detail: "45 min + questions", zone: "Salle principale", ref: "conference-1" },
+      { start: "11:00", type: "conference", title: "Conférence 2", subtitle: "Entrepreneuriat tech en Afrique", detail: "45 min + questions", zone: "Salle principale", ref: "conference-2" },
       { start: "12:30", type: "pause", title: "Pause déjeuner & networking libre", detail: "Visite des stands startups", zone: "Hall / Stands" },
       { start: "14:00", end: "15:30", type: "atelier", title: "Ateliers pratiques — session 1", detail: "3 ateliers en parallèle : A, B, C", zone: "Salles A · B · C", ref: "ateliers" },
       { start: "15:30", type: "quiz", title: "Démonstrations live & quiz tech interactif", detail: "Lots à gagner", zone: "Salle principale" },
-      { start: "16:30", type: "panel", title: "Panel #1", subtitle: "Diversité & inclusion dans la tech", zone: "Salle principale", ref: "panel-1" },
+      { start: "16:30", type: "panel", title: "Panel 1", subtitle: "Diversité & inclusion dans la tech", zone: "Salle principale", ref: "panel-1" },
       { start: "17:30", type: "networking", title: "Clôture du jour 1 & cocktail networking", zone: "Hall" },
     ],
   },
@@ -89,9 +90,9 @@ export const DAYS: readonly Day[] = [
       { start: "08:00", type: "accueil", title: "Accueil & récap de la première journée", zone: "Hall d’entrée" },
       { start: "09:15", end: "12:15", type: "formation", title: "Formations express", detail: "4 modules en parallèle — attestation de participation", zone: "Salles A · B · C · D", ref: "formations" },
       { start: "11:30", type: "pause", title: "Pause déjeuner & visite des stands", detail: "Networking exposants", zone: "Hall / Stands" },
-      { start: "12:00", type: "panel", title: "Panel #2", subtitle: null, zone: "Salle principale", ref: "panel-2" },
+      { start: "12:00", type: "panel", title: "Panel 2", subtitle: "Cybersécurité & Données : enjeux et bonnes pratiques", zone: "Salle principale", ref: "panel-2" },
       { start: "12:45", end: "14:00", type: "atelier", title: "Ateliers pratiques — session 2", detail: "3 ateliers + nouvelles démonstrations live", zone: "Salles A · B · C", ref: "ateliers" },
-      { start: "14:00", type: "conference", title: "Conférence #3", subtitle: "Innovation numérique en Côte d’Ivoire : bilan & perspectives", detail: "45 min + questions", zone: "Salle principale", ref: "conference-3" },
+      { start: "14:00", type: "conference", title: "Conférence 3", subtitle: "Innovation numérique en Côte d’Ivoire : bilan & perspectives", detail: "45 min + questions", zone: "Salle principale", ref: "conference-3" },
       { start: "15:00", type: "pitch", title: "Pitch & présentations finales du hackathon", detail: "Projets finalistes + vote du public", zone: "Salle principale" },
       { start: "17:00", type: "cloture", title: "Annonce des vainqueurs & remise des prix", zone: "Salle principale" },
       { start: "17:30", type: "networking", title: "After-party & cocktail de clôture", zone: "Hall principal" },
@@ -112,7 +113,7 @@ export interface Talk {
 export const CONFERENCES: readonly Talk[] = [
   {
     id: "conference-1",
-    kind: "Conférence #1",
+    kind: "Conférence 1",
     title: "Intelligence artificielle & avenir du travail",
     description:
       "L’intelligence artificielle transforme profondément le marché du travail. Cette conférence explore les impacts concrets de l’IA sur les métiers, les opportunités pour les professionnels africains et les compétences clés à développer pour rester compétitif.",
@@ -127,7 +128,7 @@ export const CONFERENCES: readonly Talk[] = [
   },
   {
     id: "conference-2",
-    kind: "Conférence #2",
+    kind: "Conférence 2",
     title: "Entrepreneuriat tech en Afrique : défis, réussites & stratégies",
     description:
       "Des parcours d’entrepreneurs ivoiriens et africains qui ont bâti des solutions locales à fort impact. Les défis propres au contexte africain — financement, infrastructure, marché — et les stratégies pour créer et faire grandir une startup tech.",
@@ -142,7 +143,7 @@ export const CONFERENCES: readonly Talk[] = [
   },
   {
     id: "conference-3",
-    kind: "Conférence #3",
+    kind: "Conférence 3",
     title: "Innovation numérique en Côte d’Ivoire : bilan & perspectives",
     description:
       "Un état des lieux de l’écosystème numérique ivoirien — politiques publiques, initiatives privées, projets structurants — et les secteurs à fort potentiel : fintech, agrotech, edtech, santé digitale. Le rôle de la jeunesse dans cette transformation est au centre.",
@@ -160,7 +161,7 @@ export const CONFERENCES: readonly Talk[] = [
 export const PANELS: readonly Talk[] = [
   {
     id: "panel-1",
-    kind: "Panel #1",
+    kind: "Panel 1",
     title: "Diversité & inclusion dans la tech : où en est-on en Afrique ?",
     description:
       "La représentation des femmes et des jeunes issus de milieux défavorisés dans la tech africaine, des initiatives inspirantes et des pistes concrètes pour un écosystème plus inclusif et équitable.",
@@ -169,8 +170,8 @@ export const PANELS: readonly Talk[] = [
   },
   {
     id: "panel-2",
-    kind: "Panel #2",
-    title: null,
+    kind: "Panel 2",
+    title: "Cybersécurité & Données : enjeux et bonnes pratiques",
     description: null,
     when: "Samedi 19 · 12:00",
   },
@@ -195,7 +196,7 @@ export const FORMATIONS_INFO = {
 export const FORMATIONS: readonly Formation[] = [
   {
     id: "form-1",
-    code: "Form #1",
+    code: "Form 1",
     title: "Initiation au développement web",
     tagline: "De zéro à votre première page web",
     description:
@@ -210,7 +211,7 @@ export const FORMATIONS: readonly Formation[] = [
   },
   {
     id: "form-2",
-    code: "Form #2",
+    code: "Form 2",
     title: "Introduction à l’IA",
     tagline: "Comprendre et utiliser l’intelligence artificielle au quotidien",
     description:
@@ -225,7 +226,7 @@ export const FORMATIONS: readonly Formation[] = [
   },
   {
     id: "form-3",
-    code: "Form #3",
+    code: "Form 3",
     title: "Design graphique",
     tagline: "Créer des visuels percutants avec Canva & Figma",
     description:
@@ -240,7 +241,7 @@ export const FORMATIONS: readonly Formation[] = [
   },
   {
     id: "form-4",
-    code: "Form #4",
+    code: "Form 4",
     title: "Personal branding & community management",
     tagline: "Bâtir sa marque digitale",
     description:

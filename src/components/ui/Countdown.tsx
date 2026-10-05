@@ -5,18 +5,15 @@ import { EVENT } from "@/config/event";
 
 /** Doors open (programme: accueil 08:00, Abidjan = UTC+0). */
 const START = Date.parse(EVENT.doorsOpen.iso);
-const MINUTE = 60_000;
+const SECOND = 1_000;
 
-/**
- * Current time on the client only (the server cannot know it), refreshed every
- * minute. Nothing animates: the value simply changes.
- */
+/** Current time on the client only (the server cannot know it), refreshed every second. */
 function useNow() {
   const [now, setNow] = useState<number | null>(null);
   useEffect(() => {
     const tick = () => setNow(Date.now());
     tick();
-    const id = window.setInterval(tick, MINUTE);
+    const id = window.setInterval(tick, SECOND);
     return () => window.clearInterval(id);
   }, []);
   return now;
@@ -26,10 +23,11 @@ const UNITS = [
   { key: "days", label: "Jours", short: "J" },
   { key: "hours", label: "Heures", short: "H" },
   { key: "minutes", label: "Minutes", short: "Min" },
+  { key: "seconds", label: "Secondes", short: "Sec" },
 ] as const;
 
 /**
- * Days / hours / minutes until the doors open — no seconds, no animation.
+ * Days / hours / minutes / seconds until the doors open.
  * Shown in the homepage hero (centred) and at the end of the homepage.
  */
 export function Countdown({
@@ -39,7 +37,7 @@ export function Countdown({
 }: {
   className?: string;
   centered?: boolean;
-  /** Alternate colours: figures orange · paper · orange, captions the reverse. */
+  /** Alternate colours: figures orange · paper · orange · paper, captions the reverse. */
   alternate?: boolean;
 }) {
   const now = useNow();
@@ -47,20 +45,22 @@ export function Countdown({
 
   let parts: Record<(typeof UNITS)[number]["key"], number> | null = null;
   if (now !== null) {
-    let m = Math.floor((START - now) / MINUTE);
-    const days = Math.floor(m / 1440);
-    m -= days * 1440;
-    parts = { days, hours: Math.floor(m / 60), minutes: m % 60 };
+    let sec = Math.floor((START - now) / SECOND);
+    const days = Math.floor(sec / 86_400);
+    sec -= days * 86_400;
+    const hours = Math.floor(sec / 3_600);
+    sec -= hours * 3_600;
+    parts = { days, hours, minutes: Math.floor(sec / 60), seconds: sec % 60 };
   }
 
   return (
     <div className={className}>
       {parts && (
         <span className="sr-only">
-          {parts.days} jours, {parts.hours} heures et {parts.minutes} minutes avant l’ouverture des portes
+          {parts.days} jours, {parts.hours} heures, {parts.minutes} minutes et {parts.seconds} secondes avant l’ouverture des portes
         </span>
       )}
-      <ol aria-hidden="true" className="grid grid-cols-3 border-t border-rule-strong">
+      <ol aria-hidden="true" className="grid grid-cols-4 border-t border-rule-strong">
         {UNITS.map((u, i) => (
           <li
             key={u.key}

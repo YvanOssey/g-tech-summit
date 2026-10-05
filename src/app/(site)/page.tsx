@@ -1,16 +1,26 @@
+import Image from "next/image";
 import Link from "next/link";
 import { EVENT, whatsappUrl } from "@/config/event";
 import { PHOTOS } from "@/config/media";
+import { PARTNERS } from "@/config/partners";
 import { PASSES, orderTotal } from "@/config/passes";
 import { getEventSettings } from "@/config/settings";
 import { FAQ } from "@/content/faq";
 import { HACKATHON, TRACKS } from "@/content/hackathon";
 import { DAYS } from "@/content/programme";
 import { GhostechLogo } from "@/components/brand/GhostechLogo";
+import { HackathonSteps } from "@/components/home/HackathonSteps";
 import { HomeHero } from "@/components/home/HomeHero";
-import { PartnerLogos } from "@/components/home/PartnerLogos";
+import { InfoDeck } from "@/components/home/InfoDeck";
+import { CountUp } from "@/components/motion/CountUp";
+import { Marquee } from "@/components/motion/Marquee";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { RevealText } from "@/components/motion/RevealText";
+import { ScrollWord } from "@/components/motion/ScrollWord";
+import { SpotlightGroup } from "@/components/motion/Spotlight";
+import { Tilt } from "@/components/motion/Tilt";
+import { HorizontalRail } from "@/components/motion/HorizontalRail";
+import { ParticleField } from "@/components/motion/ParticleField";
 import { DaySchedule } from "@/components/programme/DaySchedule";
 import { PassCard } from "@/components/ticket/PassCard";
 import { Accent } from "@/components/ui/Accent";
@@ -18,7 +28,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Countdown } from "@/components/ui/Countdown";
 import { FaqList } from "@/components/ui/FaqList";
 import { ImageFrame } from "@/components/ui/ImageFrame";
-import { ArrowRight } from "@/components/ui/icons";
+import { ArrowRight, ChatBubble } from "@/components/ui/icons";
 import { Pending } from "@/components/ui/Pending";
 import { Section } from "@/components/ui/Section";
 import { SectionLabel } from "@/components/ui/SectionLabel";
@@ -42,19 +52,74 @@ const FORMATS = [
   { name: "Networking", text: "Étudiants, professionnels, startups et recruteurs. Un cocktail clôt chacune des deux journées.", href: "/programme" },
 ] as const;
 
+/** Only counts that can be checked on this site. */
+const FIGURES = [
+  { value: 2, label: "Jours", detail: "18 & 19 décembre" },
+  { value: FORMATS.length, label: "Formats", detail: "Conférences, panels, formations…" },
+  { value: TRACKS.length, label: "Thématiques", detail: "au hackathon" },
+  { value: 2, label: "Pass", detail: "Event & Hackathon" },
+] as const;
+
+const RIBBON = ["Conférences", "Panels", "Formations express", "Ateliers", "Hackathon", "Stands & démos", "Networking"] as const;
+
 export default async function HomePage() {
   const settings = await getEventSettings();
-  const hackathonPhoto = PHOTOS.hackathon;
-  const atelierPhoto = PHOTOS.atelier;
+  const posterPhoto = PHOTOS.poster;
 
   return (
     <>
       <HomeHero venue={settings.venue} />
 
-      {/* ── L'événement — light, editorial, generous space ───────────── */}
-      <Section tone="paper" aria-labelledby="evenement" className="section-standard">
+      {/* ── Figures + ribbon ─────────────────────────────────────────── */}
+      <Section tone="ink" id="chiffres" aria-label="L’événement en chiffres" className="pt-4 pb-20 md:pb-28">
         <div className="shell">
-          <div className="grid-12 gap-y-12">
+          <RevealGroup as="ul" className="grid grid-cols-2 rounded-object border border-rule lg:grid-cols-4">
+            {FIGURES.map((f, i) => (
+              <RevealItem
+                as="li"
+                key={f.label}
+                className={`flex flex-col items-center px-4 py-8 text-center md:py-10 ${i % 2 ? "border-l border-rule" : ""} ${
+                  i >= 2 ? "border-t border-rule lg:border-t-0 lg:border-l" : ""
+                }`}
+              >
+                <CountUp value={f.value} className="type-condensed text-title leading-none text-signal" />
+                <span className="type-label mt-3 text-paper">{f.label}</span>
+                <span className="mt-1 text-small text-muted">{f.detail}</span>
+              </RevealItem>
+            ))}
+          </RevealGroup>
+        </div>
+
+        {/* Two crossed bands — the formats, scrolling */}
+        <div aria-hidden="true" className="relative mt-20 overflow-hidden py-10 md:mt-28">
+          <div className="-mx-4 rotate-2 border-y border-graphite bg-ink py-4">
+            <Marquee
+              reverse
+              duration={50}
+              items={RIBBON.map((r) => (
+                <span key={r} className="type-condensed flex items-center gap-8 px-4 text-heading text-mist">
+                  {r} <span className="size-2 rounded-pill bg-graphite" />
+                </span>
+              ))}
+            />
+          </div>
+          <div className="absolute inset-x-0 top-1/2 -mx-4 -translate-y-1/2 -rotate-2 bg-signal py-4 text-ink">
+            <Marquee
+              duration={40}
+              items={RIBBON.map((r) => (
+                <span key={r} className="type-condensed flex items-center gap-8 px-4 text-heading">
+                  {r} <span className="size-3 rotate-45 bg-ink" />
+                </span>
+              ))}
+            />
+          </div>
+        </div>
+      </Section>
+
+      {/* ── L'événement — light, editorial ───────────────────────────── */}
+      <Section tone="paper" aria-labelledby="evenement" className="sheet section-standard">
+        <div className="shell">
+          <div className="grid-12 gap-y-14">
             <div className="col-span-4 md:col-span-8 lg:col-span-6">
               <SectionLabel>L’événement</SectionLabel>
               <RevealText
@@ -64,44 +129,135 @@ export default async function HomePage() {
                 lines={["Deux jours pour", "apprendre, échanger", <span key="c">et <Accent>construire</Accent>.</span>]}
                 className="type-headline text-title mt-8"
               />
-              <Reveal delay={0.15} className="mt-10 space-y-8">
+              <Reveal delay={0.15} className="mt-10">
                 <p className="text-lead">
                   G-TECH SUMMER réunit étudiants, développeurs, designers, entrepreneurs et professionnels. Aucun niveau
                   technique n’est requis pour venir.
                 </p>
-                <div className="panel flex items-start gap-5 p-5 sm:p-6">
-                  <GhostechLogo width={88} className="shrink-0" />
-                  <p className="text-small text-muted">
-                    Organisé par <span className="font-semibold text-fg">{EVENT.organiser.name}</span>, communauté tech
-                    fondée à l’Institut Universitaire d’Abidjan. Cette première édition marque aussi sa première année.
-                  </p>
+                <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-4">
+                  <ButtonLink href="/programme" arrow>
+                    Découvrir le programme
+                  </ButtonLink>
+                  <ButtonLink href="/infos-pratiques" variant="link" arrow>
+                    Infos pratiques
+                  </ButtonLink>
                 </div>
               </Reveal>
             </div>
-            {atelierPhoto && (
-              <div className="col-span-4 md:col-span-8 lg:col-span-5 lg:col-start-8 lg:self-end">
-                <ImageFrame photo={atelierPhoto} aspect="aspect-[4/5] md:aspect-[16/10] lg:aspect-[4/5]" />
+
+            {posterPhoto && (
+              <div className="col-span-4 md:col-span-8 lg:col-span-6 lg:col-start-7 lg:self-center">
+                <Tilt max={4}>
+                  <ImageFrame
+                    photo={posterPhoto}
+                    aspect="aspect-[1430/1089]"
+                    sizes="(min-width: 1024px) 50vw, 100vw"
+                    parallax={0}
+                    className="shadow-[0_24px_60px_-20px_rgb(23_23_23/0.45)]"
+                  />
+                </Tilt>
+                <Reveal delay={0.3} className="mt-5 flex items-center gap-4">
+                  <GhostechLogo width={64} className="shrink-0" />
+                  <p className="text-small text-muted">
+                    <span className="block font-semibold text-fg">
+                      {EVENT.edition}, organisée par {EVENT.organiser.name}
+                    </span>
+                    Communauté tech fondée à l’Institut Universitaire d’Abidjan.
+                  </p>
+                </Reveal>
               </div>
             )}
           </div>
 
-          <RevealGroup as="ul" className="mt-20 grid gap-3 sm:grid-cols-2 lg:mt-28 lg:grid-cols-3 lg:gap-4">
-            {PROFILES.map((p, i) => (
-              <RevealItem as="li" key={p.who} className="panel flex flex-col p-6 sm:p-8">
-                <span className="type-condensed text-heading leading-none text-accent">{String(i + 1).padStart(2, "0")}</span>
-                <h3 className="type-headline mt-6 text-heading leading-tight">{p.who}</h3>
-                <p className="mt-3 text-muted">{p.what}</p>
-              </RevealItem>
-            ))}
-          </RevealGroup>
+          <div className="mt-24 flex flex-wrap items-end justify-between gap-6 lg:mt-32">
+            <h3 className="type-headline text-heading">Pour qui ?</h3>
+            <p className="max-w-md text-muted">Six profils, un même rendez-vous — choisissez votre point d’entrée.</p>
+          </div>
+          <SpotlightGroup>
+            <RevealGroup as="ul" className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4">
+              {PROFILES.map((p, i) => (
+                <RevealItem as="li" effect="flip" key={p.who} className="panel card-interactive spotlight flex flex-col p-6 sm:p-8">
+                  <span className="card-index type-condensed text-heading leading-none text-accent">{String(i + 1).padStart(2, "0")}</span>
+                  <h4 className="type-headline mt-6 text-heading leading-tight">{p.who}</h4>
+                  <p className="mt-3 text-muted">{p.what}</p>
+                </RevealItem>
+              ))}
+            </RevealGroup>
+          </SpotlightGroup>
         </div>
       </Section>
 
-      {/* ── Hackathon — dark, immersive ───────────────────────────────── */}
-      <Section tone="ink" aria-labelledby="hackathon" className="section-standard">
-        <div className="shell grid-12 gap-y-14">
-          <div className="col-span-4 md:col-span-8 lg:col-span-6">
-            <SectionLabel>{`${HACKATHON.name} · ${HACKATHON.edition}`}</SectionLabel>
+      {/* ── Formats — landscape cards sliding sideways with the scroll ─ */}
+      <Section tone="ink" aria-labelledby="formats" className="sheet section-standard">
+        <SpotlightGroup>
+          <HorizontalRail
+            count={FORMATS.length}
+            header={
+              <div className="shell flex flex-wrap items-end justify-between gap-8">
+                <div>
+                  <SectionLabel>Au programme</SectionLabel>
+                  <RevealText
+                    inView
+                    id="formats"
+                    label="Apprendre, pratiquer, rencontrer."
+                    lines={["Apprendre, pratiquer,", <Accent key="r">rencontrer.</Accent>]}
+                    className="type-headline text-title mt-8"
+                  />
+                </div>
+                <ButtonLink href="/programme" variant="link" arrow>
+                  Programme détaillé
+                </ButtonLink>
+              </div>
+            }
+          >
+            {FORMATS.map((f, i) => (
+              <li key={f.name} className="w-[min(85vw,22rem)] shrink-0 snap-start md:w-[clamp(30rem,44vw,40rem)]">
+                <Link
+                  href={f.href}
+                  className="group panel spotlight relative grid h-full min-h-56 grid-cols-[auto_1fr] gap-x-6 overflow-hidden rounded-object p-6 transition-[border-color,translate] duration-(--duration-component) hover:-translate-y-1 hover:border-signal sm:p-8 md:min-h-[min(20rem,42svh)] md:gap-x-10"
+                >
+                  {/* Index column */}
+                  <span className="flex flex-col items-start justify-between border-r border-rule pr-6 md:pr-10">
+                    <span className="type-condensed text-display leading-none text-signal/40 transition-colors duration-(--duration-component) group-hover:text-signal">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="type-meta text-muted">/{String(FORMATS.length).padStart(2, "0")}</span>
+                  </span>
+
+                  {/* Content column */}
+                  <span className="flex min-w-0 flex-col">
+                    <span className="flex items-start justify-between gap-4">
+                      <span className="type-headline block text-heading leading-none transition-colors duration-(--duration-component) group-hover:text-signal md:text-title">
+                        {f.name}
+                      </span>
+                      <span className="arrow-badge max-md:hidden">
+                        <ArrowRight className="size-4" />
+                      </span>
+                    </span>
+                    <span className="mt-auto block pt-6 text-muted">{f.text}</span>
+                    <span className="type-meta mt-5 inline-flex items-center gap-2 text-paper md:hidden">
+                      Voir <ArrowRight className="size-3.5" />
+                    </span>
+                  </span>
+
+                  {/* Orange rule drawn along the bottom on hover */}
+                  <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1 origin-left scale-x-0 bg-signal transition-transform duration-(--duration-component) ease-out-quart group-hover:scale-x-100" />
+                </Link>
+              </li>
+            ))}
+          </HorizontalRail>
+        </SpotlightGroup>
+      </Section>
+
+      {/* ── Hackathon — immersive ────────────────────────────────────── */}
+      <Section tone="ink" aria-labelledby="hackathon" className="relative isolate pb-(--section-standard)">
+        <ParticleField className="absolute inset-0 -z-10 size-full opacity-70" />
+        <div aria-hidden="true" className="glow-signal top-[55%] left-[85%] -z-10 size-[50rem]" />
+        <ScrollWord word="Hackathon" className="pt-4 pb-12 md:pb-16" />
+
+        <div className="shell">
+          <div className="mx-auto max-w-3xl text-center">
+            <SectionLabel className="justify-center">{`${HACKATHON.name} · ${HACKATHON.edition}`}</SectionLabel>
             <RevealText
               inView
               id="hackathon"
@@ -109,22 +265,25 @@ export default async function HomePage() {
               lines={["Quatre thématiques,", <span key="f">une <Accent>finale</Accent> sur scène.</span>]}
               className="type-headline text-title mt-8"
             />
-            <p className="mt-8 max-w-xl text-muted">{HACKATHON.intro}</p>
+            <p className="mx-auto mt-8 max-w-xl text-muted">{HACKATHON.intro}</p>
 
-            <dl className="mt-10 grid grid-cols-2 border-t border-rule">
+            <dl className="mt-10 grid grid-cols-2 border-t border-rule md:grid-cols-4">
               {[
                 { k: "Format", v: "En équipe uniquement" },
                 { k: "Finale", v: `Sam. 19 déc. · ${HACKATHON.finale.pitch.time}` },
                 { k: "Pitch", v: "4 min + 2 min de questions" },
                 { k: "Pass", v: `${formatFCFA(PASSES.hackathon.price)} / pers.` },
               ].map((item, i) => (
-                <div key={item.k} className={`border-b border-rule py-5 ${i % 2 ? "border-l pl-5" : "pr-5"}`}>
+                <div
+                  key={item.k}
+                  className={`border-b border-rule px-3 py-5 ${i % 2 ? "border-l" : ""} ${i === 2 ? "md:border-l" : ""}`}
+                >
                   <dt className="type-label">{item.k}</dt>
                   <dd className="mt-1.5 font-semibold">{item.v}</dd>
                 </div>
               ))}
             </dl>
-            <div className="mt-10 flex flex-wrap gap-3">
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
               <ButtonLink href="/hackathon" arrow>
                 Découvrir le hackathon
               </ButtonLink>
@@ -133,63 +292,29 @@ export default async function HomePage() {
               </ButtonLink>
             </div>
           </div>
+        </div>
 
-          <div className="col-span-4 md:col-span-8 lg:col-span-5 lg:col-start-8">
-            {hackathonPhoto && <ImageFrame photo={hackathonPhoto} className="mb-4" />}
-            <RevealGroup as="ol" className="grid gap-3 sm:grid-cols-2">
+        <div className="shell mt-20 lg:mt-28">
+          <h3 className="type-label">Les quatre thématiques</h3>
+          <SpotlightGroup>
+            <RevealGroup as="ol" className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
               {TRACKS.map((t) => (
-                <RevealItem as="li" key={t.code} className="panel p-6">
-                  <span className="type-condensed text-heading leading-none text-accent">{t.code}</span>
-                  <h3 className="type-headline mt-4 text-heading leading-tight">{t.name}</h3>
+                <RevealItem as="li" effect="flip" key={t.code} className="panel card-interactive spotlight flex min-h-56 flex-col bg-ink/85 p-6">
+                  <span className="card-index type-condensed text-title leading-none text-accent">{t.code}</span>
+                  <h4 className="type-headline mt-auto pt-8 text-heading leading-tight">{t.name}</h4>
                   <p className="mt-1 text-small text-muted">{t.claim}</p>
                 </RevealItem>
               ))}
             </RevealGroup>
-          </div>
+          </SpotlightGroup>
+
+          <h3 className="type-label mt-20">Le déroulé</h3>
+          <HackathonSteps className="mt-6" />
         </div>
       </Section>
 
-      {/* ── Formats — grey, index rows ────────────────────────────────── */}
-      <Section tone="stone" aria-labelledby="formats" className="section-standard">
-        <div className="shell">
-          <div className="flex flex-wrap items-end justify-between gap-8">
-            <div>
-              <SectionLabel>Au programme</SectionLabel>
-              <RevealText
-                inView
-                id="formats"
-                label="Apprendre, pratiquer, rencontrer."
-                lines={["Apprendre, pratiquer,", <Accent key="r">rencontrer.</Accent>]}
-                className="type-headline text-title mt-8"
-              />
-            </div>
-            <ButtonLink href="/programme" variant="link" arrow>
-              Programme détaillé
-            </ButtonLink>
-          </div>
-
-          <ul className="mt-16 border-b border-rule-strong">
-            {FORMATS.map((f, i) => (
-              <li key={f.name} className="border-t border-rule-strong">
-                <Link
-                  href={f.href}
-                  className="group grid grid-cols-[3rem_1fr_auto] items-baseline gap-x-4 gap-y-2 py-7 md:grid-cols-[5rem_minmax(0,1fr)_minmax(0,1.4fr)_auto] md:gap-x-(--gutter) md:py-9"
-                >
-                  <span className="type-meta text-muted">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="type-headline text-heading leading-none transition-colors duration-(--duration-micro) group-hover:text-accent">
-                    {f.name}
-                  </span>
-                  <span className="col-span-3 col-start-2 row-start-2 text-muted md:col-span-1 md:col-start-3 md:row-start-1">{f.text}</span>
-                  <ArrowRight className="col-start-3 row-start-1 size-5 self-center transition-transform duration-(--duration-micro) ease-out-quart group-hover:translate-x-1 md:col-start-4" />
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </Section>
-
-      {/* ── Two days — dark, dense ─────────────────────────────────────── */}
-      <Section tone="ink" aria-labelledby="deux-jours" className="section-standard">
+      {/* ── Two days — grey sheet ────────────────────────────────────── */}
+      <Section tone="stone" aria-labelledby="deux-jours" className="sheet section-standard">
         <div className="shell">
           <div className="flex flex-wrap items-end justify-between gap-8">
             <div>
@@ -208,21 +333,28 @@ export default async function HomePage() {
           </div>
           <RevealGroup className="mt-16 grid gap-4 md:grid-cols-2">
             {DAYS.map((d) => (
-              <RevealItem key={d.id} className="panel p-6 sm:p-8">
-                <div className="flex items-baseline justify-between gap-4">
-                  <h3 className="type-headline text-heading">{d.label}</h3>
-                  <span className="type-label">Jour {d.index}</span>
+              <RevealItem key={d.id} className="panel card-interactive p-6 sm:p-8">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <span className="type-label">Jour {d.index}</span>
+                    <h3 className="type-headline mt-2 text-heading">{d.label}</h3>
+                    <p className="mt-1 text-muted">{d.theme}</p>
+                  </div>
+                  <span className="card-index type-condensed text-display leading-none text-mark" aria-hidden="true">
+                    {d.date.slice(-2)}
+                  </span>
                 </div>
-                <p className="mt-2 mb-6 text-muted">{d.theme}</p>
-                <DaySchedule slots={d.slots} compact />
+                <div className="mt-8">
+                  <DaySchedule slots={d.slots} compact />
+                </div>
               </RevealItem>
             ))}
           </RevealGroup>
         </div>
       </Section>
 
-      {/* ── Billetterie — the single orange band ──────────────────────── */}
-      <Section tone="signal" aria-labelledby="pass" className="section-standard">
+      {/* ── Billetterie — the orange band ────────────────────────────── */}
+      <Section tone="signal" aria-labelledby="pass" className="sheet section-standard">
         <div className="shell">
           <div className="grid-12 gap-y-8">
             <div className="col-span-4 md:col-span-8 lg:col-span-7">
@@ -243,99 +375,154 @@ export default async function HomePage() {
           <RevealGroup className="mt-14 grid gap-4 md:grid-cols-2 md:gap-(--gutter)">
             {(["event", "hackathon"] as const).map((id, i) => (
               <RevealItem key={id}>
-                <Link href={`/billetterie?pass=${id}`} className="group block">
-                <PassCard pass={PASSES[id]} index={i + 1} className="transition-transform duration-(--duration-micro) ease-out-quart group-hover:-translate-y-1">
-                  <span className="flex size-11 items-center justify-center bg-signal text-ink">
-                    <ArrowRight className="size-5 transition-transform duration-(--duration-micro) group-hover:translate-x-0.5" />
-                    <span className="sr-only">Choisir le {PASSES[id].name}</span>
-                  </span>
-                </PassCard>
-                </Link>
+                <Tilt className="h-full">
+                  <Link href={`/billetterie?pass=${id}`} className="group block h-full rounded-object">
+                    <PassCard pass={PASSES[id]} index={i + 1}>
+                      <span className="flex size-12 items-center justify-center rounded-pill bg-signal text-ink transition-transform duration-(--duration-component) ease-out-quart group-hover:scale-110">
+                        <ArrowRight className="size-5 transition-transform duration-(--duration-micro) group-hover:translate-x-0.5" />
+                        <span className="sr-only">Choisir le {PASSES[id].name}</span>
+                      </span>
+                    </PassCard>
+                  </Link>
+                </Tilt>
               </RevealItem>
             ))}
           </RevealGroup>
         </div>
       </Section>
 
-      {/* ── Partners — light, institutional ───────────────────────────── */}
-      <Section tone="paper" aria-labelledby="partenaires" className="section-standard">
-        <div className="shell">
-          <div className="flex flex-wrap items-end justify-between gap-8">
-            <div>
-              <SectionLabel>Partenaires</SectionLabel>
-              <h2 id="partenaires" className="type-headline text-title mt-8">
-                Ils nous accompagnent
-              </h2>
-            </div>
-            <ButtonLink href="/partenaires" variant="link" arrow>
-              Devenir partenaire
-            </ButtonLink>
+      {/* ── Partners — light, endless band ───────────────────────────── */}
+      <Section tone="paper" aria-labelledby="partenaires" className="sheet section-standard">
+        <div className="shell flex flex-wrap items-end justify-between gap-8">
+          <div>
+            <SectionLabel>Partenaires</SectionLabel>
+            <h2 id="partenaires" className="type-headline text-title mt-8">
+              Ils nous accompagnent
+            </h2>
           </div>
-          <Reveal className="panel mt-14 px-2 sm:px-6">
-            <PartnerLogos />
-          </Reveal>
+          <ButtonLink href="/partenaires" variant="link" arrow>
+            Devenir partenaire
+          </ButtonLink>
         </div>
+        <Marquee
+          label="Partenaires"
+          duration={30}
+          className="mt-14 border-y border-rule py-10"
+          items={PARTNERS.map((p) => (
+            <span key={p.name} className="flex h-20 items-center px-10 md:px-16">
+              <Image
+                src={p.logo.src}
+                alt={p.name}
+                width={p.logo.width}
+                height={p.logo.height}
+                style={{ height: Math.round(64 / Math.pow(p.logo.width / p.logo.height, 0.35)), width: "auto" }}
+                className="max-w-none object-contain"
+              />
+            </span>
+          ))}
+        />
       </Section>
 
-      {/* ── Practical + FAQ — grey, calm reading ──────────────────────── */}
-      <Section tone="stone" aria-labelledby="infos" className="section-standard">
-        <div className="shell grid-12 gap-y-14">
-          <div className="col-span-4 md:col-span-3 lg:col-span-4">
-            <SectionLabel>Infos pratiques</SectionLabel>
-            <h2 id="infos" className="type-headline text-title mt-8">
-              Questions fréquentes
-            </h2>
-            <dl className="mt-10 space-y-6 border-t border-rule-strong pt-6">
+      {/* ── Practical info + FAQ ─────────────────────────────────────── */}
+      <Section tone="stone" aria-labelledby="infos" className="sheet pb-(--section-standard)">
+        <InfoDeck
+          header={
+            <div className="flex flex-wrap items-end justify-between gap-8">
               <div>
-                <dt className="type-label">Lieu</dt>
-                <dd className="mt-1.5">{settings.venue ? settings.venue.name : <Pending label="Lieu" />}</dd>
+                <SectionLabel>Infos pratiques</SectionLabel>
+                <RevealText
+                  inView
+                  id="infos"
+                  label="Tout ce qu’il faut savoir avant de venir."
+                  lines={["Tout ce qu’il faut savoir", <span key="v">avant de <Accent>venir</Accent>.</span>]}
+                  className="type-headline text-title mt-8"
+                />
               </div>
-              <div>
-                <dt className="type-label">Accueil</dt>
-                <dd className="mt-1.5">À partir de 08:00, les deux jours</dd>
-              </div>
-              <div>
-                <dt className="type-label">Contact</dt>
-                <dd className="mt-1.5 space-y-1">
-                  <a href={`mailto:${EVENT.contact.email}`} className="block break-words underline decoration-rule-strong underline-offset-4 hover:decoration-mark">
-                    {EVENT.contact.email}
-                  </a>
-                  <a href={whatsappUrl} className="block underline decoration-rule-strong underline-offset-4 hover:decoration-mark">
-                    WhatsApp {EVENT.contact.phoneDisplay}
-                  </a>
-                </dd>
-              </div>
-            </dl>
-          </div>
-          <div className="col-span-4 md:col-span-5 md:col-start-4 lg:col-span-7 lg:col-start-6">
-            <div className="panel px-6 py-2 sm:px-8">
-              <FaqList items={FAQ.slice(0, 5)} />
-            </div>
-            <div className="mt-6">
-              <ButtonLink href="/infos-pratiques#faq" variant="link" arrow>
-                Toutes les questions
+              <ButtonLink href="/infos-pratiques" variant="link" arrow>
+                Toutes les infos
               </ButtonLink>
             </div>
+          }
+          cards={[
+            {
+              icon: "pin",
+              k: "Lieu",
+              v: settings.venue ? settings.venue.name : EVENT.city,
+              note: settings.venue ? EVENT.country : <Pending label="Lieu exact">Lieu exact à annoncer</Pending>,
+            },
+            { icon: "clock", k: "Accueil", v: "Dès 08:00", note: "Vendredi 18 et samedi 19 décembre" },
+            { icon: "ticket", k: "Billet", v: "Nominatif, par e-mail", note: "Avec un QR code unique, scanné à l’entrée." },
+            { icon: "wallet", k: "Paiement", v: "Wave, sans frais ajoutés", note: "Inscriptions en ligne : ouverture prochaine." },
+          ]}
+        />
+
+        <div className="shell">
+          {/* FAQ */}
+          <div className="grid-12 mt-20 gap-y-10 lg:mt-28">
+            <div className="col-span-4 md:col-span-8 lg:col-span-4">
+              <div className="lg:sticky lg:top-[calc(var(--header-h)+2rem)]">
+                <h3 className="type-headline text-heading">Questions fréquentes</h3>
+                <p className="mt-3 text-muted">Les réponses aux questions qu’on nous pose le plus.</p>
+                <div className="theme-ink mt-8 rounded-object bg-canvas p-6 text-fg">
+                  <span className="flex size-10 items-center justify-center rounded-pill bg-signal text-ink">
+                    <ChatBubble className="size-5" />
+                  </span>
+                  <p className="type-headline mt-5 text-heading">Une autre question ?</p>
+                  <p className="mt-2 text-small text-muted">L’équipe Ghostech vous répond.</p>
+                  <div className="mt-6 flex flex-col items-start gap-3">
+                    <ButtonLink href={whatsappUrl} arrow className="text-small">
+                      WhatsApp
+                    </ButtonLink>
+                    <a
+                      href={`mailto:${EVENT.contact.email}`}
+                      className="text-small break-all underline decoration-rule-strong underline-offset-4 hover:decoration-mark"
+                    >
+                      {EVENT.contact.email}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col-span-4 md:col-span-8 lg:col-span-8">
+              <FaqList items={FAQ.slice(0, 6)} numbered />
+              <div className="mt-8">
+                <ButtonLink href="/infos-pratiques#faq" variant="link" arrow>
+                  Toutes les questions
+                </ButtonLink>
+              </div>
+            </div>
           </div>
         </div>
       </Section>
 
-      {/* ── Closing ────────────────────────────────────────────────────── */}
-      <Section tone="ink" aria-labelledby="cloture" className="section-compact">
-        <div className="shell grid-12 items-end gap-y-12">
-          <div className="col-span-4 md:col-span-8 lg:col-span-6">
-            <SectionLabel>{`Rendez-vous à ${EVENT.city}`}</SectionLabel>
-            <h2 id="cloture" className="type-headline text-title mt-8">
-              Vendredi 18 décembre, <Accent>08:00</Accent>
-            </h2>
-            <p className="mt-6 max-w-md text-lead text-muted">{EVENT.organiser.tagline}</p>
-          </div>
-          <div className="col-span-4 space-y-8 md:col-span-8 lg:col-span-6">
-            <Countdown />
-            <ButtonLink href="/billetterie" arrow>
-              Prendre mon pass
-            </ButtonLink>
-          </div>
+      {/* ── Closing — poster panel ───────────────────────────────────── */}
+      <Section tone="ink" aria-labelledby="cloture" className="sheet section-standard">
+        <div className="shell">
+          <Reveal className="relative isolate overflow-hidden rounded-object border border-rule px-6 py-14 sm:px-10 md:py-20 lg:px-16">
+            <div aria-hidden="true" className="glow-signal top-0 left-1/4 -z-10 size-[44rem]" />
+            <div className="grid-12 items-end gap-y-12">
+              <div className="col-span-4 md:col-span-8 lg:col-span-7">
+                <SectionLabel>{`Rendez-vous à ${EVENT.city}`}</SectionLabel>
+                <h2 id="cloture" className="type-condensed mt-8 text-poster">
+                  18—19 <span className="text-signal">déc.</span>
+                </h2>
+                <p className="mt-6 max-w-md text-lead text-muted">
+                  Vendredi 18 décembre, ouverture des portes à 08:00. {EVENT.organiser.tagline}
+                </p>
+              </div>
+              <div className="col-span-4 space-y-8 md:col-span-8 lg:col-span-5">
+                <Countdown />
+                <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
+                  <ButtonLink href="/billetterie" arrow>
+                    Prendre mon pass
+                  </ButtonLink>
+                  <ButtonLink href={whatsappUrl} variant="link" arrow>
+                    Une question ? WhatsApp
+                  </ButtonLink>
+                </div>
+              </div>
+            </div>
+          </Reveal>
         </div>
       </Section>
     </>

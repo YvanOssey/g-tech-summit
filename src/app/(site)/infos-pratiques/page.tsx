@@ -1,154 +1,160 @@
 import type { Metadata } from "next";
 import { EVENT, whatsappUrl } from "@/config/event";
-import { PASSES, orderTotal } from "@/config/passes";
 import { getEventSettings } from "@/config/settings";
 import { FAQ } from "@/content/faq";
-import { PageHero } from "@/components/layout/PageHero";
+import { HACKATHON } from "@/content/hackathon";
+import { FaqSearch } from "@/components/infos/FaqSearch";
+import { PageIntro } from "@/components/layout/PageIntro";
+import { RevealGroup, RevealItem } from "@/components/motion/Reveal";
+import { RevealText } from "@/components/motion/RevealText";
+import { SpotlightGroup } from "@/components/motion/Spotlight";
 import { Accent } from "@/components/ui/Accent";
-import { FaqList } from "@/components/ui/FaqList";
+import { ButtonLink } from "@/components/ui/Button";
+import { ArrowRight, ChatBubble, Clock, Mail, Phone, TicketIcon } from "@/components/ui/icons";
 import { Pending } from "@/components/ui/Pending";
 import { Section } from "@/components/ui/Section";
 import { SectionLabel } from "@/components/ui/SectionLabel";
-import { formatFCFA } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "Infos pratiques",
   description: "Dates, lieu, horaires, tarifs, contact et questions fréquentes de G-TECH SUMMER 2026 à Abidjan.",
 };
 
+/** The day itself, in three steps — validated facts only. */
+const JOURNEY = [
+  {
+    icon: TicketIcon,
+    k: "Votre billet",
+    v: "Présentez le QR code de votre billet, sur téléphone ou imprimé, à l’accueil. Il est nominatif et validé une fois par jour et par accès.",
+  },
+  {
+    icon: Clock,
+    k: "Accueil dès 08:00",
+    v: "Les deux jours. Le samedi 19, inscription sur place aux formations express : 25 à 30 participants par module.",
+  },
+  {
+    icon: ArrowRight,
+    k: "Finale du hackathon",
+    v: `Pitch et présentations finales le samedi 19 décembre à ${HACKATHON.finale.pitch.time}, remise des prix à ${HACKATHON.finale.awards.time}.`,
+  },
+] as const;
+
 export default async function PracticalPage() {
   const { venue } = await getEventSettings();
 
   return (
     <>
-      <PageHero
+      <PageIntro
         label="Infos pratiques"
         title="Tout ce qu’il faut savoir avant de venir"
         lines={["Tout ce qu’il faut", <span key="s">savoir <Accent>avant de venir</Accent></span>]}
         lead="Les informations encore en préparation apparaîtront ici dès qu’elles seront confirmées."
+        actions={
+          <>
+            <ButtonLink href="#faq" arrow>
+              Questions fréquentes
+            </ButtonLink>
+            <ButtonLink href="#contact" variant="link" arrow>
+              Contact
+            </ButtonLink>
+          </>
+        }
       />
 
-      <Section tone="ink" aria-label="Informations essentielles" className="pb-20 md:pb-24">
-        <dl className="shell grid md:grid-cols-2 lg:grid-cols-4">
-          <div className="border-t border-rule py-6 md:pr-6">
-            <dt className="type-label">Dates</dt>
-            <dd className="mt-3 space-y-1">
-              {EVENT.days.map((d) => (
-                <p key={d.iso} className="font-semibold">
-                  {d.label}
-                </p>
+      {/* ── The day itself ───────────────────────────────────────────── */}
+      <Section tone="paper" aria-labelledby="sur-place" className="sheet section-standard">
+        <div className="shell">
+          <SectionLabel index="01">Sur place</SectionLabel>
+          <RevealText
+            inView
+            id="sur-place"
+            label="Le jour J, en trois temps."
+            lines={["Le jour J,", <span key="t">en trois <Accent>temps</Accent>.</span>]}
+            className="type-headline text-title mt-8"
+          />
+
+          <RevealGroup as="ol" className="relative mt-14 grid gap-10 md:grid-cols-3 md:gap-(--gutter)">
+            {/* dashed path linking the steps */}
+            <span aria-hidden="true" className="absolute top-7 right-[16%] left-[16%] hidden border-t-2 border-dashed border-signal/60 md:block" />
+            {JOURNEY.map(({ icon: Icon, k, v }, i) => (
+              <RevealItem as="li" key={k} className="relative flex flex-col items-start md:items-center md:text-center">
+                <span className="relative flex size-14 items-center justify-center rounded-pill bg-signal text-ink ring-8 ring-paper">
+                  <Icon className="size-6" />
+                </span>
+                <span className="type-meta mt-6 text-muted">Étape {String(i + 1).padStart(2, "0")}</span>
+                <h3 className="type-headline mt-2 text-heading">{k}</h3>
+                <p className="mt-3 max-w-sm text-muted">{v}</p>
+              </RevealItem>
+            ))}
+          </RevealGroup>
+        </div>
+      </Section>
+
+      {/* ── FAQ with search ─────────────────────────────────────────── */}
+      <Section tone="stone" id="faq" aria-labelledby="titre-faq" className="sheet section-standard">
+        <div className="shell grid-12 gap-y-10">
+          <div className="col-span-4 md:col-span-8 lg:col-span-4">
+            <div className="lg:sticky lg:top-[calc(var(--header-h)+2rem)]">
+              <SectionLabel index="02">Questions fréquentes</SectionLabel>
+              <RevealText inView id="titre-faq" lines={["FAQ"]} className="type-headline text-display mt-8" />
+              <p className="mt-6 max-w-xs text-muted">Tapez un mot-clé : la liste se filtre au fur et à mesure.</p>
+            </div>
+          </div>
+          <div className="col-span-4 md:col-span-8 lg:col-span-8">
+            <FaqSearch items={FAQ} />
+          </div>
+        </div>
+      </Section>
+
+      {/* ── Contact tiles ───────────────────────────────────────────── */}
+      <Section tone="ink" id="contact" aria-labelledby="titre-contact" className="sheet section-standard">
+        <div className="shell">
+          <SectionLabel index="03">Contact</SectionLabel>
+          <RevealText
+            inView
+            id="titre-contact"
+            label="Une question ? Écrivez-nous."
+            lines={[<span key="q">Une <Accent>question</Accent> ?</span>, "Écrivez-nous."]}
+            className="type-headline text-title mt-8"
+          />
+          <SpotlightGroup>
+            <RevealGroup as="ul" className="mt-12 grid gap-3 md:grid-cols-3 lg:gap-4">
+              {[
+                { icon: Mail, k: "E-mail", v: EVENT.contact.email, href: `mailto:${EVENT.contact.email}` },
+                { icon: Phone, k: "Téléphone", v: EVENT.contact.phoneDisplay, href: `tel:${EVENT.contact.phoneE164}` },
+                { icon: ChatBubble, k: "WhatsApp", v: EVENT.contact.phoneDisplay, href: whatsappUrl },
+              ].map(({ icon: Icon, k, v, href }) => (
+                <RevealItem as="li" effect="flip" key={k}>
+                  <a
+                    href={href}
+                    className="group panel spotlight relative flex h-full min-h-52 flex-col justify-between overflow-hidden rounded-object p-6 transition-colors duration-(--duration-component) hover:border-signal sm:p-8"
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="absolute inset-0 origin-bottom scale-y-0 bg-signal transition-transform duration-(--duration-component) ease-out-quart group-hover:scale-y-100"
+                    />
+                    <span className="relative flex items-start justify-between">
+                      <span className="flex size-12 items-center justify-center rounded-pill bg-signal text-ink transition-colors group-hover:bg-ink group-hover:text-signal">
+                        <Icon className="size-6" />
+                      </span>
+                      <span className="arrow-badge group-hover:border-ink! group-hover:bg-ink! group-hover:text-signal!">
+                        <ArrowRight className="size-4" />
+                      </span>
+                    </span>
+                    <span className="relative transition-colors group-hover:text-ink">
+                      <span className="type-label block group-hover:text-ink">{k}</span>
+                      <span className="type-headline mt-2 block text-heading break-all">{v}</span>
+                    </span>
+                  </a>
+                </RevealItem>
               ))}
-            </dd>
-          </div>
-          <div className="border-t border-rule py-6 md:border-l md:pl-6">
-            <dt className="type-label">Horaires</dt>
-            <dd className="mt-3 space-y-1">
-              <p className="font-semibold">Accueil à partir de 08:00</p>
-              <p className="text-muted">Clôture du jour 1 à 17:30, after-party du jour 2 à 17:30.</p>
-            </dd>
-          </div>
-          <div className="border-t border-rule py-6 md:pr-6 lg:border-l lg:pl-6">
-            <dt className="type-label">Lieu</dt>
-            <dd className="mt-3 space-y-2">
-              {venue ? (
-                <>
-                  <p className="font-semibold">{venue.name}</p>
-                  <p className="text-muted">{venue.address}</p>
-                  {venue.mapUrl && (
-                    <a href={venue.mapUrl} className="underline underline-offset-4 hover:decoration-mark">
-                      Voir sur la carte
-                    </a>
-                  )}
-                </>
-              ) : (
-                <>
-                  <p className="font-semibold">{EVENT.city}</p>
-                  <Pending label="Lieu exact">Lieu exact à annoncer</Pending>
-                </>
-              )}
-            </dd>
-          </div>
-          <div className="border-t border-rule py-6 md:border-l md:pl-6">
-            <dt className="type-label">Tarifs</dt>
-            <dd className="mt-3 space-y-1">
-              <p className="flex justify-between gap-4">
-                <span>{PASSES.event.name}</span>
-                <span className="font-semibold">{formatFCFA(PASSES.event.price)}</span>
-              </p>
-              <p className="flex justify-between gap-4">
-                <span>{PASSES.hackathon.name}</span>
-                <span className="font-semibold">{formatFCFA(PASSES.hackathon.price)}</span>
-              </p>
-              <p className="flex justify-between gap-4 text-muted">
-                <span>Les deux</span>
-                <span>{formatFCFA(orderTotal(["event", "hackathon"]))}</span>
-              </p>
-            </dd>
-          </div>
-        </dl>
-      </Section>
-
-      <Section tone="paper" aria-labelledby="sur-place" className="section-compact">
-        <div className="shell grid-12 gap-y-10">
-          <div className="col-span-4 md:col-span-8 lg:col-span-5">
-            <SectionLabel index="01">Sur place</SectionLabel>
-            <h2 id="sur-place" className="type-headline text-title mt-8">
-              Le jour J
-            </h2>
-          </div>
-          <ul className="col-span-4 border-b border-rule-strong md:col-span-8 lg:col-span-6 lg:col-start-7">
-            {[
-              { k: "Votre billet", v: "Présentez le QR code de votre billet (sur téléphone ou imprimé) à l’accueil. Il est nominatif et validé une fois par jour et par accès." },
-              { k: "Formations express", v: "Inscription sur place le samedi 19 décembre. Places limitées : 25 à 30 participants par module." },
-              { k: "Hackathon", v: "Pitch et présentations finales le samedi 19 décembre à 15:00 en salle principale." },
-            ].map((item) => (
-              <li key={item.k} className="grid gap-2 border-t border-rule-strong py-5 sm:grid-cols-[12rem_1fr] sm:gap-6">
-                <span className="font-semibold">{item.k}</span>
-                <span className="text-muted">{item.v}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </Section>
-
-      <Section tone="stone" id="faq" aria-labelledby="titre-faq" className="section-compact">
-        <div className="shell grid-12 gap-y-10">
-          <div className="col-span-4 md:col-span-8 lg:col-span-5">
-            <SectionLabel index="02">Questions fréquentes</SectionLabel>
-            <h2 id="titre-faq" className="type-headline text-title mt-8">
-              FAQ
-            </h2>
-          </div>
-          <div className="col-span-4 md:col-span-8 lg:col-span-7 lg:col-start-6">
-            <FaqList items={FAQ} />
-          </div>
-        </div>
-      </Section>
-
-      <Section tone="ink" id="contact" aria-labelledby="titre-contact" className="section-compact">
-        <div className="shell grid-12 gap-y-10">
-          <div className="col-span-4 md:col-span-8 lg:col-span-5">
-            <SectionLabel index="03">Contact</SectionLabel>
-            <h2 id="titre-contact" className="type-headline text-title mt-8">
-              Une <Accent>question</Accent> ?
-            </h2>
-          </div>
-          <ul className="col-span-4 border-b border-rule md:col-span-8 lg:col-span-7 lg:col-start-6">
-            {[
-              { k: "E-mail", v: EVENT.contact.email, href: `mailto:${EVENT.contact.email}` },
-              { k: "Téléphone", v: EVENT.contact.phoneDisplay, href: `tel:${EVENT.contact.phoneE164}` },
-              { k: "WhatsApp", v: EVENT.contact.phoneDisplay, href: whatsappUrl },
-            ].map((c) => (
-              <li key={c.k} className="border-t border-rule">
-                <a href={c.href} className="group flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-5">
-                  <span className="type-label">{c.k}</span>
-                  <span className="text-lead font-semibold break-all underline decoration-transparent underline-offset-[6px] transition-colors group-hover:decoration-mark">
-                    {c.v}
-                  </span>
-                </a>
-              </li>
-            ))}
-          </ul>
+            </RevealGroup>
+          </SpotlightGroup>
+          {!venue && (
+            <p className="mt-10 text-muted">
+              Lieu exact : <Pending label="Lieu exact">à annoncer</Pending>
+            </p>
+          )}
         </div>
       </Section>
     </>

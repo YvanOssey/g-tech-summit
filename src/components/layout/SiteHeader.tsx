@@ -2,15 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { EVENT, whatsappUrl } from "@/config/event";
 import { MAIN_NAV, TICKETING } from "@/config/navigation";
 import { GhostechLogo } from "@/components/brand/GhostechLogo";
+import { ScrollProgress } from "@/components/motion/ScrollProgress";
 import { ButtonLink } from "@/components/ui/Button";
 
 /** Solid ink capsule — no blur, no glass, no shadow. */
-const pill = "flex h-12 items-center rounded-pill border border-graphite bg-ink text-paper";
+const pill =
+  "flex h-12 items-center rounded-pill border border-graphite bg-ink text-paper transition-colors duration-(--duration-component) hover:border-signal";
 
 /**
  * Navigation in three pills, fixed at the top: logo · links · Billetterie.
@@ -24,6 +26,15 @@ export function SiteHeader() {
   const reduce = useReducedMotion();
   const toggleRef = useRef<HTMLButtonElement>(null);
   const isHome = pathname === "/";
+
+  // Pills slide away while reading down the page and come back on the way up.
+  const [hidden, setHidden] = useState(false);
+  const { scrollY } = useScroll();
+  useMotionValueEvent(scrollY, "change", (y) => {
+    const delta = y - (scrollY.getPrevious() ?? 0);
+    if (y < 160 || delta < -4) setHidden(false);
+    else if (delta > 4) setHidden(true);
+  });
 
   // Close the menu whenever the route changes.
   if (open && openedAt !== pathname) {
@@ -51,8 +62,14 @@ export function SiteHeader() {
 
   return (
     <>
+      <ScrollProgress />
       <header className="theme-ink fixed inset-x-0 top-0 z-(--z-header)">
-        <div className="shell relative z-(--z-raised) flex h-(--header-h) items-center justify-between gap-3">
+        <motion.div
+          className="shell relative z-(--z-raised) flex h-(--header-h) items-center justify-between gap-3"
+          animate={{ y: hidden && !open ? "-110%" : "0%" }}
+          transition={{ duration: 0.35, ease: [0.25, 1, 0.5, 1] }}
+          onFocusCapture={() => setHidden(false)}
+        >
           {/* Pill 1 — logo */}
           <Link href="/" className={`${pill} px-4`} aria-label={`${EVENT.name} ${EVENT.year} — accueil`}>
             <GhostechLogo width={56} variant="light" preload />
@@ -95,7 +112,7 @@ export function SiteHeader() {
               {open ? "Fermer" : "Menu"}
             </button>
           </div>
-        </div>
+        </motion.div>
 
         <AnimatePresence>
           {open && (

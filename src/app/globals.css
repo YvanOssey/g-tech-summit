@@ -182,6 +182,7 @@
   --gutter: 1rem;
   --page-max: 90rem;
   --header-h: 5rem; /* fixed pill navigation: 3rem pills + 1rem above and below */
+  --radius-sheet: 1.5rem; /* rounded top of bands sliding over the previous one */
 
   /* Section rhythm — three tiers */
   --section-compact: 4rem;
@@ -364,13 +365,144 @@
     border: var(--rule-hairline) solid var(--rule);
   }
 
+  /*
+   * Interactive card: on hover / keyboard focus it lifts by 4px, its border
+   * turns to the theme mark and an orange rule draws along its top edge.
+   * Uses the individual "translate" property so it composes with Motion's
+   * entrance transform instead of fighting it.
+   */
+  .card-interactive {
+    position: relative;
+    transition:
+      translate var(--duration-component) var(--ease-out-quart),
+      border-color var(--duration-micro) var(--ease-out-quart);
+  }
+
+  .card-interactive::before {
+    content: "";
+    position: absolute;
+    inset: -1px -1px auto;
+    height: 3px;
+    background: var(--mark);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--duration-component) var(--ease-out-quart);
+  }
+
+  .card-interactive:hover,
+  .card-interactive:focus-within {
+    translate: 0 -4px;
+    border-color: var(--mark);
+  }
+
+  .card-interactive:hover::before,
+  .card-interactive:focus-within::before {
+    transform: scaleX(1);
+  }
+
+  /* The card's index figure slides a step to the right with the lift. */
+  .card-interactive .card-index {
+    display: inline-block;
+    transition: translate var(--duration-component) var(--ease-out-quart);
+  }
+
+  .card-interactive:hover .card-index,
+  .card-interactive:focus-within .card-index {
+    translate: 6px 0;
+  }
+
+  /*
+   * Spotlight card: an orange light follows the mouse across a group of cards
+   * (positions set by <SpotlightGroup>). Orange only — never a cool glow.
+   */
+  .spotlight {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .spotlight::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(26rem circle at var(--mx, 50%) var(--my, -50%), rgb(242 140 24 / 0.16), transparent 60%);
+    opacity: 0;
+    transition: opacity var(--duration-component) var(--ease-out-quart);
+  }
+
+  .spotlight-group:hover .spotlight::after {
+    opacity: 1;
+  }
+
+  /* Round arrow badge that turns orange and rotates a quarter on card hover. */
+  .arrow-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    flex-shrink: 0;
+    border-radius: var(--radius-pill);
+    border: var(--rule-hairline) solid var(--rule-strong);
+    transition:
+      background-color var(--duration-component) var(--ease-out-quart),
+      border-color var(--duration-component) var(--ease-out-quart),
+      color var(--duration-component) var(--ease-out-quart),
+      rotate var(--duration-component) var(--ease-out-quart);
+    rotate: -45deg;
+  }
+
+  .group:hover .arrow-badge,
+  .group:focus-visible .arrow-badge {
+    background: var(--color-signal);
+    border-color: var(--color-signal);
+    color: var(--color-ink);
+    rotate: 0deg;
+  }
+
+  /* Outlined display letters (decorative scroll words). */
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--rule-strong);
+  }
+
+  /*
+   * Sheet: a band that slides over the previous one with rounded top corners —
+   * the transition between two sections.
+   */
+  .sheet {
+    position: relative;
+    z-index: 1;
+    margin-top: calc(var(--radius-sheet) * -1);
+    border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+  }
+
   /* ── Actions ───────────────────────────────────────────────────────── */
 
   /* Primary: the only pill. One signal on hover — the fill swaps. */
   .btn-primary {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
     background: var(--btn-bg);
     color: var(--btn-fg);
     border-radius: var(--radius-pill);
+  }
+
+  /* A light sweeps across the pill on hover. */
+  .btn-primary::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(105deg, transparent 30%, rgb(255 253 248 / 0.45) 50%, transparent 70%);
+    translate: -110% 0;
+    transition: translate 0.7s var(--ease-out-quart);
+  }
+
+  .btn-primary:hover::after {
+    translate: 110% 0;
   }
 
   .btn-primary:hover {
@@ -438,7 +570,291 @@
   animation: reveal-up var(--duration-reveal) var(--ease-out-quart) both;
 }
 
+/* Hero: the picture settles from a slow zoom on first paint. */
+@keyframes settle-in {
+  from {
+    transform: scale(1.12);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.settle-in {
+  animation: settle-in 1.8s var(--ease-out-quart) both;
+}
+
+/* Hero: lines of content rise in after the headline. */
+@keyframes rise-in {
+  from {
+    transform: translateY(1.5rem);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.rise-in {
+  animation: rise-in 0.9s var(--ease-out-quart) both;
+}
+
+/* ── Hero sequence ─────────────────────────────────────────────────────── */
+
+/* Stage lights up: the backdrop fades in from black while settling. */
+@keyframes stage-in {
+  from {
+    opacity: 0;
+    transform: scale(1.15);
+  }
+}
+
+.stage-in {
+  animation: stage-in 2.4s var(--ease-out-quart) both;
+}
+
+/* The 3D scene arrives from depth. */
+@keyframes scene-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6) rotate(-12deg);
+    filter: blur(12px);
+  }
+}
+
+.scene-in {
+  animation: scene-in 1.8s var(--ease-out-quart) both;
+}
+
+/* Headline letters rise from under their line, slightly turned and blurred. */
+@keyframes char-in {
+  from {
+    transform: translateY(110%) rotate(8deg);
+    filter: blur(6px);
+    opacity: 0;
+  }
+}
+
+.char-in {
+  transform-origin: left bottom;
+  animation: char-in 0.9s var(--ease-out-quart) both;
+}
+
+/* Outlined orange figures (hero year). */
+.text-outline-signal {
+  color: transparent;
+  -webkit-text-stroke: 2px var(--color-signal);
+}
+
+/* Neon perspective floor under the hero, rolling towards the viewer.
+   The grid layer moves with a transform (GPU), never by repainting. */
+@keyframes floor-roll {
+  to {
+    transform: translateY(4rem);
+  }
+}
+
+.neon-floor {
+  position: absolute;
+  inset: auto -50% -10% -50%;
+  height: 55%;
+  overflow: hidden;
+  transform: perspective(500px) rotateX(62deg);
+  transform-origin: bottom;
+  mask-image: linear-gradient(to top, #000 0%, transparent 85%);
+}
+
+.neon-floor::before {
+  content: "";
+  position: absolute;
+  inset: -4rem 0 0;
+  background-image:
+    linear-gradient(rgb(242 140 24 / 0.22) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(242 140 24 / 0.22) 1px, transparent 1px);
+  background-size: 4rem 4rem;
+  will-change: transform;
+  animation: floor-roll 3s linear infinite;
+}
+
+/* Floating tags bob gently. */
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.float-y {
+  animation: float-y 5s ease-in-out infinite;
+}
+
+/* Hero picture lights (visor, Africa): switch on, then breathe. Orange only. */
+@keyframes hero-light {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6);
+  }
+  12% {
+    opacity: 0.9;
+  }
+  18% {
+    opacity: 0.35;
+  }
+  26%,
+  100% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes hero-breathe {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+
+.hero-light {
+  border-radius: 999px;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background: radial-gradient(closest-side, rgb(242 140 24 / 0.45), transparent);
+  transform: translate(-50%, -50%);
+  opacity: 0.6;
+  animation:
+    hero-light 2.2s var(--ease-out-quart) both,
+    hero-breathe 5s ease-in-out 2.2s infinite;
+}
+
+/* Embers rising through the warm light. */
+@keyframes ember {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.9;
+  }
+  60% {
+    transform: translate(-12px, -55vh);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(10px, -95vh);
+    opacity: 0;
+  }
+}
+
+.ember {
+  box-shadow: 0 0 6px 1px rgb(242 140 24 / 0.7);
+  animation: ember 10s linear infinite both;
+}
+
+/* FAQ accordion opens smoothly where ::details-content can be animated. */
+:root {
+  interpolate-size: allow-keywords;
+}
+
+.faq::details-content {
+  block-size: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    block-size var(--duration-component) var(--ease-out-quart),
+    opacity var(--duration-component) var(--ease-out-quart),
+    content-visibility var(--duration-component) allow-discrete;
+}
+
+.faq[open]::details-content {
+  block-size: auto;
+  opacity: 1;
+}
+
+/* Terminal caret. */
+@keyframes caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+.caret {
+  animation: caret 1s steps(1) infinite;
+}
+
+/* Endless bands — see <Marquee>. */
+@keyframes marquee {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.marquee-row {
+  animation: marquee var(--marquee-duration, 40s) linear infinite;
+}
+
+.marquee-reverse .marquee-row {
+  animation-direction: reverse;
+}
+
+.marquee:hover .marquee-row {
+  animation-play-state: paused;
+}
+
+/* Rotating circular caption (hero badge). */
+@keyframes spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+.spin-slow {
+  animation: spin 24s linear infinite;
+}
+
+/* A warm light that breathes slowly behind key headlines. Orange only. */
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+
+.glow-signal {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 999px;
+  background: radial-gradient(closest-side, rgb(242 140 24 / 0.35), transparent);
+  opacity: 0.55;
+  transform: translate(-50%, -50%);
+  animation: breathe 9s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .marquee-row,
+  .spin-slow,
+  .glow-signal,
+  .neon-floor::before,
+  .float-y,
+  .hero-light,
+  .ember,
+  .btn-primary::after {
+    animation: none !important;
+  }
+
   *,
   *::before,
   *::after {

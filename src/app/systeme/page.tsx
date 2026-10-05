@@ -58,7 +58,7 @@ const TYPE_SCALE = [
   { name: "Lead", spec: "Archivo 400 · 20 → 24 px", className: "text-lead", sample: "Conférences, panels, formations, ateliers et un hackathon, organisés par Ghostech." },
   { name: "Body", spec: "Archivo 400 · 17 px / 1,6", className: "text-body max-w-[62ch]", sample: "Accessibles aux débutants comme aux initiés, les formations express durent trois heures et donnent lieu à une attestation de participation." },
   { name: "Small", spec: "Archivo 400 · 14 px", className: "text-small", sample: "Par personne. Participation en équipe, une thématique par équipe." },
-  { name: "Caption", spec: "IBM Plex Mono 400 · 12 px · codes et références", className: "type-meta", sample: "Ven. 18.12 · 09:45 · Conférence #1" },
+  { name: "Caption", spec: "IBM Plex Mono 400 · 12 px · codes et références", className: "type-meta", sample: "Ven. 18.12 · 09:45 · Conférence 1" },
 ];
 
 const MOTION_YES = [

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Fragment } from "react";
 import {
   CONFERENCES,
   DAYS,
@@ -9,10 +10,13 @@ import {
   type Talk,
 } from "@/content/programme";
 import { CtaBand } from "@/components/layout/CtaBand";
-import { PageHero } from "@/components/layout/PageHero";
-import { RevealGroup, RevealItem } from "@/components/motion/Reveal";
+import { PageIntro } from "@/components/layout/PageIntro";
+import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
+import { RevealText } from "@/components/motion/RevealText";
+import { SpotlightGroup } from "@/components/motion/Spotlight";
 import { DayTabs } from "@/components/programme/DayTabs";
 import { Accent } from "@/components/ui/Accent";
+import { ButtonLink } from "@/components/ui/Button";
 import { SignalSquare } from "@/components/ui/icons";
 import { Pending } from "@/components/ui/Pending";
 import { Section } from "@/components/ui/Section";
@@ -24,172 +28,236 @@ export const metadata: Metadata = {
     "Le programme des 18 et 19 décembre 2026 : conférences, panels, formations express, ateliers pratiques et finale du hackathon.",
 };
 
-function TalkBlock({ talk }: { talk: Talk }) {
+/** Talks stack on top of each other while scrolling (sticky, offset per card). */
+function TalkCard({ talk, index }: { talk: Talk; index: number }) {
   return (
-    <article id={talk.id} className="grid-12 gap-y-6 border-t border-rule-strong py-10 md:py-12">
-      <div className="col-span-4 md:col-span-2 lg:col-span-3">
-        <p className="type-label">{talk.kind}</p>
-        <p className="type-meta mt-2 text-muted">{talk.when}</p>
-      </div>
-      <div className="col-span-4 md:col-span-6 lg:col-span-6">
-        {talk.title ? (
-          <h3 className="type-headline text-heading">{talk.title}</h3>
-        ) : (
-          <h3>
-            <Pending label={talk.kind}>Intitulé à confirmer</Pending>
-          </h3>
-        )}
-        {talk.description && <p className="mt-5 max-w-[62ch]">{talk.description}</p>}
-        {talk.objectives && (
-          <ul className="mt-6 space-y-2">
-            {talk.objectives.map((o) => (
-              <li key={o} className="flex gap-3 text-muted">
-                <SignalSquare className="mt-2.5" />
-                {o}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-      <dl className="col-span-4 space-y-4 md:col-span-6 md:col-start-3 lg:col-span-3 lg:col-start-10">
-        {talk.format && (
-          <div>
-            <dt className="type-meta text-muted">Format</dt>
-            <dd className="mt-1 text-small">{talk.format}</dd>
-          </div>
-        )}
-        <div>
-          <dt className="type-meta text-muted">Intervenants</dt>
-          <dd className="mt-1">
-            <Pending label="Intervenants">À confirmer</Pending>
-          </dd>
+    <article
+      id={talk.id}
+      className="panel rounded-object p-6 shadow-[0_-12px_40px_-24px_rgb(23_23_23/0.35)] sm:p-8 lg:sticky lg:p-10"
+      style={{ top: `calc(var(--header-h) + 1.5rem + ${index * 1.25}rem)` }}
+    >
+      <div className="grid-12 gap-y-6">
+        <div className="col-span-4 md:col-span-2 lg:col-span-3">
+          <p className="type-condensed text-display leading-none text-accent">{talk.kind.split(" ")[1].padStart(2, "0")}</p>
+          <p className="type-label mt-4">{talk.kind.split(" ")[0]}</p>
+          <p className="type-meta mt-2 text-muted">{talk.when}</p>
         </div>
-      </dl>
+        <div className="col-span-4 md:col-span-6 lg:col-span-6">
+          {talk.title ? (
+            <h3 className="type-headline text-title leading-[1.02]">{talk.title}</h3>
+          ) : (
+            <h3>
+              <Pending label={talk.kind}>Intitulé à confirmer</Pending>
+            </h3>
+          )}
+          {talk.description && <p className="mt-5 max-w-[62ch]">{talk.description}</p>}
+          {talk.objectives && (
+            <ul className="mt-6 grid gap-2 sm:grid-cols-2">
+              {talk.objectives.map((o) => (
+                <li key={o} className="flex gap-3 text-small text-muted">
+                  <SignalSquare className="mt-1.5" />
+                  {o}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        <dl className="col-span-4 space-y-4 md:col-span-6 md:col-start-3 lg:col-span-3 lg:col-start-10">
+          {talk.format && (
+            <div>
+              <dt className="type-meta text-muted">Format</dt>
+              <dd className="mt-1 text-small">{talk.format}</dd>
+            </div>
+          )}
+          <div>
+            <dt className="type-meta text-muted">Intervenants</dt>
+            <dd className="mt-1">
+              <Pending label="Intervenants">À confirmer</Pending>
+            </dd>
+          </div>
+        </dl>
+      </div>
     </article>
   );
 }
 
 export default function ProgrammePage() {
+  const talks = [...CONFERENCES, ...PANELS];
+
   return (
     <>
-      <PageHero
+      <PageIntro
         label="Programme · 18 & 19 décembre 2026"
-        title="Deux jours de conférences, d’ateliers et de formations"
-        lines={["Deux jours de", <span key="c"><Accent>conférences</Accent>, d’ateliers</span>, "et de formations"]}
-        lead="Conférences et panels en salle principale, formations et ateliers en parallèle dans les salles A à D, et la finale du hackathon le samedi après-midi."
-      >
-        <p className="type-meta text-muted">Programme susceptible d’évoluer. Les intervenants seront annoncés sur cette page.</p>
-      </PageHero>
+        title="Deux jours, heure par heure"
+        lines={["Deux jours,", <span key="h"><Accent>heure</Accent> par heure</span>]}
+        lead="Conférences, panels, formations express, ateliers et la finale du hackathon le samedi après-midi. Programme susceptible d’évoluer ; les intervenants seront annoncés ici."
+        actions={
+          <>
+            <ButtonLink href="#deroule" arrow>
+              Voir le déroulé
+            </ButtonLink>
+            <ButtonLink href="/billetterie" variant="link" arrow>
+              Billetterie
+            </ButtonLink>
+          </>
+        }
+      />
 
-      <Section tone="paper" aria-labelledby="titre-jours" className="section-compact">
+      {/* ── Day by day ───────────────────────────────────────────────── */}
+      <Section tone="paper" id="deroule" aria-labelledby="titre-jours" className="sheet section-standard">
         <div className="shell">
-          <SectionLabel>Jour par jour</SectionLabel>
-          <h2 id="titre-jours" className="type-headline text-title mt-8 mb-12">
-            Le déroulé
-          </h2>
-          <DayTabs days={DAYS} />
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <div>
+              <SectionLabel>Jour par jour</SectionLabel>
+              <RevealText inView id="titre-jours" lines={["Le déroulé"]} className="type-headline text-title mt-8" />
+            </div>
+            <p className="max-w-sm text-muted">Choisissez un jour : chaque créneau mène à sa description détaillée.</p>
+          </div>
+          <div className="mt-12">
+            <DayTabs days={DAYS} />
+          </div>
         </div>
       </Section>
 
-      <Section tone="stone" id="conferences" aria-labelledby="titre-conferences" className="section-compact">
+      {/* ── Talks: stacked cards ─────────────────────────────────────── */}
+      <Section tone="stone" id="conferences" aria-labelledby="titre-conferences" className="sheet section-standard">
         <div className="shell">
-          <SectionLabel index="01">Conférences</SectionLabel>
-          <h2 id="titre-conferences" className="type-headline text-title mt-8 mb-12">
-            Trois conférences
-          </h2>
-          <div className="border-b border-rule-strong">
-            {CONFERENCES.map((t) => (
-              <TalkBlock key={t.id} talk={t} />
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <div>
+              <SectionLabel index="01">Prises de parole</SectionLabel>
+              <RevealText
+                inView
+                id="titre-conferences"
+                label="Trois conférences, deux panels."
+                lines={["Trois conférences,", <span key="p">deux <Accent>panels</Accent>.</span>]}
+                className="type-headline text-title mt-8"
+              />
+            </div>
+            <p className="max-w-sm text-muted">Faites défiler : les prises de parole s’empilent dans l’ordre du programme.</p>
+          </div>
+          <div className="mt-14 space-y-6 lg:space-y-10">
+            {talks.map((t, i) => (
+              <Fragment key={t.id}>
+                {t.id === PANELS[0].id && <span id="panels" aria-hidden="true" className="block h-0 scroll-mt-32" />}
+                <TalkCard talk={t} index={i} />
+              </Fragment>
             ))}
           </div>
         </div>
       </Section>
 
-      <Section tone="ink" id="panels" aria-labelledby="titre-panels" className="section-compact">
+      {/* ── Formations: certificates ─────────────────────────────────── */}
+      <Section tone="paper" id="formations" aria-labelledby="titre-formations" className="sheet section-standard">
         <div className="shell">
-          <SectionLabel index="02">Panels & tables rondes</SectionLabel>
-          <h2 id="titre-panels" className="type-headline text-title mt-8 mb-12">
-            Deux panels
-          </h2>
-          <div className="border-b border-rule-strong">
-            {PANELS.map((t) => (
-              <TalkBlock key={t.id} talk={t} />
-            ))}
-          </div>
-        </div>
-      </Section>
-
-      <Section tone="paper" id="formations" aria-labelledby="titre-formations" className="section-compact">
-        <div className="shell">
-          <SectionLabel index="03">{FORMATIONS_INFO.when}</SectionLabel>
+          <SectionLabel index="02">{FORMATIONS_INFO.when}</SectionLabel>
           <div className="grid-12 mt-8 gap-y-6">
-            <h2 id="titre-formations" className="type-headline text-title col-span-4 md:col-span-8 lg:col-span-6">
-              Formations express
-            </h2>
+            <RevealText
+              inView
+              id="titre-formations"
+              label="Formations express"
+              lines={["Formations", <Accent key="e">express</Accent>]}
+              className="type-headline text-title col-span-4 md:col-span-8 lg:col-span-6"
+            />
             <p className="col-span-4 self-end text-muted md:col-span-6 lg:col-span-5 lg:col-start-8">{FORMATIONS_INFO.intro}</p>
           </div>
 
-          <RevealGroup className="mt-14 grid gap-4 md:grid-cols-2">
-            {FORMATIONS.map((f) => (
-              <RevealItem as="article" key={f.id} className="panel flex flex-col p-6 sm:p-8">
-                <div className="flex items-baseline justify-between gap-4">
-                  <span className="type-label">{f.code}</span>
-                  <span className="type-meta text-muted">{f.seats} places</span>
-                </div>
-                <h3 className="type-headline text-heading mt-5">{f.title}</h3>
-                <p className="mt-2 font-semibold">{f.tagline}</p>
-                <p className="mt-4 text-muted">{f.description}</p>
-                <ul className="mt-6 space-y-2 text-small">
-                  {f.goals.map((g) => (
-                    <li key={g} className="flex gap-3">
-                      <SignalSquare className="mt-2" />
-                      {g}
-                    </li>
-                  ))}
-                </ul>
-                <p className="mt-auto flex items-center justify-between gap-4 pt-8">
-                  <span className="type-meta text-muted">Formateurs</span>
-                  <Pending label="Formateurs">À confirmer</Pending>
-                </p>
-              </RevealItem>
-            ))}
-          </RevealGroup>
+          <SpotlightGroup>
+            <RevealGroup className="mt-14 grid gap-4 md:grid-cols-2">
+              {FORMATIONS.map((f, i) => (
+                <RevealItem
+                  as="article"
+                  effect="flip"
+                  key={f.id}
+                  className="panel card-interactive spotlight relative flex flex-col overflow-hidden rounded-object border-dashed p-6 sm:p-8"
+                >
+                  {/* Rotating "attestation" stamp */}
+                  <svg viewBox="0 0 120 120" aria-hidden="true" className="spin-slow absolute -top-6 -right-6 size-32 text-accent opacity-80">
+                    <defs>
+                      <path id={`stamp-${f.id}`} d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" />
+                    </defs>
+                    <circle cx="60" cy="60" r="54" fill="none" stroke="currentColor" strokeWidth="1" />
+                    <text className="font-mono uppercase" fill="currentColor" style={{ fontSize: 9, letterSpacing: "0.2em" }}>
+                      <textPath href={`#stamp-${f.id}`} textLength="272" lengthAdjust="spacing">
+                        Attestation de participation ·
+                      </textPath>
+                    </text>
+                  </svg>
+
+                  <div className="flex items-baseline gap-4 pr-24">
+                    <span className="type-condensed text-display leading-none text-accent">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="type-meta text-muted">{f.seats} places</span>
+                  </div>
+                  <h3 className="type-headline mt-6 text-heading">{f.title}</h3>
+                  <p className="mt-2 font-semibold">{f.tagline}</p>
+                  <p className="mt-4 text-muted">{f.description}</p>
+                  <ul className="mt-6 space-y-2 text-small">
+                    {f.goals.map((g) => (
+                      <li key={g} className="flex gap-3">
+                        <SignalSquare className="mt-1.5" />
+                        {g}
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="mt-auto flex items-center justify-between gap-4 border-t border-dashed border-rule-strong/40 pt-6">
+                    <span className="type-meta text-muted">Formateurs</span>
+                    <Pending label="Formateurs">À confirmer</Pending>
+                  </p>
+                </RevealItem>
+              ))}
+            </RevealGroup>
+          </SpotlightGroup>
         </div>
       </Section>
 
-      <Section tone="ink" id="ateliers" aria-labelledby="titre-ateliers" className="section-compact">
+      {/* ── Workshops: letter tiles ──────────────────────────────────── */}
+      <Section tone="ink" id="ateliers" aria-labelledby="titre-ateliers" className="sheet section-standard">
         <div className="shell">
-          <SectionLabel index="04">Ateliers pratiques & démonstrations</SectionLabel>
+          <SectionLabel index="03">Ateliers pratiques & démonstrations</SectionLabel>
           <div className="grid-12 mt-8 gap-y-6">
-            <h2 id="titre-ateliers" className="type-headline text-title col-span-4 md:col-span-8 lg:col-span-6">
-              Six ateliers
-            </h2>
+            <RevealText
+              inView
+              id="titre-ateliers"
+              label="Six ateliers, de A à F."
+              lines={["Six ateliers,", <span key="a">de <Accent>A à F</Accent>.</span>]}
+              className="type-headline text-title col-span-4 md:col-span-8 lg:col-span-6"
+            />
             <p className="col-span-4 self-end text-muted md:col-span-6 lg:col-span-5 lg:col-start-8">
               Des sessions courtes, en parallèle, pour expérimenter des technologies en direct, dans un format pratique.
             </p>
           </div>
 
-          <RevealGroup className="mt-14 grid gap-4 lg:grid-cols-2">
+          <div className="mt-14 space-y-12">
             {WORKSHOP_SESSIONS.map((s) => (
-              <RevealItem key={s.label} className="panel p-6 sm:p-8">
-                <div className="flex flex-wrap items-baseline justify-between gap-4">
+              <div key={s.label}>
+                <Reveal className="flex flex-wrap items-baseline justify-between gap-4 border-b border-rule pb-4">
                   <h3 className="type-headline text-heading">{s.label}</h3>
                   <span className="type-meta text-muted">{s.when}</span>
-                </div>
-                <ul className="mt-6 border-b border-rule">
-                  {s.workshops.map((w) => (
-                    <li key={w.code} className="grid grid-cols-[3rem_1fr] gap-4 border-t border-rule py-5">
-                      <span className="type-condensed text-heading leading-none text-accent">{w.code}</span>
-                      <div>
-                        <h4 className="font-semibold">{w.title}</h4>
-                        <p className="mt-1 text-small text-muted">{w.content}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </RevealItem>
+                </Reveal>
+                <SpotlightGroup>
+                  <RevealGroup as="ul" className="mt-6 grid gap-3 md:grid-cols-3 lg:gap-4">
+                    {s.workshops.map((w) => (
+                      <RevealItem
+                        as="li"
+                        effect="flip"
+                        key={w.code}
+                        className="panel card-interactive spotlight group relative min-h-60 overflow-hidden rounded-object p-6"
+                      >
+                        <span
+                          aria-hidden="true"
+                          className="text-outline type-condensed pointer-events-none absolute -right-2 -bottom-8 text-[11rem] leading-none transition-colors duration-(--duration-component) group-hover:text-signal/15"
+                        >
+                          {w.code}
+                        </span>
+                        <span className="type-label">Atelier {w.code}</span>
+                        <h4 className="type-headline relative mt-4 text-heading leading-tight">{w.title}</h4>
+                        <p className="relative mt-3 text-small text-muted">{w.content}</p>
+                      </RevealItem>
+                    ))}
+                  </RevealGroup>
+                </SpotlightGroup>
+              </div>
             ))}
-          </RevealGroup>
+          </div>
         </div>
       </Section>
 

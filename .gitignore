@@ -45,3 +45,8 @@ next-env.d.ts
 
 # confidential working documents (kept local)
 /Doc_n*cessaire*/
+
+# local AI tooling (not part of the site)
+/.agents/
+/.claude/skills/
+/skills-lock.json

@@ -51,10 +51,10 @@ export function RevealText({ lines, label: labelProp, as: Tag = "h2", className,
         {lines.map((line, i) => (
           <span key={i} className="block overflow-hidden pb-[0.06em] -mb-[0.06em]">
             <motion.span
-              className="block"
+              className="block origin-bottom-left"
               variants={{
-                hidden: { y: "105%" },
-                shown: { y: "0%", transition: { duration: 0.9, ease: EASE, delay: delay + i * 0.09 } },
+                hidden: { y: "110%", rotate: 4 },
+                shown: { y: "0%", rotate: 0, transition: { duration: 1, ease: EASE, delay: delay + i * 0.1 } },
               }}
             >
               {line}

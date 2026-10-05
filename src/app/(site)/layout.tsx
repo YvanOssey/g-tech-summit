@@ -12,7 +12,7 @@ export default function SiteLayout({ children }: Readonly<{ children: React.Reac
         Aller au contenu
       </a>
       <SiteHeader />
-      <main id="contenu">{children}</main>
+      <main id="contenu" className="overflow-x-clip">{children}</main>
       <SiteFooter />
       <MobileTicketBar />
     </>
