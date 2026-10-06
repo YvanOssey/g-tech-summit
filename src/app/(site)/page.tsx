@@ -3,7 +3,7 @@ import Link from "next/link";
 import { EVENT, whatsappUrl } from "@/config/event";
 import { PHOTOS } from "@/config/media";
 import { PARTNERS } from "@/config/partners";
-import { PASSES, orderTotal } from "@/config/passes";
+import { PASSES, PASS_ORDER, orderTotal } from "@/config/passes";
 import { getEventSettings } from "@/config/settings";
 import { FAQ } from "@/content/faq";
 import { HACKATHON, TRACKS } from "@/content/hackathon";
@@ -57,7 +57,7 @@ const FIGURES = [
   { value: 2, label: "Jours", detail: "18 & 19 décembre" },
   { value: FORMATS.length, label: "Formats", detail: "Conférences, panels, formations…" },
   { value: TRACKS.length, label: "Thématiques", detail: "au hackathon" },
-  { value: 2, label: "Pass", detail: "Event & Hackathon" },
+  { value: 3, label: "Pass", detail: "En ligne, présentiel, hackathon" },
 ] as const;
 
 const RIBBON = ["Conférences", "Panels", "Formations express", "Ateliers", "Hackathon", "Stands & démos", "Networking"] as const;
@@ -272,7 +272,7 @@ export default async function HomePage() {
                 { k: "Format", v: "En équipe uniquement" },
                 { k: "Finale", v: `Sam. 19 déc. · ${HACKATHON.finale.pitch.time}` },
                 { k: "Pitch", v: "4 min + 2 min de questions" },
-                { k: "Pass", v: `${formatFCFA(PASSES.hackathon.price)} / pers.` },
+                { k: "Pass", v: `${formatFCFA(PASSES.hackathon.price)} / équipe` },
               ].map((item, i) => (
                 <div
                   key={item.k}
@@ -362,22 +362,22 @@ export default async function HomePage() {
               <RevealText
                 inView
                 id="pass"
-                label="Deux pass, un billet nominatif."
-                lines={["Deux pass,", <span key="b">un <Accent>billet nominatif</Accent>.</span>]}
+                label="Trois pass, un billet nominatif."
+                lines={["Trois pass,", <span key="b">un <Accent>billet nominatif</Accent>.</span>]}
                 className="type-headline text-title mt-8"
               />
             </div>
             <p className="col-span-4 self-end text-muted md:col-span-6 lg:col-span-4 lg:col-start-9">
-              Envoyé par e-mail après paiement via Wave, sans frais ajoutés. Pour l’événement et le hackathon, prenez les
-              deux : {formatFCFA(orderTotal(["event", "hackathon"]))}.
+              À distance ou sur place, et le hackathon par équipe. Billet envoyé par e-mail après paiement via Wave, sans
+              frais ajoutés. Présentiel + Hackathon : {formatFCFA(orderTotal(["event", "hackathon"]))}.
             </p>
           </div>
-          <RevealGroup className="mt-14 grid gap-4 md:grid-cols-2 md:gap-(--gutter)">
-            {(["event", "hackathon"] as const).map((id, i) => (
+          <RevealGroup className="mt-14 grid gap-4 md:grid-cols-2 md:gap-(--gutter) lg:grid-cols-3">
+            {PASS_ORDER.map((id, i) => (
               <RevealItem key={id}>
                 <Tilt className="h-full">
                   <Link href={`/billetterie?pass=${id}`} className="group block h-full rounded-object">
-                    <PassCard pass={PASSES[id]} index={i + 1}>
+                    <PassCard pass={PASSES[id]} index={i + 1} sold={settings.sold[id]}>
                       <span className="flex size-12 items-center justify-center rounded-pill bg-signal text-ink transition-transform duration-(--duration-component) ease-out-quart group-hover:scale-110">
                         <ArrowRight className="size-5 transition-transform duration-(--duration-micro) group-hover:translate-x-0.5" />
                         <span className="sr-only">Choisir le {PASSES[id].name}</span>

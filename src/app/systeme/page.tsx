@@ -313,15 +313,16 @@ export default function DesignSystemPage() {
               Le pass est un billet
             </h2>
             <p className="mt-4 text-grey">
-              Pass Event sur papier, Pass Hackathon sur noir : les deux se distinguent au premier regard, à l’écran
-              comme à l’impression. Une commande correspond à un participant, avec un ou deux pass.
+              Pass En ligne et Présentiel sur papier, Pass Hackathon sur noir : ils se distinguent au premier regard, à
+              l’écran comme à l’impression. Chaque billet porte sa jauge d’inscription (chiffres réels).
             </p>
           </div>
         </div>
 
-        <div className="mt-10 grid gap-4 md:grid-cols-2 md:gap-(--gutter)">
-          <PassCard pass={PASSES.event} index={1} />
-          <PassCard pass={PASSES.hackathon} index={2} />
+        <div className="mt-10 grid gap-4 md:grid-cols-3 md:gap-(--gutter)">
+          <PassCard pass={PASSES.online} index={1} sold={0} />
+          <PassCard pass={PASSES.event} index={2} sold={0} />
+          <PassCard pass={PASSES.hackathon} index={3} sold={0} />
         </div>
 
         <div className="mt-20">

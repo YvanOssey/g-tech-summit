@@ -25,7 +25,8 @@ export const metadata: Metadata = {
 const dateFr = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", year: "numeric" });
 
 export default async function HackathonPage() {
-  const { hackathon: s } = await getEventSettings();
+  const settings = await getEventSettings();
+  const s = settings.hackathon;
 
   return (
     <>
@@ -52,7 +53,7 @@ export default async function HackathonPage() {
           {[
             { k: "Participation", v: "En équipe uniquement" },
             { k: "Taille des équipes", v: s.teamSize ? `${s.teamSize.min} à ${s.teamSize.max} personnes` : null },
-            { k: "Pass", v: `${formatFCFA(PASSES.hackathon.price)} / personne` },
+            { k: "Pass", v: `${formatFCFA(PASSES.hackathon.price)} / équipe` },
             { k: "Date limite", v: s.registrationDeadline ? dateFr.format(new Date(s.registrationDeadline)) : null },
           ].map((item, i) => (
             <div key={item.k} className={`py-8 pr-4 ${i % 2 ? "border-l border-rule pl-4" : ""} ${i > 0 ? "lg:border-l lg:border-rule lg:pl-6" : ""} ${i >= 2 ? "border-t border-rule lg:border-t-0" : ""}`}>
@@ -227,14 +228,14 @@ export default async function HackathonPage() {
           <div className="col-span-4 md:col-span-8 lg:col-span-6">
             <SectionLabel index="05">Inscription</SectionLabel>
             <h2 id="inscription" className="type-headline text-title mt-8">
-              Chaque membre prend <Accent>son pass</Accent>
+              Un pass <Accent>par équipe</Accent>
             </h2>
           </div>
           <div className="col-span-4 space-y-6 self-end md:col-span-6 lg:col-span-5 lg:col-start-8">
             <p className="text-muted">
-              L’inscription est libre. Chaque membre de l’équipe prend son Pass Hackathon ({formatFCFA(PASSES.hackathon.price)}).
-              Il donne accès uniquement au hackathon : pour suivre aussi les conférences, formations et ateliers, ajoutez le
-              Pass Event dans la même commande.
+              L’inscription est libre. L’équipe prend un seul Pass Hackathon ({formatFCFA(PASSES.hackathon.price)}),
+              {" "}{PASSES.hackathon.capacity.total} équipes au maximum. Il donne accès uniquement au hackathon : pour suivre
+              aussi les conférences, formations et ateliers, chaque personne prend un Pass Présentiel ou un Pass En ligne.
             </p>
             <dl className="grid grid-cols-2 gap-6 border-t border-rule-strong pt-5">
               <div>
@@ -244,8 +245,10 @@ export default async function HackathonPage() {
                 </dd>
               </div>
               <div>
-                <dt className="type-label">Places</dt>
-                <dd className="mt-1.5">{s.quota ?? <Pending label="Nombre de places" />}</dd>
+                <dt className="type-label">Équipes</dt>
+                <dd className="mt-1.5">
+                  {settings.sold.hackathon} / {PASSES.hackathon.capacity.total} inscrites
+                </dd>
               </div>
             </dl>
             <ButtonLink href="/billetterie?pass=hackathon" arrow>

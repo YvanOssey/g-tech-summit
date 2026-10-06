@@ -14,6 +14,9 @@ interface TicketSpecimenProps {
  */
 export function TicketSpecimen({ passes }: TicketSpecimenProps) {
   const rights: { label: string; detail: string }[] = [];
+  if (passes.includes("online")) {
+    rights.push({ label: PASSES.online.name, detail: `À distance · ${EVENT.days[0].short} · ${EVENT.days[1].short}` });
+  }
   if (passes.includes("event")) {
     rights.push({ label: PASSES.event.name, detail: `${EVENT.days[0].short} · ${EVENT.days[1].short}` });
   }

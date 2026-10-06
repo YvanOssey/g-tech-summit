@@ -10,7 +10,7 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
 
 export const metadata: Metadata = {
   title: "Billetterie",
-  description: "Pass Event 10 000 FCFA, Pass Hackathon 15 000 FCFA. Paiement via Wave, billet nominatif envoyé par e-mail.",
+  description: "Pass En ligne 5 000 FCFA, Pass Présentiel 10 000 FCFA, Pass Hackathon 15 000 FCFA par équipe. Paiement via Wave, billet nominatif envoyé par e-mail.",
 };
 
 const STEPS = ["Choisir", "Vos informations", "Récapitulatif", "Paiement Wave", "Billet par e-mail"] as const;
@@ -51,8 +51,8 @@ export default async function TicketingPage({
 
       <Section tone="paper" className="pt-14 pb-24 md:pt-20 md:pb-32">
         <div className="shell">
-          <h2 className="sr-only">Les deux pass</h2>
-          <PassSelector key={initial.join()} initial={initial} />
+          <h2 className="sr-only">Les trois pass</h2>
+          <PassSelector key={initial.join()} initial={initial} sold={settings.sold} />
 
           <div className="mt-12 grid gap-8 border-t border-rule-strong pt-8 lg:grid-cols-[1fr_auto] lg:items-start">
             {!settings.registrationOpen && (

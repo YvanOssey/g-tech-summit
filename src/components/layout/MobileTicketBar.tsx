@@ -39,7 +39,7 @@ export function MobileTicketBar() {
           <Link href="/billetterie" className="shell flex h-16 items-center justify-between gap-4">
             <span>
               <span className="type-meta block text-grey">18—19.12.2026</span>
-              <span className="font-semibold">Pass dès {formatFCFA(PASSES.event.price)}</span>
+              <span className="font-semibold">Pass dès {formatFCFA(Math.min(...Object.values(PASSES).map((p) => p.price)))}</span>
             </span>
             <span className="flex min-h-11 items-center gap-2 rounded-pill bg-signal px-5 font-semibold">
               Billetterie <ArrowRight className="size-4" />

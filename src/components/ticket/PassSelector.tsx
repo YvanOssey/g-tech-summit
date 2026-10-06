@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useState } from "react";
-import { PASSES, PASS_ORDER, orderTotal, type PassId } from "@/config/passes";
+import { EXCLUSIVE, PASSES, PASS_ORDER, orderTotal, withExclusions, type PassId } from "@/config/passes";
 import { formatAmount } from "@/lib/format";
 import { Check } from "@/components/ui/icons";
 import { PassCard } from "./PassCard";
@@ -10,20 +10,22 @@ import { PassCard } from "./PassCard";
 interface PassSelectorProps {
   initial?: readonly PassId[];
   onChange?: (selection: PassId[]) => void;
+  /** Passes already sold, for the registration gauges. */
+  sold?: Partial<Record<PassId, number>>;
 }
 
 /**
  * Step 1 of registration: one participant picks one or both passes.
  * The total shown here is informative — the server recomputes it from `config/passes`.
  */
-export function PassSelector({ initial = ["event"], onChange }: PassSelectorProps) {
+export function PassSelector({ initial = ["event"], onChange, sold }: PassSelectorProps) {
   const [selection, setSelection] = useState<PassId[]>([...initial]);
   const reduce = useReducedMotion();
   const total = orderTotal(selection);
 
   function toggle(id: PassId) {
-    const next = selection.includes(id) ? selection.filter((p) => p !== id) : [...selection, id];
-    const ordered = PASS_ORDER.filter((p) => next.includes(p));
+    // Adding a pass drops the ones it cannot be combined with (online vs on site).
+    const ordered = selection.includes(id) ? selection.filter((p) => p !== id) : withExclusions(selection, id);
     setSelection(ordered);
     onChange?.(ordered);
   }
@@ -32,7 +34,7 @@ export function PassSelector({ initial = ["event"], onChange }: PassSelectorProp
     <fieldset>
       <legend className="sr-only">Choisissez votre ou vos pass</legend>
 
-      <div className="grid gap-4 md:grid-cols-2 md:gap-(--gutter)">
+      <div className="grid gap-4 md:grid-cols-2 md:gap-(--gutter) lg:grid-cols-3">
         {PASS_ORDER.map((id, i) => {
           const pass = PASSES[id];
           const checked = selection.includes(id);
@@ -49,6 +51,7 @@ export function PassSelector({ initial = ["event"], onChange }: PassSelectorProp
                 pass={pass}
                 index={i + 1}
                 selected={checked}
+                sold={sold?.[id]}
                 className="transition-transform duration-(--duration-micro) ease-out-quart group-hover:-translate-y-0.5"
               >
                 <span
@@ -68,6 +71,13 @@ export function PassSelector({ initial = ["event"], onChange }: PassSelectorProp
           );
         })}
       </div>
+
+      {EXCLUSIVE.length > 0 && (
+        <p className="mt-4 text-small text-muted">
+          Le Pass En ligne et le Pass Présentiel ne se cumulent pas : choisir l’un retire l’autre. Le Pass Hackathon se
+          combine avec l’un ou l’autre.
+        </p>
+      )}
 
       <div
         className="mt-6 flex flex-wrap items-end justify-between gap-x-8 gap-y-3 border-t border-rule-strong pt-4"

@@ -1,6 +1,10 @@
 import type { ReactNode } from "react";
-import type { Pass } from "@/config/passes";
+import type { Pass, PassId } from "@/config/passes";
 import { formatAmount } from "@/lib/format";
+import { CapacityGauge } from "./CapacityGauge";
+
+/** How each pass is attended — shown in the ticket header. */
+const MODE: Record<PassId, string> = { online: "À distance", event: "Sur place", hackathon: "Par équipe" };
 
 interface PassCardProps {
   pass: Pass;
@@ -9,15 +13,17 @@ interface PassCardProps {
   children?: ReactNode;
   /** Visual state used by the selector. */
   selected?: boolean;
+  /** Passes already sold — shows the registration gauge when given. */
+  sold?: number;
   className?: string;
 }
 
 /**
  * A pass is drawn as a ticket: the same object becomes the order summary,
  * the e-mailed ticket and the printed badge.
- * Event = paper ticket, Hackathon = ink ticket — the two read apart at a glance, even in print.
+ * En ligne & Présentiel = paper tickets, Hackathon = ink ticket — they read apart at a glance, even in print.
  */
-export function PassCard({ pass, index, children, selected, className = "" }: PassCardProps) {
+export function PassCard({ pass, index, children, selected, sold, className = "" }: PassCardProps) {
   const dark = pass.id === "hackathon";
   const surface = dark ? "bg-ink text-paper" : "bg-(--pass-surface) text-ink";
   const muted = dark ? "text-mist" : "text-smoke";
@@ -37,7 +43,9 @@ export function PassCard({ pass, index, children, selected, className = "" }: Pa
 
       <div className="flex flex-1 flex-col gap-6 p-6 sm:p-8">
         <div className={`type-meta flex justify-between gap-4 ${muted}`}>
-          <span>Pass {String(index).padStart(2, "0")}</span>
+          <span>
+            Pass {String(index).padStart(2, "0")} · {MODE[pass.id]}
+          </span>
           <span>18—19.12.2026</span>
         </div>
 
@@ -47,6 +55,10 @@ export function PassCard({ pass, index, children, selected, className = "" }: Pa
           <p className="font-semibold">{pass.access}</p>
           <p className={`text-small leading-normal ${muted}`}>{pass.summary}</p>
         </div>
+
+        {sold !== undefined && (
+          <CapacityGauge sold={sold} total={pass.capacity.total} unit={pass.capacity.unit} dark={dark} />
+        )}
       </div>
 
       <div
@@ -56,7 +68,7 @@ export function PassCard({ pass, index, children, selected, className = "" }: Pa
           <span className="type-condensed text-title leading-none">
             {formatAmount(pass.price)}
           </span>
-          <span className={`type-meta ${muted}`}>FCFA</span>
+          <span className={`type-meta ${muted}`}>FCFA{pass.per === "équipe" ? " / équipe" : ""}</span>
         </p>
         {children}
       </div>

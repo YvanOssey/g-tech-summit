@@ -38,8 +38,9 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  // The intro script (IntroCurtain) adds the class "intro-seen" to <html> before hydration.
   return (
-    <html lang="fr" className={`${archivo.variable} ${plexMono.variable}`}>
+    <html lang="fr" className={`${archivo.variable} ${plexMono.variable}`} suppressHydrationWarning>
       <body>
         {/* Without JavaScript, entrance animations never run: show their content as is. */}
         <noscript>

@@ -199,6 +199,7 @@
   --z-sticky: 30;
   --z-header: 40;
   --z-skip: 50;
+  --z-intro: 60;
 
   /* Motion */
   --duration-micro: 160ms;
@@ -703,6 +704,96 @@
 .faq[open]::details-content {
   block-size: auto;
   opacity: 1;
+}
+
+/* ── Opening curtain (see <IntroCurtain>) ────────────────────────────────
+   ~1.2 s of loading, then the curtain lifts in 0.9 s. Pure CSS: it hides
+   itself even without JavaScript and never blocks clicks. */
+@property --intro-n {
+  syntax: "<integer>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@keyframes intro-lift {
+  to {
+    clip-path: inset(0 0 100% 0);
+    visibility: hidden;
+  }
+}
+
+@keyframes intro-drift {
+  to {
+    transform: translateY(-12vh);
+    opacity: 0;
+  }
+}
+
+@keyframes intro-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes intro-count {
+  to {
+    --intro-n: 100;
+  }
+}
+
+@keyframes intro-char {
+  from {
+    transform: translateY(105%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-intro);
+  background: var(--color-ink);
+  pointer-events: none;
+  clip-path: inset(0 0 0 0);
+  animation: intro-lift 0.9s var(--ease-in-out-quart) 1.3s forwards;
+}
+
+.intro-inner {
+  animation: intro-drift 0.9s var(--ease-in-out-quart) 1.3s forwards;
+}
+
+.intro-char {
+  animation: intro-char 0.7s var(--ease-out-quart) both;
+}
+
+.intro-bar {
+  transform-origin: left;
+  animation: intro-fill 1.2s var(--ease-in-out-quart) both;
+}
+
+.intro-count {
+  counter-reset: intro var(--intro-n);
+  animation: intro-count 1.2s var(--ease-in-out-quart) forwards;
+}
+
+.intro-count::after {
+  content: counter(intro, decimal-leading-zero);
+}
+
+/* Once per visit, and never with reduced motion. */
+.intro-seen .intro {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro {
+    display: none;
+  }
 }
 
 /* Endless bands — see <Marquee>. */

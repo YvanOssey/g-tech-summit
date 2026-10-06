@@ -13,12 +13,12 @@ export const FAQ: readonly FaqItem[] = [
     a: "Non. G-TECH SUMMIT s’adresse aussi bien aux personnes qui découvrent la tech qu’aux professionnels. Les formations express sont accessibles aux débutants comme aux initiés, et l’initiation au développement web ne demande aucun prérequis.",
   },
   {
-    q: "Quelle est la différence entre le Pass Event et le Pass Hackathon ?",
-    a: "Le Pass Event (10 000 FCFA) donne accès aux deux jours de l’événement : conférences, panels, formations express, ateliers, stands et networking. Le Pass Hackathon (15 000 FCFA par personne) donne uniquement accès à la participation au hackathon.",
+    q: "Quels sont les différents pass ?",
+    a: "Le Pass En ligne (5 000 FCFA, 100 places) permet de suivre les deux jours à distance : le lien de connexion est envoyé par e-mail. Le Pass Présentiel (10 000 FCFA, 40 places) donne accès sur place aux deux jours : conférences, panels, formations express, ateliers, stands et networking. Le Pass Hackathon (15 000 FCFA par équipe de 2 à 3 personnes, 10 équipes) donne uniquement accès à la participation au hackathon.",
   },
   {
     q: "Je veux participer à l’événement et au hackathon. Comment faire ?",
-    a: "Prenez les deux pass dans la même commande : 10 000 + 15 000, soit 25 000 FCFA.",
+    a: "Le Pass Hackathon se combine avec le Pass Présentiel ou le Pass En ligne dans la même commande : par exemple Présentiel + Hackathon, 10 000 + 15 000, soit 25 000 FCFA. Le Pass En ligne et le Pass Présentiel ne se cumulent pas.",
   },
   {
     q: "Comment se passe le paiement ?",
@@ -30,7 +30,7 @@ export const FAQ: readonly FaqItem[] = [
   },
   {
     q: "Peut-on participer seul au hackathon ?",
-    a: "Non, la participation se fait en équipe uniquement. Chaque membre de l’équipe prend son propre Pass Hackathon. La taille définitive des équipes sera annoncée prochainement.",
+    a: "Non, la participation se fait en équipe uniquement, de 2 à 3 personnes. Un seul Pass Hackathon est pris pour toute l’équipe, et 10 équipes au maximum peuvent s’inscrire.",
   },
   {
     q: "Comment s’inscrire aux formations express ?",
