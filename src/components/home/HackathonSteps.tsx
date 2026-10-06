@@ -7,7 +7,7 @@ import { HACKATHON } from "@/content/hackathon";
 /** The hackathon from team to podium — validated facts only (TDR XII). */
 const STEPS = [
   { title: "Formez votre équipe", when: null, text: "Participation en équipe uniquement ; les équipes multidisciplinaires sont encouragées." },
-  { title: "Choisissez une thématique", when: null, text: "Une seule par équipe, parmi les quatre, pour un problème réel en Côte d’Ivoire ou en Afrique." },
+  { title: "Choisissez une thématique", when: null, text: "Une seule par équipe, parmi les deux, pour un problème réel en Côte d’Ivoire ou en Afrique." },
   { title: "Construisez", when: null, text: "Le projet, original, est développé pendant la période du hackathon." },
   {
     title: "Pitchez",

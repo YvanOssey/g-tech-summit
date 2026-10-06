@@ -60,8 +60,6 @@ const FIGURES = [
   { value: 3, label: "Pass", detail: "En ligne, présentiel, hackathon" },
 ] as const;
 
-const RIBBON = ["Conférences", "Panels", "Formations express", "Ateliers", "Hackathon", "Stands & démos", "Networking"] as const;
-
 export default async function HomePage() {
   const settings = await getEventSettings();
   const posterPhoto = PHOTOS.poster;
@@ -70,7 +68,7 @@ export default async function HomePage() {
     <>
       <HomeHero venue={settings.venue} />
 
-      {/* ── Figures + ribbon ─────────────────────────────────────────── */}
+      {/* ── Figures ────────────────────────────────────────────────── */}
       <Section tone="ink" id="chiffres" aria-label="L’événement en chiffres" className="pt-4 pb-20 md:pb-28">
         <div className="shell">
           <RevealGroup as="ul" className="grid grid-cols-2 border border-rule lg:grid-cols-4">
@@ -88,31 +86,6 @@ export default async function HomePage() {
               </RevealItem>
             ))}
           </RevealGroup>
-        </div>
-
-        {/* Two crossed bands — the formats, scrolling */}
-        <div aria-hidden="true" className="relative mt-20 overflow-hidden py-10 md:mt-28">
-          <div className="-mx-4 rotate-2 border-y border-graphite bg-ink py-4">
-            <Marquee
-              reverse
-              duration={50}
-              items={RIBBON.map((r) => (
-                <span key={r} className="type-condensed flex items-center gap-8 px-4 text-heading text-mist">
-                  {r} <span className="size-2 rounded-pill bg-graphite" />
-                </span>
-              ))}
-            />
-          </div>
-          <div className="absolute inset-x-0 top-1/2 -mx-4 -translate-y-1/2 -rotate-2 bg-signal py-4 text-ink">
-            <Marquee
-              duration={40}
-              items={RIBBON.map((r) => (
-                <span key={r} className="type-condensed flex items-center gap-8 px-4 text-heading">
-                  {r} <span className="size-3 rotate-45 bg-ink" />
-                </span>
-              ))}
-            />
-          </div>
         </div>
       </Section>
 
@@ -261,8 +234,8 @@ export default async function HomePage() {
             <RevealText
               inView
               id="hackathon"
-              label="Quatre thématiques, une finale sur scène."
-              lines={["Quatre thématiques,", <span key="f">une <Accent>finale</Accent> sur scène.</span>]}
+              label="Deux thématiques, une finale sur scène."
+              lines={["Deux thématiques,", <span key="f">une <Accent>finale</Accent> sur scène.</span>]}
               className="type-headline text-title mt-8"
             />
             <p className="mx-auto mt-8 max-w-xl text-muted">{HACKATHON.intro}</p>
@@ -295,9 +268,9 @@ export default async function HomePage() {
         </div>
 
         <div className="shell mt-20 lg:mt-28">
-          <h3 className="type-label">Les quatre thématiques</h3>
+          <h3 className="type-label">Les deux thématiques</h3>
           <SpotlightGroup>
-            <RevealGroup as="ol" className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
+            <RevealGroup as="ol" className="mt-6 grid gap-3 sm:grid-cols-2 lg:gap-4">
               {TRACKS.map((t) => (
                 <RevealItem as="li" effect="flip" key={t.code} className="panel card-interactive spotlight flex min-h-56 flex-col bg-ink/85 p-6">
                   <span className="card-index type-condensed text-title leading-none text-accent">{t.code}</span>

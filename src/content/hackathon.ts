@@ -2,6 +2,8 @@
  * Hackathon — source: TDR section XII, validated by the organisers.
  * Undecided items (team size, deadline, quota, challenge start, jury) live in
  * `config/settings.ts` and are rendered as pending.
+ * Tracks: reduced to two by the organisers on 2026-10-06 (cybersecurity and
+ * networks merged, robotics dropped).
  */
 
 export const HACKATHON = {
@@ -27,24 +29,13 @@ export interface Track {
 export const TRACKS: readonly Track[] = [
   {
     code: "01",
-    name: "Cybersécurité",
-    claim: "Sécuriser l’Afrique numérique",
-    description: "Développer des solutions pour protéger les systèmes, réseaux et données contre les cybermenaces.",
+    name: "Cybersécurité & Réseaux",
+    claim: "Sécuriser et connecter l’Afrique numérique",
+    description:
+      "Protéger les systèmes, réseaux et données contre les cybermenaces, et imaginer des infrastructures et des solutions réseau adaptées aux réalités africaines.",
   },
   {
     code: "02",
-    name: "Réseau & infrastructure",
-    claim: "Connecter l’Afrique intelligemment",
-    description: "Imaginer des infrastructures et des solutions réseau adaptées aux réalités africaines.",
-  },
-  {
-    code: "03",
-    name: "Robotique",
-    claim: "Automatiser les solutions africaines",
-    description: "Créer des systèmes robotiques et embarqués qui répondent à des défis locaux.",
-  },
-  {
-    code: "04",
     name: "Développement & IA",
     claim: "Innover pour l’impact social africain",
     description: "Concevoir des applications web, mobile et IA utiles aux populations et aux entreprises africaines.",

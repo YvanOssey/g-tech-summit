@@ -19,7 +19,7 @@ import { formatFCFA } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "Hackathon",
-  description: `Hackathon Ghostech, 2ᵉ édition : 4 thématiques, participation en équipe, finale le 19 décembre 2026 à Abidjan. Thème : ${HACKATHON.theme}.`,
+  description: `Hackathon Ghostech, 2ᵉ édition : 2 thématiques, participation en équipe, finale le 19 décembre 2026 à Abidjan. Thème : ${HACKATHON.theme}.`,
 };
 
 const dateFr = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", year: "numeric" });
@@ -73,8 +73,8 @@ export default async function HackathonPage() {
               <RevealText
                 inView
                 id="titre-thematiques"
-                label="Quatre défis, une seule thématique par équipe."
-                lines={["Quatre défis,", <span key="u">une seule <Accent>par équipe</Accent>.</span>]}
+                label="Deux défis, une seule thématique par équipe."
+                lines={["Deux défis,", <span key="u">une seule <Accent>par équipe</Accent>.</span>]}
                 className="type-headline text-title mt-8"
               />
             </div>
