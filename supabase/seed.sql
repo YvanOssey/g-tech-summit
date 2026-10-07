@@ -16,7 +16,7 @@ insert into public.partners (name, logo_path, logo_width, logo_height, position,
   ('FIRATEK', '/partners/firatek.png', 389, 227, 6, true),
   ('IT-LeadHER', '/partners/it-leadher.png', 640, 607, 7, true),
   ('Les Gos Créatives', '/partners/les-gos-creatives.png', 640, 640, 8, true),
-  ('REDIS-IUA', '/partners/redis-iua.png', 640, 622, 9, true);
+  ('IT Foundation', '/partners/it-foundation.png', 640, 143, 9, true);
 
 insert into public.faq_items (question, answer, position, published) values
   ('Faut-il avoir un niveau technique pour venir ?', 'Non. G-TECH SUMMIT s’adresse aussi bien aux personnes qui découvrent la tech qu’aux professionnels. Les formations express sont accessibles aux débutants comme aux initiés, et l’initiation au développement web ne demande aucun prérequis.', 1, true),

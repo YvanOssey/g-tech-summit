@@ -16,5 +16,5 @@ export const PARTNERS: readonly Partner[] = [
   { name: "FIRATEK", logo: { src: "/partners/firatek.png", width: 389, height: 227 } },
   { name: "IT-LeadHER", logo: { src: "/partners/it-leadher.png", width: 640, height: 607 } },
   { name: "Les Gos Créatives", logo: { src: "/partners/les-gos-creatives.png", width: 640, height: 640 } },
-  { name: "REDIS-IUA", logo: { src: "/partners/redis-iua.png", width: 640, height: 622 } },
+  { name: "IT Foundation", logo: { src: "/partners/it-foundation.png", width: 640, height: 143 } },
 ];
