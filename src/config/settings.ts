@@ -1,11 +1,14 @@
 /**
- * Settings that are NOT decided yet and will be editable from the admin
- * (stored in the database once the back office exists).
+ * Settings that are NOT decided yet, edited from the admin and stored in the
+ * database (table event_settings, pass counts from pass_sales()).
  * `null` means "not announced" — the UI renders <Pending /> instead of guessing.
  *
- * Pages read them through `getEventSettings()` so the data source can switch
- * from this file to the database without touching any component.
+ * Pages read them through `getEventSettings()`; the values below are the
+ * fallback used when the database is not configured or not reachable.
  */
+import { unstable_cache } from "next/cache";
+import { loadEventSettings } from "@/server/repositories/settings";
+
 export interface Venue {
   name: string;
   address: string;
@@ -48,6 +51,18 @@ const DEFAULT_SETTINGS: EventSettings = {
   },
 };
 
+/** Cache tag: admin edits and confirmed payments call revalidateTag() with it. */
+export const EVENT_SETTINGS_TAG = "event-settings";
+
+/**
+ * One cached copy shared by all visitors, refreshed at most every 5 minutes
+ * (sooner when the tag is revalidated). Pages stay static and fast.
+ */
+const cachedSettings = unstable_cache(() => loadEventSettings(DEFAULT_SETTINGS), ["event-settings"], {
+  tags: [EVENT_SETTINGS_TAG],
+  revalidate: 300,
+});
+
 export async function getEventSettings(): Promise<EventSettings> {
-  return DEFAULT_SETTINGS;
+  return cachedSettings();
 }
