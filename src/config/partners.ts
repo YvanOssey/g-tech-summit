@@ -8,7 +8,7 @@ export interface Partner {
 }
 
 export const PARTNERS: readonly Partner[] = [
-  { name: "AfroLink", logo: { src: "/partners/afrolink.png", width: 640, height: 94 } },
+  { name: "Impact Hub Abidjan", logo: { src: "/partners/impact-hub.png", width: 317, height: 316 } },
   { name: "AIESEC", logo: { src: "/partners/aiesec.png", width: 640, height: 91 } },
   { name: "H-Electro", logo: { src: "/partners/h-electro.png", width: 488, height: 488 } },
   { name: "Neddigi", logo: { src: "/partners/neddigi.png", width: 640, height: 348 } },

@@ -8,7 +8,7 @@ begin;
 insert into public.event_settings (id, registration_open, team_size_min, team_size_max) values (1, false, 5, 5);
 
 insert into public.partners (name, logo_path, logo_width, logo_height, position, published) values
-  ('AfroLink', '/partners/afrolink.png', 640, 94, 1, true),
+  ('Impact Hub Abidjan', '/partners/impact-hub.png', 317, 316, 1, true),
   ('AIESEC', '/partners/aiesec.png', 640, 91, 2, true),
   ('H-Electro', '/partners/h-electro.png', 488, 488, 3, true),
   ('Neddigi', '/partners/neddigi.png', 640, 348, 4, true),
