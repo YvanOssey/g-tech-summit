@@ -5,7 +5,6 @@ import { PHOTOS } from "@/config/media";
 import { PASSES, PASS_ORDER, orderTotal } from "@/config/passes";
 import { getEventSettings } from "@/config/settings";
 import { HACKATHON, TRACKS } from "@/content/hackathon";
-import { DAYS } from "@/content/programme";
 import { GhostechLogo } from "@/components/brand/GhostechLogo";
 import { HackathonSteps } from "@/components/home/HackathonSteps";
 import { HomeHero } from "@/components/home/HomeHero";
@@ -31,7 +30,7 @@ import { Pending } from "@/components/ui/Pending";
 import { Section } from "@/components/ui/Section";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { formatFCFA } from "@/lib/format";
-import { getFaq, getPartners } from "@/server/repositories/content";
+import { getFaq, getPartners, getProgramme } from "@/server/repositories/content";
 
 const PROFILES = [
   { who: "Vous découvrez la tech", what: "Initiation au développement web sans prérequis, introduction à l’IA, ateliers de découverte des outils IA." },
@@ -60,7 +59,7 @@ const FIGURES = [
 ] as const;
 
 export default async function HomePage() {
-  const [settings, partners, faq] = await Promise.all([getEventSettings(), getPartners(), getFaq()]);
+  const [settings, partners, faq, days] = await Promise.all([getEventSettings(), getPartners(), getFaq(), getProgramme()]);
   const posterPhoto = PHOTOS.poster;
 
   return (
@@ -304,7 +303,7 @@ export default async function HomePage() {
             </ButtonLink>
           </div>
           <RevealGroup className="mt-16 grid gap-4 md:grid-cols-2">
-            {DAYS.map((d) => (
+            {days.map((d) => (
               <RevealItem key={d.id} className="panel card-interactive p-6 sm:p-8">
                 <div className="flex items-start justify-between gap-4">
                   <div>

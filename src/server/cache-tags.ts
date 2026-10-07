@@ -5,3 +5,4 @@
 export { EVENT_SETTINGS_TAG } from "@/config/settings";
 export const FAQ_TAG = "faq";
 export const PARTNERS_TAG = "partners";
+export const PROGRAMME_TAG = "programme";

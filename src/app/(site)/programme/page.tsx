@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Fragment } from "react";
 import {
   CONFERENCES,
-  DAYS,
   FORMATIONS,
   FORMATIONS_INFO,
   PANELS,
@@ -18,6 +17,7 @@ import { DayTabs } from "@/components/programme/DayTabs";
 import { Accent } from "@/components/ui/Accent";
 import { ButtonLink } from "@/components/ui/Button";
 import { SignalSquare } from "@/components/ui/icons";
+import { getProgramme } from "@/server/repositories/content";
 import { Pending } from "@/components/ui/Pending";
 import { Section } from "@/components/ui/Section";
 import { SectionLabel } from "@/components/ui/SectionLabel";
@@ -81,7 +81,8 @@ function TalkCard({ talk, index }: { talk: Talk; index: number }) {
   );
 }
 
-export default function ProgrammePage() {
+export default async function ProgrammePage() {
+  const days = await getProgramme();
   const talks = [...CONFERENCES, ...PANELS];
 
   return (
@@ -114,7 +115,7 @@ export default function ProgrammePage() {
             <p className="max-w-sm text-muted">Choisissez un jour : chaque créneau mène à sa description détaillée.</p>
           </div>
           <div className="mt-12">
-            <DayTabs days={DAYS} />
+            <DayTabs days={days} />
           </div>
         </div>
       </Section>

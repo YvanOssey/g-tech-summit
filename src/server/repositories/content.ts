@@ -2,13 +2,14 @@ import "server-only";
 import { unstable_cache } from "next/cache";
 import { PARTNERS, type Partner } from "@/config/partners";
 import { FAQ, type FaqItem } from "@/content/faq";
+import { DAYS, type Day, type Slot } from "@/content/programme";
 import { partnerLogoUrl } from "@/lib/partner-logo";
-import { FAQ_TAG, PARTNERS_TAG } from "@/server/cache-tags";
+import { FAQ_TAG, PARTNERS_TAG, PROGRAMME_TAG } from "@/server/cache-tags";
 import { createPublicClient } from "@/server/db/clients";
 import { hasDatabase } from "@/server/db/env";
 
 /**
- * Published partners and FAQ for the public site, in the same shape as the
+ * Published partners, FAQ and programme slots for the public site, in the same shape as the
  * files they replace, so the components do not change. Read with the public
  * client (RLS: published rows only), cached and shared by every visitor,
  * refreshed when an admin saves (updateTag) and at most every 5 minutes.
@@ -55,5 +56,46 @@ async function loadFaq(): Promise<readonly FaqItem[]> {
   }
 }
 
+/**
+ * The two days with their PUBLISHED slots, ordered by start time. Day names,
+ * dates and themes stay in content/programme.ts. Rooms are never exposed
+ * publicly (zone left empty), speakers are not shown yet.
+ */
+async function loadProgramme(): Promise<readonly Day[]> {
+  if (!hasDatabase) return DAYS;
+  try {
+    const { data, error } = await createPublicClient()
+      .from("programme_slots")
+      .select("day, start_time, end_time, type, title, subtitle, detail, ref")
+      .eq("published", true)
+      .order("day")
+      .order("start_time")
+      .order("position");
+    if (error || !data) {
+      console.warn(`[content] programme indisponible, fichier utilisé (${error?.code || error?.message || "aucune donnée"})`);
+      return DAYS;
+    }
+    return DAYS.map((day) => ({
+      ...day,
+      slots: data
+        .filter((s) => s.day === day.index)
+        .map((s): Slot => ({
+          start: s.start_time.slice(0, 5),
+          ...(s.end_time ? { end: s.end_time.slice(0, 5) } : {}),
+          type: s.type,
+          title: s.title,
+          ...(s.subtitle ? { subtitle: s.subtitle } : {}),
+          ...(s.detail ? { detail: s.detail } : {}),
+          zone: "",
+          ...(s.ref ? { ref: s.ref } : {}),
+        })),
+    }));
+  } catch (e) {
+    console.warn(`[content] programme injoignable, fichier utilisé (${e instanceof Error ? e.name : "erreur"})`);
+    return DAYS;
+  }
+}
+
+export const getProgramme = unstable_cache(loadProgramme, ["programme"], { tags: [PROGRAMME_TAG], revalidate: 300 });
 export const getPartners = unstable_cache(loadPartners, ["partners"], { tags: [PARTNERS_TAG], revalidate: 300 });
 export const getFaq = unstable_cache(loadFaq, ["faq"], { tags: [FAQ_TAG], revalidate: 300 });
