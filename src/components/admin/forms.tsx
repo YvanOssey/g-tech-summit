@@ -67,3 +67,68 @@ export function FormMessage({ state }: { state: FormState }) {
     </div>
   );
 }
+
+interface TextAreaProps extends ComponentProps<"textarea"> {
+  label: string;
+  name: string;
+  error?: string;
+  hint?: string;
+}
+
+export function TextArea({ label, name, error, hint, id = name, rows = 5, ...props }: TextAreaProps) {
+  const describedBy = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(" ") || undefined;
+  return (
+    <div>
+      <label htmlFor={id} className="block text-small font-semibold">
+        {label}
+      </label>
+      <textarea id={id} name={name} rows={rows} className={input} aria-invalid={error ? true : undefined} aria-describedby={describedBy} {...props} />
+      {hint && (
+        <p id={`${id}-hint`} className="mt-1 text-small text-grey">
+          {hint}
+        </p>
+      )}
+      {error && (
+        <p id={`${id}-error`} className="mt-1 text-small font-medium text-[#b42318]">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
+export function Checkbox({ label, name, hint, id = name, ...props }: Omit<ComponentProps<"input">, "type"> & { label: string; name: string; hint?: string }) {
+  return (
+    <div className="flex items-start gap-3">
+      <input id={id} name={name} type="checkbox" value="on" className="mt-1 size-4 accent-ink" aria-describedby={hint ? `${id}-hint` : undefined} {...props} />
+      <div>
+        <label htmlFor={id} className="text-small font-semibold">
+          {label}
+        </label>
+        {hint && (
+          <p id={`${id}-hint`} className="text-small text-grey">
+            {hint}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/** Secondary submit for one-click actions (move, publish, delete). Asks first when `confirm` is set. */
+export function ActionButton({ children, confirm, danger = false, ...props }: ComponentProps<"button"> & { confirm?: string; danger?: boolean }) {
+  return (
+    <button
+      type="submit"
+      onClick={(e) => {
+        if (confirm && !window.confirm(confirm)) e.preventDefault();
+      }}
+      className={`min-h-9 rounded-input border px-2.5 text-small font-medium whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal disabled:cursor-not-allowed disabled:opacity-40 ${
+        danger ? "border-[#b42318]/40 text-[#7a1a12] hover:border-[#b42318]" : "border-ink/20 hover:border-ink"
+      }`}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+}

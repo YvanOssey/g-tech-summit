@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { EVENT, whatsappUrl } from "@/config/event";
 import { getEventSettings } from "@/config/settings";
-import { FAQ } from "@/content/faq";
 import { HACKATHON } from "@/content/hackathon";
 import { FaqSearch } from "@/components/infos/FaqSearch";
 import { PageIntro } from "@/components/layout/PageIntro";
@@ -14,6 +13,7 @@ import { ArrowRight, ChatBubble, Clock, Mail, Phone, TicketIcon } from "@/compon
 import { Pending } from "@/components/ui/Pending";
 import { Section } from "@/components/ui/Section";
 import { SectionLabel } from "@/components/ui/SectionLabel";
+import { getFaq } from "@/server/repositories/content";
 
 export const metadata: Metadata = {
   title: "Infos pratiques",
@@ -40,7 +40,7 @@ const JOURNEY = [
 ] as const;
 
 export default async function PracticalPage() {
-  const { venue } = await getEventSettings();
+  const [{ venue }, faq] = await Promise.all([getEventSettings(), getFaq()]);
 
   return (
     <>
@@ -101,7 +101,7 @@ export default async function PracticalPage() {
             </div>
           </div>
           <div className="col-span-4 md:col-span-8 lg:col-span-8">
-            <FaqSearch items={FAQ} />
+            <FaqSearch items={faq} />
           </div>
         </div>
       </Section>

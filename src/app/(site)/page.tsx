@@ -2,10 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { EVENT, whatsappUrl } from "@/config/event";
 import { PHOTOS } from "@/config/media";
-import { PARTNERS } from "@/config/partners";
 import { PASSES, PASS_ORDER, orderTotal } from "@/config/passes";
 import { getEventSettings } from "@/config/settings";
-import { FAQ } from "@/content/faq";
 import { HACKATHON, TRACKS } from "@/content/hackathon";
 import { DAYS } from "@/content/programme";
 import { GhostechLogo } from "@/components/brand/GhostechLogo";
@@ -33,6 +31,7 @@ import { Pending } from "@/components/ui/Pending";
 import { Section } from "@/components/ui/Section";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { formatFCFA } from "@/lib/format";
+import { getFaq, getPartners } from "@/server/repositories/content";
 
 const PROFILES = [
   { who: "Vous découvrez la tech", what: "Initiation au développement web sans prérequis, introduction à l’IA, ateliers de découverte des outils IA." },
@@ -61,7 +60,7 @@ const FIGURES = [
 ] as const;
 
 export default async function HomePage() {
-  const settings = await getEventSettings();
+  const [settings, partners, faq] = await Promise.all([getEventSettings(), getPartners(), getFaq()]);
   const posterPhoto = PHOTOS.poster;
 
   return (
@@ -381,7 +380,7 @@ export default async function HomePage() {
           label="Partenaires"
           duration={30}
           className="mt-14 border-y border-rule py-10"
-          items={PARTNERS.map((p) => (
+          items={partners.map((p) => (
             <span key={p.name} className="flex h-20 items-center px-10 md:px-16">
               <Image
                 src={p.logo.src}
@@ -457,7 +456,7 @@ export default async function HomePage() {
               </div>
             </div>
             <div className="col-span-4 md:col-span-8 lg:col-span-8">
-              <FaqList items={FAQ.slice(0, 6)} numbered />
+              <FaqList items={faq.slice(0, 6)} numbered />
               <div className="mt-8">
                 <ButtonLink href="/infos-pratiques#faq" variant="link" arrow>
                   Toutes les questions

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { EVENT, whatsappUrl } from "@/config/event";
-import { PARTNERS, type Partner } from "@/config/partners";
+import type { Partner } from "@/config/partners";
 import { PageIntro } from "@/components/layout/PageIntro";
 import { Marquee } from "@/components/motion/Marquee";
 import { RevealGroup, RevealItem } from "@/components/motion/Reveal";
@@ -13,6 +13,7 @@ import { Accent } from "@/components/ui/Accent";
 import { ButtonLink } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
 import { SectionLabel } from "@/components/ui/SectionLabel";
+import { getPartners } from "@/server/repositories/content";
 
 export const metadata: Metadata = {
   title: "Partenaires",
@@ -35,7 +36,9 @@ function PartnerLogo({ partner, base, className = "" }: { partner: Partner; base
   );
 }
 
-export default function PartnersPage() {
+export default async function PartnersPage() {
+  const partners = await getPartners();
+
   return (
     <>
       <PageIntro
@@ -68,7 +71,7 @@ export default function PartnersPage() {
 
           <SpotlightGroup>
             <RevealGroup as="ul" className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:gap-4">
-              {PARTNERS.map((p) => (
+              {partners.map((p) => (
                 <RevealItem as="li" effect="flip" key={p.name}>
                   <Tilt max={6}>
                     <div className="panel card-interactive spotlight flex aspect-[4/3] flex-col items-center justify-center gap-6 bg-paper! p-6">
@@ -84,7 +87,7 @@ export default function PartnersPage() {
         <Marquee
           duration={26}
           className="mt-16 border-y border-rule py-5"
-          items={PARTNERS.map((p) => (
+          items={partners.map((p) => (
             <span key={p.name} className="type-condensed flex items-center gap-8 px-8 text-title text-ink/15">
               {p.name} <span className="size-3 rotate-45 bg-signal" />
             </span>
