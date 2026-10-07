@@ -14,7 +14,7 @@ export const FAQ: readonly FaqItem[] = [
   },
   {
     q: "Quels sont les différents pass ?",
-    a: "Le Pass En ligne (5 000 FCFA, 100 places) permet de suivre les deux jours à distance : le lien de connexion est envoyé par e-mail. Le Pass Présentiel (10 000 FCFA, 40 places) donne accès sur place aux deux jours : conférences, panels, formations express, ateliers, stands et networking. Le Pass Hackathon (15 000 FCFA par équipe de 2 à 3 personnes, 10 équipes) donne uniquement accès à la participation au hackathon.",
+    a: "Le Pass En ligne (5 000 FCFA, 100 places) permet de suivre les deux jours à distance : le lien de connexion est envoyé par e-mail. Le Pass Présentiel (10 000 FCFA, 40 places) donne accès sur place aux deux jours : conférences, panels, formations express, ateliers, stands et networking. Le Pass Hackathon (15 000 FCFA par équipe de 5 personnes, 10 équipes) donne uniquement accès à la participation au hackathon.",
   },
   {
     q: "Je veux participer à l’événement et au hackathon. Comment faire ?",
@@ -30,7 +30,7 @@ export const FAQ: readonly FaqItem[] = [
   },
   {
     q: "Peut-on participer seul au hackathon ?",
-    a: "Non, la participation se fait en équipe uniquement, de 2 à 3 personnes. Un seul Pass Hackathon est pris pour toute l’équipe, et 10 équipes au maximum peuvent s’inscrire.",
+    a: "Non, la participation se fait en équipe uniquement, de 5 personnes. Un seul Pass Hackathon est pris pour toute l’équipe, et 10 équipes au maximum peuvent s’inscrire.",
   },
   {
     q: "Comment s’inscrire aux formations express ?",

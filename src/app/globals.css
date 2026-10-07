@@ -760,11 +760,11 @@
   background: var(--color-ink);
   pointer-events: none;
   clip-path: inset(0 0 0 0);
-  animation: intro-lift 0.9s var(--ease-in-out-quart) 1.3s forwards;
+  animation: intro-lift 0.9s var(--ease-in-out-quart) 1.6s forwards;
 }
 
 .intro-inner {
-  animation: intro-drift 0.9s var(--ease-in-out-quart) 1.3s forwards;
+  animation: intro-drift 0.9s var(--ease-in-out-quart) 1.6s forwards;
 }
 
 .intro-char {
@@ -773,12 +773,12 @@
 
 .intro-bar {
   transform-origin: left;
-  animation: intro-fill 1.2s var(--ease-in-out-quart) both;
+  animation: intro-fill 1.5s var(--ease-in-out-quart) both;
 }
 
 .intro-count {
   counter-reset: intro var(--intro-n);
-  animation: intro-count 1.2s var(--ease-in-out-quart) forwards;
+  animation: intro-count 1.5s var(--ease-in-out-quart) forwards;
 }
 
 .intro-count::after {

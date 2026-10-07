@@ -5,7 +5,7 @@
 
 begin;
 
-insert into public.event_settings (id, registration_open, team_size_min, team_size_max) values (1, false, 2, 3);
+insert into public.event_settings (id, registration_open, team_size_min, team_size_max) values (1, false, 5, 5);
 
 insert into public.partners (name, logo_path, logo_width, logo_height, position, published) values
   ('AfroLink', '/partners/afrolink.png', 640, 94, 1, true),
@@ -20,11 +20,11 @@ insert into public.partners (name, logo_path, logo_width, logo_height, position,
 
 insert into public.faq_items (question, answer, position, published) values
   ('Faut-il avoir un niveau technique pour venir ?', 'Non. G-TECH SUMMIT s’adresse aussi bien aux personnes qui découvrent la tech qu’aux professionnels. Les formations express sont accessibles aux débutants comme aux initiés, et l’initiation au développement web ne demande aucun prérequis.', 1, true),
-  ('Quels sont les différents pass ?', 'Le Pass En ligne (5 000 FCFA, 100 places) permet de suivre les deux jours à distance : le lien de connexion est envoyé par e-mail. Le Pass Présentiel (10 000 FCFA, 40 places) donne accès sur place aux deux jours : conférences, panels, formations express, ateliers, stands et networking. Le Pass Hackathon (15 000 FCFA par équipe de 2 à 3 personnes, 10 équipes) donne uniquement accès à la participation au hackathon.', 2, true),
+  ('Quels sont les différents pass ?', 'Le Pass En ligne (5 000 FCFA, 100 places) permet de suivre les deux jours à distance : le lien de connexion est envoyé par e-mail. Le Pass Présentiel (10 000 FCFA, 40 places) donne accès sur place aux deux jours : conférences, panels, formations express, ateliers, stands et networking. Le Pass Hackathon (15 000 FCFA par équipe de 5 personnes, 10 équipes) donne uniquement accès à la participation au hackathon.', 2, true),
   ('Je veux participer à l’événement et au hackathon. Comment faire ?', 'Le Pass Hackathon se combine avec le Pass Présentiel ou le Pass En ligne dans la même commande : par exemple Présentiel + Hackathon, 10 000 + 15 000, soit 25 000 FCFA. Le Pass En ligne et le Pass Présentiel ne se cumulent pas.', 3, true),
   ('Comment se passe le paiement ?', 'Le paiement se fera en ligne via Wave, directement depuis le site. Aucun frais supplémentaire n’est ajouté au prix affiché. Les inscriptions en ligne ouvrent prochainement.', 4, true),
   ('Comment vais-je recevoir mon billet ?', 'Par e-mail, une fois le paiement réellement confirmé. Le billet est nominatif et contient un QR code unique, scanné à l’entrée.', 5, true),
-  ('Peut-on participer seul au hackathon ?', 'Non, la participation se fait en équipe uniquement, de 2 à 3 personnes. Un seul Pass Hackathon est pris pour toute l’équipe, et 10 équipes au maximum peuvent s’inscrire.', 6, true),
+  ('Peut-on participer seul au hackathon ?', 'Non, la participation se fait en équipe uniquement, de 5 personnes. Un seul Pass Hackathon est pris pour toute l’équipe, et 10 équipes au maximum peuvent s’inscrire.', 6, true),
   ('Comment s’inscrire aux formations express ?', 'Sur place, le samedi 19 décembre. Les places sont limitées (25 à 30 participants par module). Chaque formation donne lieu à une attestation de participation.', 7, true),
   ('Où se déroule l’événement ?', 'À Abidjan. Le lieu exact sera annoncé prochainement sur ce site.', 8, true),
   ('Peut-on annuler ou se faire rembourser ?', 'La politique d’annulation est en cours de définition. Elle sera publiée avant l’ouverture des inscriptions.', 9, true);

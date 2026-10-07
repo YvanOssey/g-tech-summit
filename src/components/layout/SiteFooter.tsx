@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { EVENT, whatsappUrl } from "@/config/event";
-import { LEGAL_NAV, MAIN_NAV, TICKETING } from "@/config/navigation";
+import { MAIN_NAV, TICKETING } from "@/config/navigation";
 import { GhostechLogo } from "@/components/brand/GhostechLogo";
 
 const link =
@@ -67,20 +67,9 @@ export function SiteFooter() {
           G-TECH <span className="text-signal">SUMMIT</span>
         </p>
 
-        <div className="type-meta mt-8 flex flex-col gap-3 border-t border-rule pt-6 text-muted md:flex-row md:items-center md:justify-between">
-          <p>
-            {EVENT.name} {EVENT.year} · 18—19.12.2026 · {EVENT.city}, {EVENT.country}
-          </p>
-          <ul className="flex flex-wrap gap-x-6 gap-y-2">
-            {LEGAL_NAV.map((item) => (
-              <li key={item.href}>
-                <Link href={item.href} className="hover:text-fg">
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <p className="type-meta mt-8 border-t border-rule pt-6 text-muted">
+          {EVENT.name} {EVENT.year} · 18—19.12.2026 · {EVENT.city}, {EVENT.country}
+        </p>
       </div>
     </footer>
   );

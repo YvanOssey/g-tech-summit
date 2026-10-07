@@ -23,7 +23,7 @@ export default async function HackathonAdminPage({ searchParams }: { searchParam
   const fixed = [
     { k: "Thème", v: HACKATHON.theme },
     { k: "Thématiques", v: TRACKS.map((t) => t.name).join(" · ") },
-    { k: "Taille des équipes", v: settings?.team_size_min && settings.team_size_max ? `${settings.team_size_min} à ${settings.team_size_max} personnes` : "—" },
+    { k: "Taille des équipes", v: settings?.team_size_min && settings.team_size_max ? settings.team_size_min === settings.team_size_max ? `${settings.team_size_min} personnes` : `${settings.team_size_min} à ${settings.team_size_max} personnes` : "—" },
     { k: "Pass", v: `${formatFCFA(PASSES.hackathon.price)} par équipe · ${PASSES.hackathon.capacity.total} équipes` },
     { k: "Finale", v: `${HACKATHON.finale.pitch.date} à ${HACKATHON.finale.pitch.time}` },
   ];

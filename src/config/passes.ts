@@ -6,7 +6,7 @@
  * Validated by the organisers on 2026-10-06:
  * - Pass En ligne     5 000 FCFA — 100 places
  * - Pass Présentiel  10 000 FCFA — 40 places   (id "event", kept so ?pass=event links still work)
- * - Pass Hackathon   15 000 FCFA per TEAM — 10 teams of 2 to 3 people
+ * - Pass Hackathon   15 000 FCFA per TEAM — 10 teams of 5 people (team size changed on 2026-10-07)
  * Numbers of passes already sold live in settings (`getEventSettings().sold`).
  */
 export type PassId = "online" | "event" | "hackathon";
@@ -51,9 +51,12 @@ export const PASSES: Record<PassId, Pass> = {
     per: "équipe",
     capacity: { total: 10, unit: "équipes" },
     access: "Participation au hackathon uniquement",
-    summary: "Par équipe de 2 à 3 personnes. Une thématique par équipe.",
+    summary: "Par équipe de 5 personnes. Une thématique par équipe.",
   },
 };
+
+/** People per hackathon team, the buyer included. */
+export const TEAM_SIZE = 5;
 
 export const PASS_ORDER: readonly PassId[] = ["online", "event", "hackathon"];
 

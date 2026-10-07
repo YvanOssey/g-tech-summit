@@ -111,7 +111,7 @@ export default async function DashboardPage({
               </tbody>
             </table>
           </div>
-          <p className="mt-2 text-small text-grey">Hackathon : une vente = une équipe (2 à 3 billets).</p>
+          <p className="mt-2 text-small text-grey">Hackathon : une vente = une équipe (5 billets).</p>
         </section>
 
         <section aria-labelledby="paiements">

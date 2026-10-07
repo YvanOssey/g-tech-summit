@@ -11,9 +11,3 @@ export const MAIN_NAV: readonly NavItem[] = [
 ];
 
 export const TICKETING: NavItem = { href: "/billetterie", label: "Billetterie" };
-
-export const LEGAL_NAV: readonly NavItem[] = [
-  { href: "/mentions-legales", label: "Mentions légales" },
-  { href: "/cgv", label: "Conditions de vente" },
-  { href: "/confidentialite", label: "Confidentialité" },
-];

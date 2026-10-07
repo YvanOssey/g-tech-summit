@@ -43,7 +43,7 @@ const DEFAULT_SETTINGS: EventSettings = {
   sold: { online: 0, event: 0, hackathon: 0 },
   registrationOpen: false,
   hackathon: {
-    teamSize: { min: 2, max: 3 }, // confirmed by the organisers, 2026-10-06
+    teamSize: { min: 5, max: 5 }, // confirmed by the organisers, 2026-10-07
     registrationDeadline: null,
     quota: null,
     challengesStart: null,

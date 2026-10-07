@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import { useActionState, useState } from "react";
-import { Checkbox, Field, FormMessage, SubmitButton } from "@/components/admin/forms";
+import { useActionState } from "react";
+import { TEAM_SIZE } from "@/config/passes";
+import { Field, FormMessage, SubmitButton } from "@/components/admin/forms";
 import { startCheckout } from "./actions";
 
 interface CheckoutFormProps {
@@ -51,7 +51,6 @@ export function CheckoutForm({ passes, hackathon, total, tracks }: CheckoutFormP
   const [state, action] = useActionState(startCheckout, null);
   const values = state?.values;
   const errors = state?.fieldErrors;
-  const [third, setThird] = useState(values?.third_member === "on");
 
   return (
     <form action={action} className="space-y-10" noValidate>
@@ -68,7 +67,7 @@ export function CheckoutForm({ passes, hackathon, total, tracks }: CheckoutFormP
       {hackathon && (
         <fieldset className="space-y-6 border-t border-rule-strong pt-8">
           <legend className="type-headline text-heading">Votre équipe</legend>
-          <p className="text-small text-muted">2 ou 3 personnes, vous compris. Chaque membre reçoit son propre billet nominatif.</p>
+          <p className="text-small text-muted">{TEAM_SIZE} personnes, vous compris : renseignez vos {TEAM_SIZE - 1} coéquipiers. Chaque membre reçoit son propre billet nominatif.</p>
           <Field label="Nom de l’équipe" name="team_name" required defaultValue={values?.team_name} error={errors?.team_name} />
 
           <div role="radiogroup" aria-labelledby="track-label" aria-describedby={errors?.track_code ? "track-error" : undefined}>
@@ -90,27 +89,14 @@ export function CheckoutForm({ passes, hackathon, total, tracks }: CheckoutFormP
             )}
           </div>
 
-          <Person prefix="m1" legend="Coéquipier 2" values={values} errors={errors} optionalPhone />
-          <Checkbox label="Ajouter un 3ᵉ membre" name="third_member" checked={third} onChange={(e) => setThird(e.currentTarget.checked)} />
-          {third && <Person prefix="m2" legend="Coéquipier 3" values={values} errors={errors} optionalPhone />}
+          {Array.from({ length: TEAM_SIZE - 1 }, (_, i) => (
+            <Person key={i} prefix={`m${i + 1}`} legend={`Coéquipier ${i + 2}`} values={values} errors={errors} optionalPhone />
+          ))}
           {errors?.teammates && <p className="text-small font-medium text-[#b42318]">{errors.teammates}</p>}
         </fieldset>
       )}
 
       <div className="space-y-5 border-t border-rule-strong pt-8">
-        <div>
-          <Checkbox label="J’accepte les conditions de vente et la politique de confidentialité" name="consent" defaultChecked={values?.consent === "on"} />
-          <p className="mt-1 ml-7 text-small">
-            <Link href="/cgv" target="_blank" className="underline underline-offset-4">
-              Conditions de vente
-            </Link>{" "}
-            ·{" "}
-            <Link href="/confidentialite" target="_blank" className="underline underline-offset-4">
-              Confidentialité
-            </Link>
-          </p>
-          {errors?.consent && <p className="mt-1 ml-7 text-small font-medium text-[#b42318]">{errors.consent}</p>}
-        </div>
         <FormMessage state={state} />
         <div className="max-w-sm">
           <SubmitButton pendingLabel="Redirection vers le paiement…">{`Payer ${total}`}</SubmitButton>

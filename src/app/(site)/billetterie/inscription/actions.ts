@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import type { FormState } from "@/components/admin/forms";
+import { TEAM_SIZE } from "@/config/passes";
 import { SITE_URL } from "@/config/site";
 import { startOrder } from "@/server/checkout/orders";
 import { checkoutSchema, parsePassList } from "@/server/checkout/schema";
@@ -52,12 +53,11 @@ export async function startCheckout(_prev: FormState, formData: FormData): Promi
   const parsed = checkoutSchema.safeParse({
     passes,
     buyer: person("buyer"),
-    consent: formData.get("consent") === "on",
     team: hackathon
       ? {
           name: text(formData, "team_name"),
           track_code: text(formData, "track_code"),
-          teammates: formData.get("third_member") === "on" ? [person("m1"), person("m2")] : [person("m1")],
+          teammates: Array.from({ length: TEAM_SIZE - 1 }, (_, i) => person(`m${i + 1}`)),
         }
       : null,
   });

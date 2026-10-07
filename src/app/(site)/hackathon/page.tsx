@@ -52,7 +52,7 @@ export default async function HackathonPage() {
         <dl className="shell grid grid-cols-2 lg:grid-cols-4">
           {[
             { k: "Participation", v: "En équipe uniquement" },
-            { k: "Taille des équipes", v: s.teamSize ? `${s.teamSize.min} à ${s.teamSize.max} personnes` : null },
+            { k: "Taille des équipes", v: s.teamSize ? s.teamSize.min === s.teamSize.max ? `${s.teamSize.min} personnes` : `${s.teamSize.min} à ${s.teamSize.max} personnes` : null },
             { k: "Pass", v: `${formatFCFA(PASSES.hackathon.price)} / équipe` },
             { k: "Date limite", v: s.registrationDeadline ? dateFr.format(new Date(s.registrationDeadline)) : null },
           ].map((item, i) => (

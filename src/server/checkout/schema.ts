@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { EXCLUSIVE, PASS_ORDER, type PassId } from "@/config/passes";
+import { EXCLUSIVE, PASS_ORDER, TEAM_SIZE, type PassId } from "@/config/passes";
 import { TRACKS } from "@/content/hackathon";
 
 /** Passes from "?pass=event,hackathon": known ids, no duplicate, exclusivity respected. */
@@ -45,13 +45,12 @@ export const checkoutSchema = z
   .object({
     passes: z.array(z.enum(PASS_ORDER as unknown as [PassId, ...PassId[]])).min(1),
     buyer: person,
-    consent: z.literal(true, "Acceptez les conditions de vente et la politique de confidentialité pour continuer."),
     team: z
       .object({
         name: z.string().trim().min(2, "Nom d’équipe trop court.").max(60, "60 caractères maximum."),
         track_code: z.enum(TRACKS.map((t) => t.code) as [string, ...string[]], "Choisissez une thématique."),
-        /** The buyer is always a member: 1 or 2 teammates make a team of 2 or 3. No captain is asked online. */
-        teammates: z.array(teammate).min(1, "Ajoutez au moins un coéquipier.").max(2, "Deux coéquipiers au maximum."),
+        /** The buyer is always a member: 4 teammates make a team of 5 (organisers' choice, 2026-10-07). No captain is asked online. */
+        teammates: z.array(teammate).length(TEAM_SIZE - 1, `Une équipe compte ${TEAM_SIZE} personnes : renseignez vos ${TEAM_SIZE - 1} coéquipiers.`),
       })
       .nullable(),
   })
