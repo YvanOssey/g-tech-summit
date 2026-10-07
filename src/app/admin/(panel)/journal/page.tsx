@@ -18,6 +18,12 @@ const ACTION: Record<string, string> = {
   change_role: "Changement de rôle",
   activate: "Compte réactivé",
   deactivate: "Compte désactivé",
+  export: "Export CSV",
+  resync: "Revérification du paiement",
+  refund: "Remboursement",
+  cancel_ticket: "Billet annulé",
+  reissue_ticket: "Nouveau lien de billet",
+  set_captain: "Capitaine désigné",
 };
 
 const ENTITY: Record<string, string> = {
@@ -26,6 +32,10 @@ const ENTITY: Record<string, string> = {
   partners: "Partenaires",
   event_settings: "Paramètres",
   programme_slots: "Programme",
+  participants: "Participants",
+  orders: "Commandes",
+  tickets: "Billets",
+  hackathon_teams: "Équipes",
 };
 
 const date = new Intl.DateTimeFormat("fr-FR", { dateStyle: "short", timeStyle: "medium", timeZone: "Africa/Abidjan" });

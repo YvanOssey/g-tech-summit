@@ -100,6 +100,14 @@ export function getPayment(reference: string): Promise<GeniusPayPayment> {
 }
 
 /**
+ * Full refund of a completed payment. Idempotent on Genius Pay's side:
+ * replaying it returns the same result. Only "completed" payments qualify.
+ */
+export function refundPayment(reference: string, reason: string): Promise<{ reference: string; status: string; amount_refunded?: number }> {
+  return call("POST", `/payments/${encodeURIComponent(reference)}/refund`, { reason }, `refund-${reference}`);
+}
+
+/**
  * Webhook signature: HMAC-SHA256(secret, timestamp + "." + raw body), hex.
  * Rejects messages older than 5 minutes (replays).
  */

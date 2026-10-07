@@ -30,8 +30,11 @@ const phone = z
 
 const person = z.object({ first_name: name("Prénom"), last_name: name("Nom"), email, phone });
 
-/** Teammates: the phone number is optional (organisers' choice, 2026-10-07). */
-const teammate = z.object({
+/**
+ * Teammates: the phone number is optional (organisers' choice, 2026-10-07).
+ * Also used by the admin to correct a participant's details.
+ */
+export const teammate = z.object({
   first_name: name("Prénom"),
   last_name: name("Nom"),
   email,
