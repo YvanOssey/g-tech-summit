@@ -1,4 +1,7 @@
-import type { NextConfig } from "next";
+// Plain JavaScript on purpose: on hosts whose system is too old for the
+// native Next.js compiler (Hostinger: glibc < 2.29), the WebAssembly fallback
+// cannot load a TypeScript config. See docs/mise-en-ligne.md.
+import { fileURLToPath } from "node:url";
 
 // Partner logos uploaded from the admin are served by Supabase Storage.
 const supabaseHost = process.env.NEXT_PUBLIC_SUPABASE_URL ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname : null;
@@ -25,14 +28,15 @@ const SECURITY_HEADERS = [
   { key: "Strict-Transport-Security", value: "max-age=31536000" },
 ];
 
-const nextConfig: NextConfig = {
+/** @type {import("next").NextConfig} */
+const nextConfig = {
   poweredByHeader: false,
   async headers() {
     return [{ source: "/:path*", headers: SECURITY_HEADERS }];
   },
-  // A stray package-lock.json exists higher up in the user folder; pin the project root.
+  // A stray package-lock.json exists higher up in the user folder; pin the project root (dev only).
   turbopack: {
-    root: __dirname,
+    root: fileURLToPath(new URL(".", import.meta.url)),
   },
   experimental: {
     serverActions: {

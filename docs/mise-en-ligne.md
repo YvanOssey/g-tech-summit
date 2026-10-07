@@ -38,7 +38,7 @@ Dans le **SQL Editor**, toutes les migrations doivent avoir été exécutées, d
 4. **Code** : envoyer l'archive `g-tech-summit.zip` (voir « Préparer l'archive ») ou relier un dépôt GitHub privé.
 5. Réglages de build :
    - **Commande d'installation** : `npm ci`
-   - **Commande de build** : `npm run build`
+   - **Commande de build** : `npm run build` (elle lance `next build --webpack` : les serveurs Hostinger ont un système trop ancien — glibc < 2.29 — pour le compilateur natif de Next.js ; Next.js utilise alors sa version WebAssembly, qui ne fonctionne qu'avec Webpack. Pour la même raison, la configuration est en JavaScript : `next.config.mjs`, pas `.ts`.)
    - **Commande de démarrage** : `npm start`
    - **Répertoire** : la racine du projet (là où se trouve `package.json`)
 6. **Variables d'environnement** : les saisir AVANT le premier build (voir section 3). Les variables `NEXT_PUBLIC_…` sont intégrées au moment du build : si on les change, il faut relancer un build.
