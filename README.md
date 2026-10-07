@@ -94,7 +94,7 @@ Les **prix et capacités** des pass sont fixés dans `src/config/passes.ts` : le
 
 ## Mise en ligne
 
-Tout est décrit pas à pas dans **[docs/mise-en-ligne.md](docs/mise-en-ligne.md)** : Supabase, application Node.js Hostinger, variables d'environnement, webhook Genius Pay, vérifications et ouverture réelle des ventes.
+Tout est décrit pas à pas dans **[docs/mise-en-ligne.md](docs/mise-en-ligne.md)** : Supabase, application Node.js Hostinger, variables d'environnement, webhook Genius Pay, vérifications et ouverture réelle des ventes
 
 ---
 
