@@ -2,7 +2,7 @@ import { z } from "zod";
 import { EXCLUSIVE, PASS_ORDER, TEAM_SIZE, type PassId } from "@/config/passes";
 import { TRACKS } from "@/content/hackathon";
 
-/** Passes from "?pass=event,hackathon": known ids, no duplicate, exclusivity respected. */
+/** Passes from "?pass=hackathon": known ids, no duplicate, exclusivity respected (one pass per order). */
 export function parsePassList(value: unknown): PassId[] | null {
   if (typeof value !== "string") return null;
   const ids = [...new Set(value.split(",").map((v) => v.trim()))];

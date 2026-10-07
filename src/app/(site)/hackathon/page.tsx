@@ -234,8 +234,8 @@ export default async function HackathonPage() {
           <div className="col-span-4 space-y-6 self-end md:col-span-6 lg:col-span-5 lg:col-start-8">
             <p className="text-muted">
               L’inscription est libre. L’équipe prend un seul Pass Hackathon ({formatFCFA(PASSES.hackathon.price)}),
-              {" "}{PASSES.hackathon.capacity.total} équipes au maximum. Il donne accès uniquement au hackathon : pour suivre
-              aussi les conférences, formations et ateliers, chaque personne prend un Pass Présentiel ou un Pass En ligne.
+              {" "}{PASSES.hackathon.capacity.total} équipes au maximum. Il donne aussi à chacun des 5 membres l’accès sur place
+              à l’événement : conférences, formations et ateliers compris. Inutile de prendre un Pass Présentiel en plus.
             </p>
             <dl className="grid grid-cols-2 gap-6 border-t border-rule-strong pt-5">
               <div>

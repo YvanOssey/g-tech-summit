@@ -15,7 +15,7 @@ interface PassSelectorProps {
 }
 
 /**
- * Step 1 of registration: one participant picks one or both passes.
+ * Step 1 of registration: one participant picks one pass (passes do not combine).
  * The total shown here is informative — the server recomputes it from `config/passes`.
  */
 export function PassSelector({ initial = ["event"], onChange, sold }: PassSelectorProps) {
@@ -24,7 +24,7 @@ export function PassSelector({ initial = ["event"], onChange, sold }: PassSelect
   const total = orderTotal(selection);
 
   function toggle(id: PassId) {
-    // Adding a pass drops the ones it cannot be combined with (online vs on site).
+    // Picking a pass drops the ones it cannot be combined with (all of them).
     const ordered = selection.includes(id) ? selection.filter((p) => p !== id) : withExclusions(selection, id);
     setSelection(ordered);
     onChange?.(ordered);
@@ -32,7 +32,7 @@ export function PassSelector({ initial = ["event"], onChange, sold }: PassSelect
 
   return (
     <fieldset>
-      <legend className="sr-only">Choisissez votre ou vos pass</legend>
+      <legend className="sr-only">Choisissez votre pass</legend>
 
       <div className="grid gap-4 md:grid-cols-2 md:gap-(--gutter) lg:grid-cols-3">
         {PASS_ORDER.map((id, i) => {
@@ -74,8 +74,8 @@ export function PassSelector({ initial = ["event"], onChange, sold }: PassSelect
 
       {EXCLUSIVE.length > 0 && (
         <p className="mt-4 text-small text-muted">
-          Le Pass En ligne et le Pass Présentiel ne se cumulent pas : choisir l’un retire l’autre. Le Pass Hackathon se
-          combine avec l’un ou l’autre.
+          Un seul pass par inscription : choisir un pass retire l’autre. Le Pass Hackathon inclut l’accès sur place à
+          l’événement pour chaque membre de l’équipe.
         </p>
       )}
 

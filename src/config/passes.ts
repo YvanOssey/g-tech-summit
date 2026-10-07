@@ -50,8 +50,8 @@ export const PASSES: Record<PassId, Pass> = {
     price: 15_000,
     per: "équipe",
     capacity: { total: 10, unit: "équipes" },
-    access: "Participation au hackathon uniquement",
-    summary: "Par équipe de 5 personnes. Une thématique par équipe.",
+    access: "Hackathon + accès sur place à G-TECH SUMMIT",
+    summary: "Par équipe de 5 personnes, chacune avec accès à l’événement. Une thématique par équipe.",
   },
 };
 
@@ -61,10 +61,10 @@ export const TEAM_SIZE = 5;
 export const PASS_ORDER: readonly PassId[] = ["online", "event", "hackathon"];
 
 /**
- * Passes that cannot be combined in one order: one follows the event either
- * remotely or on site. The hackathon pass combines with either.
+ * Passes that cannot be combined in one order. Since 2026-10-07 no pass combines
+ * with another: the hackathon pass already includes on-site access to the event.
  */
-export const EXCLUSIVE: readonly (readonly PassId[])[] = [["online", "event"]];
+export const EXCLUSIVE: readonly (readonly PassId[])[] = [["online", "event", "hackathon"]];
 
 /** Applies the exclusivity rule when `added` is selected. */
 export function withExclusions(selection: readonly PassId[], added: PassId): PassId[] {
@@ -72,7 +72,7 @@ export function withExclusions(selection: readonly PassId[], added: PassId): Pas
   return PASS_ORDER.filter((id) => id === added || (selection.includes(id) && !blocked.includes(id)));
 }
 
-/** One order = one buyer, at most one of each pass, exclusivity applied. */
+/** One order = one buyer and one pass (exclusivity applied). */
 export function orderTotal(passIds: readonly PassId[]): number {
   return [...new Set(passIds)].reduce((sum, id) => sum + PASSES[id].price, 0);
 }

@@ -14,11 +14,11 @@ export const FAQ: readonly FaqItem[] = [
   },
   {
     q: "Quels sont les différents pass ?",
-    a: "Le Pass En ligne (5 000 FCFA, 100 places) permet de suivre les deux jours à distance : le lien de connexion est envoyé par e-mail. Le Pass Présentiel (10 000 FCFA, 40 places) donne accès sur place aux deux jours : conférences, panels, formations express, ateliers, stands et networking. Le Pass Hackathon (15 000 FCFA par équipe de 5 personnes, 10 équipes) donne uniquement accès à la participation au hackathon.",
+    a: "Le Pass En ligne (5 000 FCFA, 100 places) permet de suivre les deux jours à distance : le lien de connexion est envoyé par e-mail. Le Pass Présentiel (10 000 FCFA, 40 places) donne accès sur place aux deux jours : conférences, panels, formations express, ateliers, stands et networking. Le Pass Hackathon (15 000 FCFA par équipe de 5 personnes, 10 équipes) donne accès au hackathon et, pour chaque membre de l’équipe, à l’événement sur place.",
   },
   {
     q: "Je veux participer à l’événement et au hackathon. Comment faire ?",
-    a: "Le Pass Hackathon se combine avec le Pass Présentiel ou le Pass En ligne dans la même commande : par exemple Présentiel + Hackathon, 10 000 + 15 000, soit 25 000 FCFA. Le Pass En ligne et le Pass Présentiel ne se cumulent pas.",
+    a: "Prenez le Pass Hackathon : il donne à chaque membre de l’équipe l’accès à l’événement sur place, en plus du hackathon. Les pass ne se cumulent pas : une inscription correspond à un seul pass.",
   },
   {
     q: "Comment se passe le paiement ?",
