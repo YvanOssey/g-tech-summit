@@ -43,6 +43,12 @@ export async function signIn(_prev: FormState, formData: FormData): Promise<Form
     return { error: INVALID };
   }
 
+  // Two-factor authentication on: the 6-digit code comes next.
+  const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  if (aal?.nextLevel === "aal2" && aal.currentLevel !== "aal2") {
+    redirect(`/admin/verification?suite=${encodeURIComponent(safeNext(formData.get("suite")))}`);
+  }
+
   await supabase.from("admin_users").update({ last_sign_in_at: new Date().toISOString() }).eq("id", data.user.id);
   await logAction(supabase, data.user.id, "sign_in", "admin_users", data.user.id);
 
@@ -65,4 +71,30 @@ export async function requestPasswordReset(_prev: FormState, formData: FormData)
     message:
       "Si cette adresse correspond à un compte administrateur, un lien de réinitialisation vient d’être envoyé. Il est valable une heure.",
   };
+}
+
+const codeSchema = z.string().trim().regex(/^\d{6}$/, "Le code compte 6 chiffres.");
+
+/** Second step of the sign-in when two-factor authentication is on. */
+export async function verifySecondFactor(_prev: FormState, formData: FormData): Promise<FormState> {
+  const supabase = await createSessionClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/admin/login");
+
+  const code = codeSchema.safeParse(formData.get("code"));
+  if (!code.success) return { fieldErrors: { code: "Le code compte 6 chiffres." } };
+  if (!allow(`mfa:${user.id}`, 5, 600_000)) return { error: TOO_MANY };
+
+  const { data: factors } = await supabase.auth.mfa.listFactors();
+  const factor = factors?.totp?.[0];
+  if (!factor) redirect("/admin");
+
+  const { error } = await supabase.auth.mfa.challengeAndVerify({ factorId: factor.id, code: code.data });
+  if (error) return { fieldErrors: { code: "Code incorrect ou expiré. Saisissez le code affiché maintenant dans l’application." } };
+
+  await supabase.from("admin_users").update({ last_sign_in_at: new Date().toISOString() }).eq("id", user.id);
+  await logAction(supabase, user.id, "sign_in", "admin_users", user.id, { second_factor: true });
+  redirect(safeNext(formData.get("suite")));
 }

@@ -6,6 +6,7 @@ const OK: Record<string, string> = {
   "billet-annule": "Billet annulé : il n’ouvre plus les portes.",
   "nouveau-lien": "Nouveau lien de billet créé : l’ancien lien et l’ancien QR code ne fonctionnent plus.",
   capitaine: "Capitaine désigné.",
+  envoye: "Billet(s) renvoyé(s) par e-mail.",
   "1": "Informations enregistrées.",
 };
 
@@ -14,6 +15,9 @@ const ERR: Record<string, string> = {
   "non-remboursable": "Cette commande ne peut pas être remboursée (paiement non réussi ou déjà remboursé).",
   motif: "Indiquez le motif du remboursement (3 caractères minimum).",
   enregistrement: "La modification n’a pas pu être enregistrée.",
+  smtp: "L’envoi d’e-mails n’est pas configuré sur ce serveur (variables SMTP_…).",
+  email: "L’e-mail n’a pas pu être envoyé. Vérifiez l’adresse du participant et réessayez.",
+  "rien-a-envoyer": "Rien à envoyer : la commande n’est pas payée ou ses billets sont annulés.",
 };
 
 /** Result of the order / ticket actions, read from ?ok= or ?erreur=. */

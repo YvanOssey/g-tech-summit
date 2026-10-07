@@ -2,6 +2,7 @@ import "server-only";
 import { randomBytes, randomInt } from "node:crypto";
 import { PASSES, orderTotal, type PassId } from "@/config/passes";
 import { createServiceClient } from "@/server/db/clients";
+import { sendOrderEmails } from "@/server/email/tickets";
 import type { OrderStatus } from "@/server/db/types";
 import { GeniusPayError, createPayment, getPayment, isSandbox, type GeniusPayStatus } from "@/server/payments/geniuspay";
 import type { CheckoutInput } from "./schema";
@@ -151,6 +152,10 @@ export async function syncOrder(orderId: string): Promise<{ status: OrderStatus;
     });
     if (error) throw new Error(`[checkout] validation impossible (${error.code})`);
     if (result === "no_place") console.warn(`[checkout] ${order.reference} payée sans place restante : à rembourser`);
+    // Tickets by e-mail, in the background: a mail failure never blocks the order (admins can re-send).
+    if (result === "paid") {
+      void sendOrderEmails(order.id).catch((e) => console.error(`[email] billets de ${order.reference} non envoyés (${e instanceof Error ? e.message.slice(0, 120) : "erreur"})`));
+    }
     const { data: after } = await db.from("orders").select("status").eq("id", order.id).single();
     return { status: after?.status ?? order.status, changed: result !== "already_paid" };
   }

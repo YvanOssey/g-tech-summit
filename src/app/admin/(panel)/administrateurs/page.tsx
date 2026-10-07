@@ -4,12 +4,13 @@ import { Notice, PageHeader } from "@/components/admin/ui";
 import { requireAdmin } from "@/server/auth/require-admin";
 import { ROLE_LABEL } from "@/server/auth/roles";
 import { createSessionClient } from "@/server/auth/session";
-import { updateAdmin } from "./actions";
+import { createServiceClient } from "@/server/db/clients";
+import { resetMfa, updateAdmin } from "./actions";
 import { GrantForm } from "./GrantForm";
 
 export const metadata: Metadata = { title: "Administrateurs" };
 
-const OK: Record<string, string> = { ajoute: "Accès donné.", modifie: "Compte modifié." };
+const OK: Record<string, string> = { ajoute: "Accès donné.", modifie: "Compte modifié.", mfa: "Double authentification réinitialisée : la personne pourra la réactiver." };
 const ERR: Record<string, string> = {
   "soi-meme": "Vous ne pouvez pas modifier votre propre accès : demandez à un autre super administrateur.",
   dernier: "Impossible : il doit toujours rester au moins un super administrateur actif.",
@@ -25,6 +26,9 @@ export default async function AdminsPage({ searchParams }: { searchParams: Promi
     .from("admin_users")
     .select("id, email, full_name, role, active, last_sign_in_at")
     .order("created_at");
+  // Which accounts have two-factor authentication on (Auth admin API, server only).
+  const { data: users } = await createServiceClient().auth.admin.listUsers({ perPage: 1000 });
+  const withMfa = new Set((users?.users ?? []).filter((u) => (u.factors ?? []).some((f) => f.status === "verified")).map((u) => u.id));
 
   return (
     <>
@@ -39,6 +43,7 @@ export default async function AdminsPage({ searchParams }: { searchParams: Promi
               <th scope="col" className="px-4 py-2.5 font-medium">Compte</th>
               <th scope="col" className="px-4 py-2.5 font-medium">Rôle</th>
               <th scope="col" className="px-4 py-2.5 font-medium">Statut</th>
+              <th scope="col" className="px-4 py-2.5 font-medium">Double auth.</th>
               <th scope="col" className="px-4 py-2.5 font-medium">Dernière connexion</th>
               <th scope="col" className="px-4 py-2.5 font-medium">
                 <span className="sr-only">Actions</span>
@@ -57,6 +62,7 @@ export default async function AdminsPage({ searchParams }: { searchParams: Promi
                   </td>
                   <td className="px-4 py-2.5 whitespace-nowrap">{ROLE_LABEL[a.role]}</td>
                   <td className="px-4 py-2.5">{a.active ? "Actif" : "Désactivé"}</td>
+                  <td className="px-4 py-2.5">{withMfa.has(a.id) ? "Activée" : "—"}</td>
                   <td className="px-4 py-2.5 whitespace-nowrap text-grey">{a.last_sign_in_at ? date.format(new Date(a.last_sign_in_at)) : "Jamais"}</td>
                   <td className="px-4 py-2.5">
                     {!self && (
@@ -69,6 +75,14 @@ export default async function AdminsPage({ searchParams }: { searchParams: Promi
                             {a.role === "ADMIN" ? "Passer super admin" : "Passer admin"}
                           </ActionButton>
                         </form>
+                        {withMfa.has(a.id) && (
+                          <form action={resetMfa}>
+                            <input type="hidden" name="id" value={a.id} />
+                            <ActionButton confirm={`Réinitialiser la double authentification de ${a.email} ? Son compte ne sera plus protégé que par le mot de passe jusqu’à ce qu’elle la réactive.`}>
+                              Réinitialiser la 2FA
+                            </ActionButton>
+                          </form>
+                        )}
                         <form action={updateAdmin}>
                           <input type="hidden" name="id" value={a.id} />
                           <input type="hidden" name="kind" value="active" />

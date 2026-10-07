@@ -9,9 +9,31 @@ import { requireAdmin } from "@/server/auth/require-admin";
 import { createSessionClient } from "@/server/auth/session";
 import { EVENT_SETTINGS_TAG } from "@/server/cache-tags";
 import { syncOrder } from "@/server/checkout/orders";
+import { isMailConfigured } from "@/server/email/mailer";
+import { sendOrderEmails } from "@/server/email/tickets";
 import { GeniusPayError, refundPayment } from "@/server/payments/geniuspay";
 
 const id = z.string().uuid();
+
+/**
+ * Sends the tickets of an order again by e-mail: the whole order, or one
+ * ticket (`ticket_id`). Only valid tickets of a paid order are sent.
+ */
+export async function resendTickets(formData: FormData) {
+  const admin = await requireAdmin();
+  const orderId = id.parse(formData.get("order_id"));
+  const ticketId = formData.get("ticket_id") ? id.parse(formData.get("ticket_id")) : null;
+  if (!isMailConfigured()) back(formData, "erreur=smtp");
+
+  let sent = 0;
+  try {
+    sent = await sendOrderEmails(orderId, { force: true, ...(ticketId ? { ticketIds: [ticketId] } : {}) });
+  } catch {
+    back(formData, "erreur=email");
+  }
+  await logAction(await createSessionClient(), admin.id, "resend_email", ticketId ? "tickets" : "orders", ticketId ?? orderId, { sent });
+  back(formData, sent > 0 ? "ok=envoye" : "erreur=rien-a-envoyer");
+}
 
 /** Where to come back after an action: an admin page only. */
 function back(formData: FormData, notice: string): never {

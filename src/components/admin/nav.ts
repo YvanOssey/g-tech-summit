@@ -22,6 +22,7 @@ export const ADMIN_NAV: readonly AdminNavGroup[] = [
       { href: "/admin/commandes", label: "Commandes & billets" },
       { href: "/admin/paiements", label: "Paiements" },
       { href: "/admin/equipes", label: "Équipes hackathon" },
+      { href: "/admin/controle", label: "Contrôle à l’entrée" },
     ],
   },
   {

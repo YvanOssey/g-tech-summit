@@ -13,7 +13,7 @@ import { requireAdmin } from "@/server/auth/require-admin";
 import { hasRole } from "@/server/auth/roles";
 import { createSessionClient } from "@/server/auth/session";
 import { loadRegistrations } from "@/server/repositories/registrations";
-import { refundOrder, resyncOrder, setCaptain } from "../actions";
+import { refundOrder, resendTickets, resyncOrder, setCaptain } from "../actions";
 import { ActionNotices } from "../notices";
 import { TicketRows } from "../TicketRows";
 
@@ -54,11 +54,20 @@ export default async function OrderPage({
         title={`Commande ${order.reference}`}
         description={`Créée le ${date.format(new Date(order.createdAt))}${order.paidAt ? ` · payée le ${date.format(new Date(order.paidAt))}` : ""}`}
         actions={
-          <form action={resyncOrder}>
-            <input type="hidden" name="order_id" value={order.id} />
-            <input type="hidden" name="back" value={back} />
-            <ActionButton>Revérifier le paiement</ActionButton>
-          </form>
+          <>
+            {order.status === "PAID" && (
+              <form action={resendTickets}>
+                <input type="hidden" name="order_id" value={order.id} />
+                <input type="hidden" name="back" value={back} />
+                <ActionButton confirm="Renvoyer par e-mail tous les billets de cette commande à leurs titulaires ?">Renvoyer tous les billets</ActionButton>
+              </form>
+            )}
+            <form action={resyncOrder}>
+              <input type="hidden" name="order_id" value={order.id} />
+              <input type="hidden" name="back" value={back} />
+              <ActionButton>Revérifier le paiement</ActionButton>
+            </form>
+          </>
         }
       />
       <ActionNotices params={query} />

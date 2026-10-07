@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { getAdmin } from "@/server/auth/require-admin";
+import { getAdmin, isMfaPending } from "@/server/auth/require-admin";
 import { safeNext } from "@/server/auth/safe-next";
 import { LoginForm } from "./LoginForm";
 
@@ -18,6 +18,7 @@ export default async function LoginPage({
   const [params, admin] = await Promise.all([searchParams, getAdmin()]);
   const suite = typeof params.suite === "string" ? safeNext(params.suite) : undefined;
   if (admin) redirect(suite ?? "/admin");
+  if (await isMfaPending()) redirect(`/admin/verification${suite ? `?suite=${encodeURIComponent(suite)}` : ""}`);
 
   const notice = typeof params.erreur === "string" ? NOTICES[params.erreur] : undefined;
 

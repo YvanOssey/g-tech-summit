@@ -103,3 +103,22 @@ export async function updateAdmin(formData: FormData) {
   await logAction(db, admin.id, change.kind === "role" ? "change_role" : change.active ? "activate" : "deactivate", "admin_users", targetId, update);
   redirect("/admin/administrateurs?ok=modifie");
 }
+
+/** Phone lost: removes another admin's two-factor authentication (super admins only, logged). */
+export async function resetMfa(formData: FormData) {
+  const admin = await requireAdmin("SUPER_ADMIN");
+  const targetId = id.parse(formData.get("id"));
+  if (targetId === admin.id) redirect("/admin/administrateurs?erreur=soi-meme");
+
+  // Listing and deleting another user's factors needs the Auth admin API (server only).
+  const service = createServiceClient();
+  const { data, error } = await service.auth.admin.mfa.listFactors({ userId: targetId });
+  if (error) redirect("/admin/administrateurs?erreur=enregistrement");
+  for (const factor of data.factors) {
+    const removed = await service.auth.admin.mfa.deleteFactor({ id: factor.id, userId: targetId });
+    if (removed.error) redirect("/admin/administrateurs?erreur=enregistrement");
+  }
+
+  await logAction(await createSessionClient(), admin.id, "mfa_reset", "admin_users", targetId);
+  redirect("/admin/administrateurs?ok=mfa");
+}

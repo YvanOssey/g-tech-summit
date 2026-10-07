@@ -36,7 +36,7 @@ export default async function PanelLayout({ children }: Readonly<{ children: Rea
             <Link href="/" target="_blank" className="hidden underline underline-offset-4 hover:text-signal-text md:inline">
               Voir le site
             </Link>
-            <Link href="/admin/mot-de-passe" className="hidden text-right leading-tight sm:block" title="Changer mon mot de passe">
+            <Link href="/admin/securite" className="hidden text-right leading-tight sm:block" title="Sécurité du compte">
               <span className="block font-medium">{admin.full_name ?? admin.email}</span>
               <span className="text-grey">{ROLE_LABEL[admin.role]}</span>
             </Link>

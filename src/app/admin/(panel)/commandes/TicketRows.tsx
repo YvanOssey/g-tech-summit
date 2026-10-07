@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ActionButton } from "@/components/admin/forms";
 import { PASSES } from "@/config/passes";
 import type { Registrations, TicketSummary } from "@/server/repositories/registrations";
-import { cancelTicket, reissueTicket } from "./actions";
+import { cancelTicket, reissueTicket, resendTickets } from "./actions";
 
 const STATUS = { VALID: "Valide", USED: "Utilisé", CANCELLED: "Annulé" } as const;
 
@@ -35,6 +35,12 @@ export function TicketRows({ tickets, data, back, showHolder = true }: { tickets
               )}
               {t.status === "VALID" && (
                 <>
+                  <form action={resendTickets}>
+                    <input type="hidden" name="order_id" value={t.orderId} />
+                    <input type="hidden" name="ticket_id" value={t.id} />
+                    <input type="hidden" name="back" value={back} />
+                    <ActionButton>Renvoyer par e-mail</ActionButton>
+                  </form>
                   <form action={reissueTicket}>
                     <input type="hidden" name="ticket_id" value={t.id} />
                     <input type="hidden" name="back" value={back} />

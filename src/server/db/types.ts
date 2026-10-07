@@ -179,6 +179,14 @@ export type EventSettingsRow = {
   updated_by: string | null;
 };
 
+export type TicketCheckinRow = {
+  id: number;
+  ticket_id: string;
+  day: 1 | 2;
+  checked_at: string;
+  checked_by: string | null;
+};
+
 type WithTimestamps = "id" | "created_at" | "updated_at";
 
 export type Database = {
@@ -196,6 +204,7 @@ export type Database = {
         PaymentRow,
         WithTimestamps | "provider" | "provider_reference" | "status" | "fees" | "payment_method" | "checkout_url" | "completed_at" | "environment"
       >;
+      ticket_checkins: Table<TicketCheckinRow, "id" | "checked_at" | "checked_by">;
       payment_events: Table<PaymentEventRow, "id" | "provider_reference" | "received_at" | "processed_at" | "error">;
       programme_slots: Table<
         ProgrammeSlotRow,

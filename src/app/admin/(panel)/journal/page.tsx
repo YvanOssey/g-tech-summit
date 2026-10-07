@@ -24,6 +24,11 @@ const ACTION: Record<string, string> = {
   cancel_ticket: "Billet annulé",
   reissue_ticket: "Nouveau lien de billet",
   set_captain: "Capitaine désigné",
+  checkin: "Entrée validée",
+  undo_checkin: "Entrée annulée",
+  mfa_enable: "Double authentification activée",
+  mfa_disable: "Double authentification désactivée",
+  mfa_reset: "Double authentification réinitialisée",
 };
 
 const ENTITY: Record<string, string> = {
