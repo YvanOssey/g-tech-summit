@@ -35,11 +35,11 @@ export const getAdmin = cache(async (): Promise<Admin | null> => {
  * Call at the top of EVERY admin page, Server Action and Route Handler.
  * A layout check alone is not enough: Server Actions can be called directly.
  * - not signed in, or not an active admin → login page;
- * - signed in without the required role → admin home with a notice.
+ * - signed in without the required role → "access denied" page.
  */
 export async function requireAdmin(required: AdminRole = "ADMIN"): Promise<Admin> {
   const admin = await getAdmin();
   if (!admin) redirect("/admin/login");
-  if (!hasRole(admin.role, required)) redirect("/admin?acces=refuse");
+  if (!hasRole(admin.role, required)) redirect("/admin/acces-refuse");
   return admin;
 }

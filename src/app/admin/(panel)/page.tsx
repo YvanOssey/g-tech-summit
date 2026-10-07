@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Notice, PageHeader, UpcomingSection } from "@/components/admin/ui";
 import { requireAdmin } from "@/server/auth/require-admin";
 
 export const metadata: Metadata = { title: "Tableau de bord" };
@@ -14,21 +14,12 @@ export default async function AdminHomePage({
 
   return (
     <>
-      {params.acces === "refuse" && (
-        <p role="alert" className="mb-6 border-l-2 border-[#b42318] bg-[#b42318]/8 px-3 py-2 text-small text-[#7a1a12]">
-          Votre rôle ne donne pas accès à cette page.
-        </p>
-      )}
-      {params["mot-de-passe"] === "ok" && (
-        <p className="mb-6 border-l-2 border-ink bg-stone px-3 py-2 text-small">Votre mot de passe a été enregistré.</p>
-      )}
-      <h1 className="text-heading font-semibold">Tableau de bord</h1>
-      <p className="mt-2 text-grey">Connecté en tant que {admin.email}. Le tableau de bord arrive à la phase 4.</p>
-      <p className="mt-6 text-small">
-        <Link href="/admin/mot-de-passe" className="underline underline-offset-4 hover:text-signal-text">
-          Changer mon mot de passe
-        </Link>
-      </p>
+      {params["mot-de-passe"] === "ok" && <Notice>Votre mot de passe a été enregistré.</Notice>}
+      <PageHeader title="Tableau de bord" description={`Connecté en tant que ${admin.email}.`} />
+      <UpcomingSection phase={4}>
+        Participants, billets vendus par pass, paiements, chiffre d’affaires, inscriptions récentes et programme à venir —
+        uniquement à partir des données réelles.
+      </UpcomingSection>
     </>
   );
 }
