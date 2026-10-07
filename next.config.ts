@@ -35,8 +35,12 @@ const nextConfig: NextConfig = {
     root: __dirname,
   },
   experimental: {
-    // Admin forms send partner logos (1 MB max) through Server Actions: keep room for the form overhead.
-    serverActions: { bodySizeLimit: "1.2mb" },
+    serverActions: {
+      // Admin forms send partner logos (1 MB max): keep room for the form overhead.
+      bodySizeLimit: "1.2mb",
+      // Production address, accepted even if the host's proxy rewrites the Host header.
+      allowedOrigins: ["summit.ghostech.tech"],
+    },
   },
   images: {
     remotePatterns: supabaseHost
