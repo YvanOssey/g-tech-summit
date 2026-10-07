@@ -30,6 +30,14 @@ const phone = z
 
 const person = z.object({ first_name: name("Prénom"), last_name: name("Nom"), email, phone });
 
+/** Teammates: the phone number is optional (organisers' choice, 2026-10-07). */
+const teammate = z.object({
+  first_name: name("Prénom"),
+  last_name: name("Nom"),
+  email,
+  phone: z.union([z.literal("").transform(() => null), phone]),
+});
+
 export const checkoutSchema = z
   .object({
     passes: z.array(z.enum(PASS_ORDER as unknown as [PassId, ...PassId[]])).min(1),
@@ -39,9 +47,8 @@ export const checkoutSchema = z
       .object({
         name: z.string().trim().min(2, "Nom d’équipe trop court.").max(60, "60 caractères maximum."),
         track_code: z.enum(TRACKS.map((t) => t.code) as [string, ...string[]], "Choisissez une thématique."),
-        teammates: z.array(person).max(2, "Deux coéquipiers au maximum."),
-        /** 0 = the buyer, 1 and 2 = teammates. */
-        captain: z.coerce.number().int().min(0).max(2),
+        /** The buyer is always a member: 1 or 2 teammates make a team of 2 or 3. No captain is asked online. */
+        teammates: z.array(teammate).min(1, "Ajoutez au moins un coéquipier.").max(2, "Deux coéquipiers au maximum."),
       })
       .nullable(),
   })
@@ -49,7 +56,6 @@ export const checkoutSchema = z
     const hackathon = v.passes.includes("hackathon");
     if (hackathon && !v.team) ctx.addIssue({ code: "custom", path: ["team"], message: "Renseignez votre équipe." });
     if (!v.team) return;
-    if (v.team.captain > v.team.teammates.length) ctx.addIssue({ code: "custom", path: ["team", "captain"], message: "Choisissez le capitaine parmi les membres." });
     const emails = [v.buyer.email, ...v.team.teammates.map((t) => t.email)];
     if (new Set(emails).size !== emails.length)
       ctx.addIssue({ code: "custom", path: ["team", "teammates"], message: "Chaque membre doit avoir sa propre adresse e-mail." });

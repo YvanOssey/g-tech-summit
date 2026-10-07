@@ -34,8 +34,9 @@ export async function startOrder(input: CheckoutInput, siteUrl: string): Promise
         name: input.team.name,
         track_code: input.team.track_code,
         members: [
-          { is_buyer: true, is_captain: input.team.captain === 0 },
-          ...input.team.teammates.map((t, i) => ({ is_buyer: false, is_captain: input.team!.captain === i + 1, ...t })),
+          // Captain not asked online: can be set later from the admin.
+          { is_buyer: true, is_captain: false },
+          ...input.team.teammates.map((t) => ({ is_buyer: false, is_captain: false, ...t })),
         ],
       }
     : null;

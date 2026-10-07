@@ -51,9 +51,7 @@ export async function startCheckout(_prev: FormState, formData: FormData): Promi
       ? {
           name: text(formData, "team_name"),
           track_code: text(formData, "track_code"),
-          // Teammates are not collected online for now (organisers' choice, 2026-10-07): the buyer registers the team.
-          teammates: [],
-          captain: 0,
+          teammates: formData.get("third_member") === "on" ? [person("m1"), person("m2")] : [person("m1")],
         }
       : null,
   });

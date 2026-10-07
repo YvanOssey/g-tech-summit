@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { Checkbox, Field, FormMessage, SubmitButton } from "@/components/admin/forms";
 import { startCheckout } from "./actions";
 
@@ -12,15 +12,37 @@ interface CheckoutFormProps {
   tracks: readonly { code: string; name: string }[];
 }
 
-function Person({ prefix, legend, values, errors }: { prefix: string; legend?: string; values?: Record<string, string>; errors?: Record<string, string> }) {
+function Person({
+  prefix,
+  legend,
+  values,
+  errors,
+  optionalPhone = false,
+}: {
+  prefix: string;
+  legend?: string;
+  values?: Record<string, string>;
+  errors?: Record<string, string>;
+  optionalPhone?: boolean;
+}) {
   const f = (name: string) => `${prefix}_${name}`;
   return (
     <div className="grid gap-5 sm:grid-cols-2">
       {legend && <p className="font-semibold sm:col-span-2">{legend}</p>}
       <Field label="Prénom" name={f("first_name")} autoComplete={prefix === "buyer" ? "given-name" : "off"} required defaultValue={values?.[f("first_name")]} error={errors?.[f("first_name")]} />
       <Field label="Nom" name={f("last_name")} autoComplete={prefix === "buyer" ? "family-name" : "off"} required defaultValue={values?.[f("last_name")]} error={errors?.[f("last_name")]} />
-      <Field label="E-mail" name={f("email")} type="email" autoComplete={prefix === "buyer" ? "email" : "off"} required defaultValue={values?.[f("email")]} error={errors?.[f("email")]} hint={prefix === "buyer" ? "Le billet y est envoyé." : undefined} />
-      <Field label="Téléphone" name={f("phone")} type="tel" inputMode="tel" autoComplete={prefix === "buyer" ? "tel" : "off"} placeholder="07 00 00 00 00" required defaultValue={values?.[f("phone")]} error={errors?.[f("phone")]} />
+      <Field label="E-mail" name={f("email")} type="email" autoComplete={prefix === "buyer" ? "email" : "off"} required defaultValue={values?.[f("email")]} error={errors?.[f("email")]} hint={prefix === "buyer" ? "Le billet y est envoyé." : "Son billet y sera envoyé."} />
+      <Field
+        label={optionalPhone ? "Téléphone (facultatif)" : "Téléphone"}
+        name={f("phone")}
+        type="tel"
+        inputMode="tel"
+        autoComplete={prefix === "buyer" ? "tel" : "off"}
+        placeholder="07 00 00 00 00"
+        required={!optionalPhone}
+        defaultValue={values?.[f("phone")]}
+        error={errors?.[f("phone")]}
+      />
     </div>
   );
 }
@@ -29,6 +51,7 @@ export function CheckoutForm({ passes, hackathon, total, tracks }: CheckoutFormP
   const [state, action] = useActionState(startCheckout, null);
   const values = state?.values;
   const errors = state?.fieldErrors;
+  const [third, setThird] = useState(values?.third_member === "on");
 
   return (
     <form action={action} className="space-y-10" noValidate>
@@ -37,7 +60,7 @@ export function CheckoutForm({ passes, hackathon, total, tracks }: CheckoutFormP
       <fieldset className="space-y-5">
         <legend className="type-headline text-heading">Vos coordonnées</legend>
         <p className="text-small text-muted">
-          {hackathon ? "Vous inscrivez votre équipe : le billet hackathon est établi à votre nom." : "Le billet est nominatif : il est établi à ces nom et prénom."}
+          {hackathon ? "Vous faites partie de l’équipe : vous recevez vous aussi un billet." : "Le billet est nominatif : il est établi à ces nom et prénom."}
         </p>
         <Person prefix="buyer" values={values} errors={errors} />
       </fieldset>
@@ -45,7 +68,7 @@ export function CheckoutForm({ passes, hackathon, total, tracks }: CheckoutFormP
       {hackathon && (
         <fieldset className="space-y-6 border-t border-rule-strong pt-8">
           <legend className="type-headline text-heading">Votre équipe</legend>
-          <p className="text-small text-muted">Une équipe de 2 ou 3 personnes, vous compris.</p>
+          <p className="text-small text-muted">2 ou 3 personnes, vous compris. Chaque membre reçoit son propre billet nominatif.</p>
           <Field label="Nom de l’équipe" name="team_name" required defaultValue={values?.team_name} error={errors?.team_name} />
 
           <div role="radiogroup" aria-labelledby="track-label" aria-describedby={errors?.track_code ? "track-error" : undefined}>
@@ -66,6 +89,11 @@ export function CheckoutForm({ passes, hackathon, total, tracks }: CheckoutFormP
               </p>
             )}
           </div>
+
+          <Person prefix="m1" legend="Coéquipier 2" values={values} errors={errors} optionalPhone />
+          <Checkbox label="Ajouter un 3ᵉ membre" name="third_member" checked={third} onChange={(e) => setThird(e.currentTarget.checked)} />
+          {third && <Person prefix="m2" legend="Coéquipier 3" values={values} errors={errors} optionalPhone />}
+          {errors?.teammates && <p className="text-small font-medium text-[#b42318]">{errors.teammates}</p>}
         </fieldset>
       )}
 
