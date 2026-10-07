@@ -13,7 +13,6 @@ insert into public.partners (name, logo_path, logo_width, logo_height, position,
   ('H-Electro', '/partners/h-electro.png', 488, 488, 3, true),
   ('Neddigi', '/partners/neddigi.png', 640, 348, 4, true),
   ('DigiFemmes Côte d’Ivoire', '/partners/digifemmes-ci.png', 640, 183, 5, true),
-  ('FIRATEK', '/partners/firatek.png', 389, 227, 6, true),
   ('IT-LeadHER', '/partners/it-leadher.png', 640, 607, 7, true),
   ('Les Gos Créatives', '/partners/les-gos-creatives.png', 640, 640, 8, true),
   ('IT Foundation', '/partners/it-foundation.png', 640, 143, 9, true);

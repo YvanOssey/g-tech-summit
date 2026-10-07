@@ -61,13 +61,8 @@ export default async function PartnersPage() {
       {/* ── Logo wall ────────────────────────────────────────────────── */}
       <Section tone="paper" id="logos" aria-labelledby="titre-logos" className="sheet section-standard">
         <div className="shell">
-          <div className="flex flex-wrap items-end justify-between gap-6">
-            <div>
-              <SectionLabel index="01">Avec nous</SectionLabel>
-              <RevealText inView id="titre-logos" lines={["Nos partenaires"]} className="type-headline text-title mt-8" />
-            </div>
-            <p className="max-w-sm text-muted">Logos présentés dans leurs couleurs d’origine.</p>
-          </div>
+          <SectionLabel index="01">Avec nous</SectionLabel>
+          <RevealText inView id="titre-logos" lines={["Nos partenaires"]} className="type-headline text-title mt-8" />
 
           <SpotlightGroup>
             <RevealGroup as="ul" className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:gap-4">

@@ -13,7 +13,6 @@ export const PARTNERS: readonly Partner[] = [
   { name: "H-Electro", logo: { src: "/partners/h-electro.png", width: 488, height: 488 } },
   { name: "Neddigi", logo: { src: "/partners/neddigi.png", width: 640, height: 348 } },
   { name: "DigiFemmes Côte d’Ivoire", logo: { src: "/partners/digifemmes-ci.png", width: 640, height: 183 } },
-  { name: "FIRATEK", logo: { src: "/partners/firatek.png", width: 389, height: 227 } },
   { name: "IT-LeadHER", logo: { src: "/partners/it-leadher.png", width: 640, height: 607 } },
   { name: "Les Gos Créatives", logo: { src: "/partners/les-gos-creatives.png", width: 640, height: 640 } },
   { name: "IT Foundation", logo: { src: "/partners/it-foundation.png", width: 640, height: 143 } },
