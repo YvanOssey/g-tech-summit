@@ -2,6 +2,7 @@ import { revalidateTag } from "next/cache";
 import { EVENT_SETTINGS_TAG } from "@/server/cache-tags";
 import { syncOrder } from "@/server/checkout/orders";
 import { createServiceClient } from "@/server/db/clients";
+import { allow, clientIp } from "@/server/rate-limit";
 
 /**
  * Called by the confirmation page while a payment is pending: asks Genius Pay
@@ -9,6 +10,8 @@ import { createServiceClient } from "@/server/db/clients";
  * identified by its secret access token, never by its readable reference.
  */
 export async function POST(request: Request) {
+  // The confirmation page polls every 4 s for 2 minutes: 60 calls per 10 minutes is plenty.
+  if (!allow(`statut:${await clientIp()}`, 60, 600_000)) return Response.json({ error: "too_many" }, { status: 429 });
   const body = (await request.json().catch(() => null)) as { c?: unknown } | null;
   const token = typeof body?.c === "string" && /^[A-Za-z0-9_-]{43}$/.test(body.c) ? body.c : null;
   if (!token) return Response.json({ error: "invalid" }, { status: 400 });

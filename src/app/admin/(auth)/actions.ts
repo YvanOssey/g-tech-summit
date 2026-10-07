@@ -8,6 +8,7 @@ import { logAction } from "@/server/audit";
 import { safeNext } from "@/server/auth/safe-next";
 import { createSessionClient } from "@/server/auth/session";
 import { hasDatabase } from "@/server/db/env";
+import { allow, clientIp } from "@/server/rate-limit";
 
 /** Same message whatever went wrong: never reveal whether an address has an account. */
 const INVALID = "Adresse e-mail ou mot de passe incorrect.";
@@ -26,6 +27,10 @@ export async function signIn(_prev: FormState, formData: FormData): Promise<Form
 
   const parsed = signInSchema.safeParse({ email: formData.get("email"), password: formData.get("password") });
   if (!parsed.success) return { error: INVALID };
+
+  // 5 attempts per 10 minutes for one address from one network, 20 per network overall.
+  const ip = await clientIp();
+  if (!allow(`signin:${ip}:${parsed.data.email}`, 5, 600_000) || !allow(`signin:${ip}`, 20, 600_000)) return { error: TOO_MANY };
 
   const supabase = await createSessionClient();
   const { data, error } = await supabase.auth.signInWithPassword(parsed.data);
@@ -49,6 +54,7 @@ export async function requestPasswordReset(_prev: FormState, formData: FormData)
 
   const parsed = email.safeParse(formData.get("email"));
   if (!parsed.success) return { fieldErrors: { email: "Saisissez une adresse e-mail valide." } };
+  if (!allow(`reset:${await clientIp()}`, 3, 900_000)) return { error: TOO_MANY };
 
   const supabase = await createSessionClient();
   const { error } = await supabase.auth.resetPasswordForEmail(parsed.data, { redirectTo: `${SITE_URL}/admin/callback` });

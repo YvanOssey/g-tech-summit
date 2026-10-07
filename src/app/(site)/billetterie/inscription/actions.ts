@@ -7,6 +7,7 @@ import { startOrder } from "@/server/checkout/orders";
 import { checkoutSchema, parsePassList } from "@/server/checkout/schema";
 import { createServiceClient } from "@/server/db/clients";
 import { isCheckoutReady } from "@/server/payments/readiness";
+import { allow, clientIp } from "@/server/rate-limit";
 
 /** Field name in the form for each path of the schema. */
 function fieldName(path: PropertyKey[]): string {
@@ -27,6 +28,11 @@ function typed(formData: FormData): Record<string, string> {
 }
 
 export async function startCheckout(_prev: FormState, formData: FormData): Promise<FormState> {
+  // Each attempt holds places for 30 minutes: 10 attempts per 10 minutes per network.
+  if (!allow(`checkout:${await clientIp()}`, 10, 600_000)) {
+    return { error: "Trop de tentatives depuis votre connexion. Patientez quelques minutes avant de réessayer.", values: typed(formData) };
+  }
+
   const passes = parsePassList(formData.get("passes"));
   if (!passes) return { error: "Sélection de pass invalide. Revenez à la billetterie pour choisir vos pass.", values: typed(formData) };
 
