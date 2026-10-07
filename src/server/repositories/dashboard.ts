@@ -38,6 +38,10 @@ export interface DashboardData {
   recent: RecentOrder[];
   upcoming: UpcomingSlot[];
   registrationOpen: boolean;
+  /** Sandbox orders, kept out of every figure above. */
+  testOrders: number;
+  /** Paid with no place left: to refund. */
+  toRefund: number;
 }
 
 const STATUSES: readonly OrderStatus[] = ["PAID", "PENDING", "FAILED", "CANCELLED", "EXPIRED", "REFUNDED"];
@@ -50,8 +54,8 @@ const STATUSES: readonly OrderStatus[] = ["PAID", "PENDING", "FAILED", "CANCELLE
 export async function getDashboardData(db: Db, now = new Date()): Promise<DashboardData> {
   const [participants, tickets, orders, items, slots, settings] = await Promise.all([
     db.from("participants").select("id", { count: "exact", head: true }).is("anonymised_at", null),
-    db.from("tickets").select("id", { count: "exact", head: true }).neq("status", "CANCELLED"),
-    db.from("orders").select("id, reference, status, total, created_at, expires_at, participant_id").order("created_at", { ascending: false }),
+    db.from("tickets").select("order_id").neq("status", "CANCELLED"),
+    db.from("orders").select("id, reference, status, total, created_at, expires_at, participant_id, is_test, refund_required").order("created_at", { ascending: false }),
     db.from("order_items").select("order_id, pass_id"),
     db.from("programme_slots").select("id, day, start_time, type, title, subtitle").eq("published", true).order("day").order("start_time"),
     db.from("event_settings").select("registration_open").maybeSingle(),
@@ -61,7 +65,8 @@ export async function getDashboardData(db: Db, now = new Date()): Promise<Dashbo
     if (r.error) throw new Error(`[dashboard] lecture impossible : ${r.error.code}`);
   }
 
-  const orderRows = orders.data ?? [];
+  const allOrders = orders.data ?? [];
+  const orderRows = allOrders.filter((o) => !o.is_test);
   const byOrder = new Map(orderRows.map((o) => [o.id, o]));
 
   // Sales per pass.
@@ -77,7 +82,9 @@ export async function getDashboardData(db: Db, now = new Date()): Promise<Dashbo
   const ordersByStatus = Object.fromEntries(STATUSES.map((s) => [s, 0])) as Record<OrderStatus, number>;
   let revenue = 0;
   for (const o of orderRows) {
-    ordersByStatus[o.status] += 1;
+    // A pending order whose 30-minute hold is over no longer holds anything.
+    const status = o.status === "PENDING" && o.expires_at && new Date(o.expires_at) <= now ? "EXPIRED" : o.status;
+    ordersByStatus[status] += 1;
     if (o.status === "PAID") revenue += o.total;
   }
 
@@ -107,12 +114,14 @@ export async function getDashboardData(db: Db, now = new Date()): Promise<Dashbo
 
   return {
     participants: participants.count ?? 0,
-    ticketsIssued: tickets.count ?? 0,
+    ticketsIssued: (tickets.data ?? []).filter((t) => byOrder.has(t.order_id)).length,
     sales,
     ordersByStatus,
     revenue,
     recent,
     upcoming,
     registrationOpen: settings.data?.registration_open ?? false,
+    testOrders: allOrders.length - orderRows.length,
+    toRefund: orderRows.filter((o) => o.refund_required).length,
   };
 }

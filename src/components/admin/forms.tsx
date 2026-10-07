@@ -3,8 +3,11 @@
 import type { ComponentProps } from "react";
 import { useFormStatus } from "react-dom";
 
-/** Result of an admin Server Action, shown under the form. */
-export type FormState = { error?: string; fieldErrors?: Record<string, string>; message?: string } | null;
+/**
+ * Result of a Server Action, shown with the form. React empties a form after
+ * each submission: `values` sends the typed text back so it can be restored.
+ */
+export type FormState = { error?: string; fieldErrors?: Record<string, string>; message?: string; values?: Record<string, string> } | null;
 
 const input =
   "mt-1.5 block w-full rounded-input border border-ink/25 bg-paper px-3.5 py-2.5 text-ink " +

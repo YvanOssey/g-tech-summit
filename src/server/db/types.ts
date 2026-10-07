@@ -60,6 +60,12 @@ export type OrderRow = Timestamps & {
   paid_at: string | null;
   cancelled_at: string | null;
   refunded_at: string | null;
+  /** Secret of the buyer's confirmation link. */
+  access_token: string | null;
+  /** Sandbox order (Genius Pay test keys): kept out of the real figures. */
+  is_test: boolean;
+  /** Paid after its hold expired with no place left: to be refunded. */
+  refund_required: boolean;
 };
 
 export type OrderItemRow = {
@@ -106,6 +112,8 @@ export type PaymentRow = Timestamps & {
   payment_method: string | null;
   checkout_url: string | null;
   completed_at: string | null;
+  /** "sandbox" or "live", as reported by Genius Pay. */
+  environment: string | null;
 };
 
 export type PaymentEventRow = {
@@ -179,14 +187,14 @@ export type Database = {
       admin_users: Table<AdminUserRow, "full_name" | "role" | "active" | "last_sign_in_at" | "created_at" | "updated_at">;
       audit_log: Table<AuditLogRow, "id" | "entity_id" | "changes" | "created_at">;
       participants: Table<ParticipantRow, WithTimestamps | "phone" | "consent_at" | "notes" | "anonymised_at">;
-      orders: Table<OrderRow, WithTimestamps | "status" | "currency" | "expires_at" | "paid_at" | "cancelled_at" | "refunded_at">;
+      orders: Table<OrderRow, WithTimestamps | "status" | "currency" | "expires_at" | "paid_at" | "cancelled_at" | "refunded_at" | "access_token" | "is_test" | "refund_required">;
       order_items: Table<OrderItemRow, "id">;
       hackathon_teams: Table<HackathonTeamRow, WithTimestamps>;
       hackathon_members: Table<HackathonMemberRow, "is_captain">;
       tickets: Table<TicketRow, "id" | "status" | "issued_at" | "emailed_at" | "checked_in_at" | "checked_in_by">;
       payments: Table<
         PaymentRow,
-        WithTimestamps | "provider" | "provider_reference" | "status" | "fees" | "payment_method" | "checkout_url" | "completed_at"
+        WithTimestamps | "provider" | "provider_reference" | "status" | "fees" | "payment_method" | "checkout_url" | "completed_at" | "environment"
       >;
       payment_events: Table<PaymentEventRow, "id" | "provider_reference" | "received_at" | "processed_at" | "error">;
       programme_slots: Table<
@@ -216,6 +224,11 @@ export type Database = {
       pass_sales: { Args: Record<string, never>; Returns: { pass_id: PassId; sold: number }[] };
       is_admin: { Args: Record<string, never>; Returns: boolean };
       is_super_admin: { Args: Record<string, never>; Returns: boolean };
+      create_order: { Args: { p_order: Record<string, unknown>; p_capacities: Record<string, number>; p_hold_minutes: number }; Returns: string };
+      finalize_order: {
+        Args: { p_order_id: string; p_completed_at: string; p_capacities: Record<string, number> };
+        Returns: "paid" | "already_paid" | "no_place";
+      };
     };
     Enums: {
       admin_role: AdminRole;

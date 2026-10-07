@@ -43,6 +43,17 @@ export default async function DashboardPage({
   return (
     <>
       {params["mot-de-passe"] === "ok" && <Notice>Votre mot de passe a été enregistré.</Notice>}
+      {data.toRefund > 0 && (
+        <Notice tone="error">
+          {data.toRefund} commande{data.toRefund > 1 ? "s" : ""} payée{data.toRefund > 1 ? "s" : ""} sans place restante : à rembourser.
+        </Notice>
+      )}
+      {data.testOrders > 0 && (
+        <Notice>
+          {data.testOrders} commande{data.testOrders > 1 ? "s" : ""} de test (paiement simulé) ne {data.testOrders > 1 ? "sont" : "est"} pas
+          comptée{data.testOrders > 1 ? "s" : ""} dans ces chiffres.
+        </Notice>
+      )}
       <PageHeader
         title="Tableau de bord"
         description={

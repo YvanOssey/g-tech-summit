@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import { whatsappUrl } from "@/config/event";
 import { PASS_ORDER, type PassId } from "@/config/passes";
 import { getEventSettings } from "@/config/settings";
+import { CheckoutStart } from "@/components/ticket/CheckoutStart";
 import { PassSelector } from "@/components/ticket/PassSelector";
 import { Accent } from "@/components/ui/Accent";
 import { ButtonLink } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
 import { SectionLabel } from "@/components/ui/SectionLabel";
+import { isCheckoutReady } from "@/server/payments/readiness";
 
 export const metadata: Metadata = {
   title: "Billetterie",
@@ -27,6 +29,8 @@ export default async function TicketingPage({
 }) {
   const [{ pass }, settings] = await Promise.all([searchParams, getEventSettings()]);
   const initial = parsePass(pass);
+  // Online sale only when registrations are open AND payment can be taken.
+  const open = settings.registrationOpen && isCheckoutReady();
 
   return (
     <>
@@ -52,10 +56,13 @@ export default async function TicketingPage({
       <Section tone="paper" className="pt-14 pb-24 md:pt-20 md:pb-32">
         <div className="shell">
           <h2 className="sr-only">Les trois pass</h2>
-          <PassSelector key={initial.join()} initial={initial} sold={settings.sold} />
+          {open ? (
+            <CheckoutStart key={initial.join()} initial={initial} sold={settings.sold} />
+          ) : (
+            <>
+              <PassSelector key={initial.join()} initial={initial} sold={settings.sold} />
 
-          <div className="mt-12 grid gap-8 border-t border-rule-strong pt-8 lg:grid-cols-[1fr_auto] lg:items-start">
-            {!settings.registrationOpen && (
+              <div className="mt-12 grid gap-8 border-t border-rule-strong pt-8 lg:grid-cols-[1fr_auto] lg:items-start">
               <div className="max-w-2xl">
                 <p className="type-headline text-heading">Les inscriptions en ligne ouvrent prochainement</p>
                 <p className="mt-4 text-muted">
@@ -64,21 +71,22 @@ export default async function TicketingPage({
                   écrivez-nous.
                 </p>
               </div>
-            )}
-            <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
-              <button
-                type="button"
-                disabled
-                aria-disabled="true"
-                className="min-h-12 cursor-not-allowed rounded-pill bg-stone px-6 font-semibold text-grey"
-              >
-                Continuer — bientôt disponible
-              </button>
-              <ButtonLink href={whatsappUrl} variant="link">
-                Être prévenu sur WhatsApp
-              </ButtonLink>
+              <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
+                <button
+                  type="button"
+                  disabled
+                  aria-disabled="true"
+                  className="min-h-12 cursor-not-allowed rounded-pill bg-stone px-6 font-semibold text-grey"
+                >
+                  Continuer — bientôt disponible
+                </button>
+                <ButtonLink href={whatsappUrl} variant="link">
+                  Être prévenu sur WhatsApp
+                </ButtonLink>
+              </div>
             </div>
-          </div>
+            </>
+          )}
         </div>
       </Section>
     </>

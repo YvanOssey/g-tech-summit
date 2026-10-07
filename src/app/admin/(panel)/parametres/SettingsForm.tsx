@@ -7,7 +7,7 @@ import { saveSettings } from "./actions";
 
 type Settings = Pick<EventSettingsRow, "venue_name" | "venue_address" | "venue_map_url" | "registration_open">;
 
-export function SettingsForm({ settings, checkoutReady }: { settings: Settings; checkoutReady: boolean }) {
+export function SettingsForm({ settings, checkoutReady, webhookReady }: { settings: Settings; checkoutReady: boolean; webhookReady: boolean }) {
   const [state, action] = useActionState(saveSettings, null);
 
   return (
@@ -33,18 +33,26 @@ export function SettingsForm({ settings, checkoutReady }: { settings: Settings; 
       <fieldset className="space-y-4 border border-ink/10 bg-paper p-6">
         <legend className="px-1 font-semibold">Inscriptions en ligne</legend>
         {checkoutReady ? (
-          <Checkbox
-            label="Inscriptions ouvertes"
-            name="registration_open"
-            defaultChecked={settings.registration_open}
-            hint="Ouvertes, la billetterie permet d’acheter un pass et de payer via Wave."
-          />
+          <>
+            <Checkbox
+              label="Inscriptions ouvertes"
+              name="registration_open"
+              defaultChecked={settings.registration_open}
+              hint="Ouvertes, la billetterie permet d’acheter un pass et de payer via Genius Pay (Wave, Orange Money, MTN, Moov, carte)."
+            />
+            {!webhookReady && (
+              <p className="border-l-2 border-signal bg-signal/10 px-3 py-2 text-small">
+                Le webhook Genius Pay n’est pas configuré : un paiement n’est confirmé que lorsque l’acheteur revient sur le site. À configurer
+                avant d’ouvrir les ventes réelles.
+              </p>
+            )}
+          </>
         ) : (
           <p className="text-small">
             <span className="font-semibold">Fermées.</span>{" "}
             <span className="text-grey">
-              Elles ne pourront être ouvertes qu’une fois le paiement Genius Pay en service (phase 8). Le site affiche
-              « Les inscriptions en ligne ouvrent prochainement ».
+              Les clés Genius Pay ne sont pas configurées sur ce serveur : le paiement est impossible. Le site affiche « Les inscriptions
+              en ligne ouvrent prochainement ».
             </span>
           </p>
         )}

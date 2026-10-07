@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Notice, PageHeader } from "@/components/admin/ui";
 import { requireAdmin } from "@/server/auth/require-admin";
 import { createSessionClient } from "@/server/auth/session";
-import { isCheckoutReady } from "@/server/payments/readiness";
+import { hasWebhookSecret, isCheckoutReady } from "@/server/payments/readiness";
 import { SettingsForm } from "./SettingsForm";
 
 export const metadata: Metadata = { title: "Paramètres" };
@@ -24,7 +24,7 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
       />
       {params.ok && <Notice>Paramètres enregistrés. Le site est mis à jour à la prochaine visite.</Notice>}
       {settings ? (
-        <SettingsForm settings={settings} checkoutReady={isCheckoutReady()} />
+        <SettingsForm settings={settings} checkoutReady={isCheckoutReady()} webhookReady={hasWebhookSecret()} />
       ) : (
         <Notice tone="error">Les paramètres n’ont pas pu être chargés.</Notice>
       )}
