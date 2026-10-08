@@ -17,7 +17,7 @@ export function SiteFooter() {
         {/* Three columns from tablet up: organiser on the left, pages centred, contact against the right edge. */}
         <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-3">
           {/* Organiser — left */}
-          <div className="col-span-2 md:col-span-1">
+          <div className="col-span-2 md:col-span-1 md:pl-6 lg:pl-12">
             <GhostechLogo width={88} variant="light" />
             <p className="mt-4 max-w-xs text-small text-muted">
               {EVENT.name} {EVENT.year} est organisé par {EVENT.organiser.name}.
