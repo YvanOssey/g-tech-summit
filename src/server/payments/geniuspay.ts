@@ -13,8 +13,12 @@ export type GeniusPayStatus = "pending" | "processing" | "completed" | "failed" 
 
 export interface GeniusPayPayment {
   reference: string;
+  /** Returned by the payment list, not by the payment detail (checked 2026-10-08): see paymentOrderReference(). */
   external_reference?: string | null;
   amount: number;
+  currency?: string | null;
+  /** What we sent at creation, echoed back; holds order_reference. */
+  metadata?: Record<string, unknown> | null;
   fees?: number | null;
   /** Absent from some creation responses (the payment is then pending). */
   status?: GeniusPayStatus;
@@ -93,6 +97,25 @@ export function createPayment(input: {
     },
     input.externalReference,
   );
+}
+
+/**
+ * The order reference a payment was created for. The payment detail does not
+ * return external_reference, but echoes our metadata (order_reference).
+ */
+export function paymentOrderReference(payment: GeniusPayPayment): string | null {
+  const fromMetadata = payment.metadata?.order_reference ?? payment.metadata?.external_reference;
+  return payment.external_reference ?? (typeof fromMetadata === "string" ? fromMetadata : null);
+}
+
+/** Genius Pay hosted checkout pages only, over HTTPS (geniuspay.ci or one of its subdomains). */
+export function isGeniusPayCheckoutUrl(value: string): boolean {
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" && (url.hostname === "geniuspay.ci" || url.hostname.endsWith(".geniuspay.ci"));
+  } catch {
+    return false;
+  }
 }
 
 export function getPayment(reference: string): Promise<GeniusPayPayment> {

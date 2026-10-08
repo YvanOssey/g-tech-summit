@@ -4,7 +4,15 @@ import { HOLD_MINUTES, PASSES, orderTotal, type PassId } from "@/config/passes";
 import { createServiceClient } from "@/server/db/clients";
 import { sendOrderEmails } from "@/server/email/tickets";
 import type { OrderStatus } from "@/server/db/types";
-import { GeniusPayError, createPayment, getPayment, isSandbox, type GeniusPayStatus } from "@/server/payments/geniuspay";
+import {
+  GeniusPayError,
+  createPayment,
+  getPayment,
+  isGeniusPayCheckoutUrl,
+  isSandbox,
+  paymentOrderReference,
+  type GeniusPayStatus,
+} from "@/server/payments/geniuspay";
 import type { CheckoutInput } from "./schema";
 
 const CAPACITIES = Object.fromEntries(Object.values(PASSES).map((p) => [p.id, p.capacity.total])) as Record<PassId, number>;
@@ -80,7 +88,7 @@ export async function startOrder(input: CheckoutInput, siteUrl: string): Promise
       errorUrl: back,
     });
     const checkoutUrl = payment.checkout_url ?? "";
-    if (!new URL(checkoutUrl).hostname.endsWith("geniuspay.ci")) throw new GeniusPayError("UNEXPECTED_CHECKOUT_URL", 0);
+    if (!isGeniusPayCheckoutUrl(checkoutUrl)) throw new GeniusPayError("UNEXPECTED_CHECKOUT_URL", 0);
 
     const saved = await db.from("payments").insert({
       order_id: orderId,
@@ -165,8 +173,9 @@ export async function syncOrder(orderId: string): Promise<{ status: OrderStatus;
     .eq("id", payment.id);
 
   if (gp.status === "completed") {
-    if (gp.amount !== order.total || (gp.external_reference && gp.external_reference !== order.reference)) {
-      console.error(`[checkout] ${order.reference} : montant ou référence Genius Pay incohérents, commande non validée`);
+    // Same amount, in CFA francs, for this very order: otherwise the order is not validated.
+    if (gp.amount !== order.total || gp.currency !== "XOF" || paymentOrderReference(gp) !== order.reference) {
+      console.error(`[checkout] ${order.reference} : montant, devise ou référence Genius Pay incohérents, commande non validée`);
       return { status: order.status, changed: false };
     }
     const { data: result, error } = await db.rpc("finalize_order", {
