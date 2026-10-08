@@ -9,13 +9,20 @@ import { hasDatabase } from "@/server/db/env";
  * back to `fallback` field by field: the public site never breaks because of
  * the database.
  */
+/**
+ * The only columns visitors may read (supabase/migrations/0007_settings_public_columns.sql):
+ * not who last changed the settings, nor when.
+ */
+const PUBLIC_COLUMNS =
+  "id, venue_name, venue_address, venue_map_url, registration_open, team_size_min, team_size_max, registration_deadline, challenges_start, jury";
+
 export async function loadEventSettings(fallback: EventSettings): Promise<EventSettings> {
   if (!hasDatabase) return fallback;
 
   try {
     const db = createPublicClient();
     const [settings, sales] = await Promise.all([
-      db.from("event_settings").select("*").eq("id", 1).maybeSingle(),
+      db.from("event_settings").select(PUBLIC_COLUMNS).eq("id", 1).maybeSingle(),
       db.rpc("pass_sales"),
     ]);
     if (settings.error || sales.error || !settings.data) {

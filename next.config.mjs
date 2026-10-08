@@ -22,7 +22,8 @@ const SECURITY_HEADERS = [
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   // Camera kept for this site only: the entrance QR scanner will need it.
   { key: "Permissions-Policy", value: "camera=(self), microphone=(), geolocation=(), payment=()" },
-  { key: "Strict-Transport-Security", value: "max-age=31536000" },
+  // includeSubDomains only covers *.summit.ghostech.tech (none today), never the ghostech.tech site.
+  { key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains" },
 ];
 
 /** @type {import("next").NextConfig} */
