@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/Button";
 import { Pending } from "@/components/ui/Pending";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { SignalSquare } from "@/components/ui/icons";
+import { requireAdmin } from "@/server/auth/require-admin";
 
 export const metadata: Metadata = {
   title: "Système de design",
@@ -77,7 +78,10 @@ const MOTION_NO = [
   "Tout mouvement quand « réduire les animations » est actif",
 ];
 
-export default function DesignSystemPage() {
+/** Team reference only (audit F-16): signed-in admins, like the back office. */
+export default async function DesignSystemPage() {
+  await requireAdmin();
+
   return (
     <main className="pb-32">
       {/* ── Opening poster ─────────────────────────────────────── */}
