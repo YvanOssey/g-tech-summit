@@ -4,6 +4,7 @@ import { EVENT, whatsappUrl } from "@/config/event";
 import { PHOTOS } from "@/config/media";
 import { PASSES, PASS_ORDER, orderTotal } from "@/config/passes";
 import { getEventSettings } from "@/config/settings";
+import { EventJsonLd } from "@/components/seo/EventJsonLd";
 import { HACKATHON, TRACKS } from "@/content/hackathon";
 import { GhostechLogo } from "@/components/brand/GhostechLogo";
 import { HackathonSteps } from "@/components/home/HackathonSteps";
@@ -64,6 +65,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <EventJsonLd settings={settings} />
       <HomeHero venue={settings.venue} />
 
       {/* ── Figures ────────────────────────────────────────────────── */}
