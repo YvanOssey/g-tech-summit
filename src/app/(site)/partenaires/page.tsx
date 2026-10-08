@@ -20,19 +20,17 @@ export const metadata: Metadata = {
   description: "Les partenaires de G-TECH SUMMIT 2026 et comment soutenir l’événement.",
 };
 
-/** Optical balance: very wide logos get less height than square ones. */
-const logoHeight = (p: Partner, base: number) => Math.round(base / Math.pow(p.logo.width / p.logo.height, 0.35));
-
-function PartnerLogo({ partner, base, className = "" }: { partner: Partner; base: number; className?: string }) {
+/**
+ * The logo fills a fixed box, so every card keeps the same size and shape
+ * whatever the logo. Optical balance: very wide logos use less of the box
+ * height than square ones.
+ */
+function PartnerLogo({ partner }: { partner: Partner }) {
+  const scale = Math.min(1, 1.6 / Math.pow(partner.logo.width / partner.logo.height, 0.35));
   return (
-    <Image
-      src={partner.logo.src}
-      alt={partner.name}
-      width={partner.logo.width}
-      height={partner.logo.height}
-      style={{ height: logoHeight(partner, base), width: "auto" }}
-      className={`max-w-full object-contain ${className}`}
-    />
+    <div className="relative w-4/5 lg:w-3/5" style={{ height: `${Math.round(scale * 100)}%` }}>
+      <Image src={partner.logo.src} alt={partner.name} fill sizes="(min-width: 1024px) 400px, 45vw" className="object-contain" />
+    </div>
   );
 }
 
@@ -65,13 +63,15 @@ export default async function PartnersPage() {
           <RevealText inView id="titre-logos" lines={["Nos partenaires"]} className="type-headline text-title mt-8" />
 
           <SpotlightGroup>
-            <RevealGroup as="ul" className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:gap-4">
+            <RevealGroup as="ul" className="mt-12 grid max-w-5xl grid-cols-2 gap-3 lg:gap-4">
               {partners.map((p) => (
                 <RevealItem as="li" effect="flip" key={p.name}>
                   <Tilt max={6}>
-                    <div className="panel card-interactive spotlight flex aspect-[4/3] flex-col items-center justify-center gap-6 bg-paper! p-6">
-                      <PartnerLogo partner={p} base={90} />
-                      <span className="type-meta text-muted">{p.name}</span>
+                    <div className="panel card-interactive spotlight grid aspect-[4/3] lg:aspect-[2/1] grid-rows-[minmax(0,1fr)_auto] place-items-center gap-3 overflow-hidden bg-paper! p-4 sm:gap-5 sm:p-8">
+                      <div className="flex size-full items-center justify-center">
+                        <PartnerLogo partner={p} />
+                      </div>
+                      <span className="type-meta line-clamp-2 min-h-[2lh] text-center text-muted">{p.name}</span>
                     </div>
                   </Tilt>
                 </RevealItem>
