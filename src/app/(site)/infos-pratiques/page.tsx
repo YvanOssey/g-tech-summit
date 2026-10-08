@@ -48,7 +48,7 @@ export default async function PracticalPage() {
         label="Infos pratiques"
         title="Tout ce qu’il faut savoir avant de venir"
         lines={["Tout ce qu’il faut", <span key="s">savoir <Accent>avant de venir</Accent></span>]}
-        lead="Les informations encore en préparation apparaîtront ici dès qu’elles seront confirmées."
+        lead="Dates, lieu, pass, questions fréquentes et contact : l’essentiel pour préparer votre venue."
         actions={
           <>
             <ButtonLink href="#faq" arrow>
