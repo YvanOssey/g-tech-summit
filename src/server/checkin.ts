@@ -1,9 +1,20 @@
 import "server-only";
 import { EVENT } from "@/config/event";
 import type { PassId } from "@/config/passes";
+import { isSandbox } from "@/server/payments/geniuspay";
 
 /** Passes that give access on site. The online pass never opens the doors. */
 export const ON_SITE_PASSES: readonly PassId[] = ["event", "hackathon"];
+
+/**
+ * Test tickets come from simulated (sandbox) payments: free for anyone while
+ * the sandbox keys are in place. They are accepted at the door only while the
+ * site itself runs on sandbox keys (to rehearse the entrance control), and
+ * refused as soon as the live keys are set.
+ */
+export function testTicketsRefused(): boolean {
+  return !isSandbox();
+}
 
 /** Event day (1 or 2) for a date in Abidjan, or null outside the event. */
 export function eventDay(now = new Date()): 1 | 2 | null {

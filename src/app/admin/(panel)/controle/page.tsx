@@ -6,7 +6,7 @@ import { EVENT } from "@/config/event";
 import { PASSES } from "@/config/passes";
 import { requireAdmin } from "@/server/auth/require-admin";
 import { createSessionClient } from "@/server/auth/session";
-import { ON_SITE_PASSES, eventDay, pickDay } from "@/server/checkin";
+import { ON_SITE_PASSES, eventDay, pickDay, testTicketsRefused } from "@/server/checkin";
 import { loadRegistrations } from "@/server/repositories/registrations";
 import { checkIn, undoCheckIn } from "./actions";
 
@@ -17,6 +17,7 @@ const RESULT: Record<string, { ok: boolean; text: string }> = {
   deja: { ok: false, text: "Déjà entré ce jour-là : entrée refusée." },
   annule: { ok: false, text: "Billet annulé : entrée refusée." },
   "en-ligne": { ok: false, text: "Pass En ligne : pas d’accès sur place." },
+  test: { ok: false, text: "Billet de test (paiement simulé) : entrée refusée." },
   annulee: { ok: true, text: "Passage annulé." },
   erreur: { ok: false, text: "L’entrée n’a pas pu être enregistrée. Réessayez." },
 };
@@ -41,6 +42,7 @@ export default async function EntrancePage({ searchParams }: { searchParams: Pro
       })
     : [];
   const result = one("entree") ? RESULT[one("entree")!] : undefined;
+  const refuseTests = testTicketsRefused();
   const today = eventDay();
 
   return (
@@ -117,6 +119,8 @@ export default async function EntrancePage({ searchParams }: { searchParams: Pro
                         Annuler
                       </button>
                     </form>
+                  ) : refuseTests && testOrders.has(t.orderId) ? (
+                    <span className="font-semibold text-[#b42318]">Billet de test : refusé</span>
                   ) : (
                     <form action={checkIn}>
                       <input type="hidden" name="ticket_id" value={t.id} />

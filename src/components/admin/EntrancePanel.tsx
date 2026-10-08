@@ -12,6 +12,8 @@ interface EntrancePanelProps {
   day: 1 | 2 | null;
   /** Result of the last action (?entree=…). */
   result?: string;
+  /** Test tickets are refused (the site takes real payments). */
+  testRefused: boolean;
 }
 
 const time = new Intl.DateTimeFormat("fr-FR", { weekday: "short", hour: "2-digit", minute: "2-digit", timeZone: "Africa/Abidjan" });
@@ -29,14 +31,16 @@ function Verdict({ ok, title, detail }: { ok: boolean; title: string; detail?: s
  * Shown on a ticket page to a signed-in admin only: the door decision for
  * the day, in large colours, and the button that records the entry.
  */
-export function EntrancePanel({ ticket, holder, checkins, day, result }: EntrancePanelProps) {
+export function EntrancePanel({ ticket, holder, checkins, day, result, testRefused }: EntrancePanelProps) {
   const back = `/billet/${ticket.token}`;
   const today = day ? checkins.find((c) => c.day === day) : undefined;
   const onSite = ON_SITE_PASSES.includes(ticket.passId);
+  const refusedTest = ticket.isTest && testRefused;
 
   let verdict: React.ReactNode;
   if (ticket.status === "CANCELLED") verdict = <Verdict ok={false} title="Billet annulé" detail="Refuser l’entrée." />;
   else if (!onSite) verdict = <Verdict ok={false} title="Pass En ligne" detail="Ce pass ne donne pas accès sur place." />;
+  else if (refusedTest) verdict = <Verdict ok={false} title="Billet de test" detail="Paiement simulé : refuser l’entrée." />;
   else if (result === "ok" && today) verdict = <Verdict ok title="Entrée validée" detail={`${holder} · ${PASSES[ticket.passId].name}`} />;
   else if (today)
     verdict = <Verdict ok={false} title={`Déjà entré — jour ${today.day}`} detail={`Scanné ${time.format(new Date(today.at))}${today.by ? ` par ${today.by}` : ""}.`} />;
@@ -46,13 +50,17 @@ export function EntrancePanel({ ticket, holder, checkins, day, result }: Entranc
       <h2 id="controle" className="type-meta text-grey">
         Contrôle à l’entrée {day ? `· jour ${day}` : ""}
       </h2>
-      {ticket.isTest && <p className="mt-2 border border-signal px-3 py-1 text-small">Billet de test : à refuser le jour de l’événement.</p>}
+      {ticket.isTest && !testRefused && (
+        <p className="mt-2 border border-signal px-3 py-1 text-small">
+          Billet de test : accepté tant que le site est en mode test (sandbox), refusé dès que les vraies clés de paiement sont en place.
+        </p>
+      )}
       {result === "erreur" && <p className="mt-2 text-small font-medium text-[#7a1a12]">L’entrée n’a pas pu être enregistrée. Réessayez.</p>}
       {result === "annulee" && <p className="mt-2 text-small">Passage annulé.</p>}
 
       <div className="mt-4">{verdict}</div>
 
-      {ticket.status !== "CANCELLED" && onSite && !today && (
+      {ticket.status !== "CANCELLED" && onSite && !refusedTest && !today && (
         <div className="mt-4 flex flex-wrap gap-3">
           {(day ? [day] : ([1, 2] as const)).map((d) => (
             <form key={d} action={checkIn} className="flex-1">

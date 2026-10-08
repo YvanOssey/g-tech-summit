@@ -8,7 +8,7 @@ import { Section } from "@/components/ui/Section";
 import { SITE_URL } from "@/config/site";
 import { getAdmin } from "@/server/auth/require-admin";
 import { createSessionClient } from "@/server/auth/session";
-import { pickDay } from "@/server/checkin";
+import { pickDay, testTicketsRefused } from "@/server/checkin";
 import { createServiceClient } from "@/server/db/clients";
 
 export const metadata: Metadata = {
@@ -71,6 +71,7 @@ export default async function TicketPage({
             checkins={checkins}
             day={pickDay(query.jour)}
             result={query.entree}
+            testRefused={testTicketsRefused()}
           />
         </div>
       )}
