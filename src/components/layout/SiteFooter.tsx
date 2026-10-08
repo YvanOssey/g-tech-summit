@@ -39,7 +39,7 @@ export function SiteFooter() {
           </nav>
 
           {/* Contact — right */}
-          <div className="min-w-0 md:justify-self-end md:text-right">
+          <div className="min-w-0 md:justify-self-end md:pr-6 md:text-right lg:pr-12">
             <p className="type-label">Contact</p>
             <ul className="mt-4 space-y-2 text-small break-words sm:text-body">
               <li>
