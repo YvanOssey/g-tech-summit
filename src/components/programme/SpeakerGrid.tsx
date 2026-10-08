@@ -1,6 +1,8 @@
 import Image from "next/image";
-import Link from "next/link";
+import { Marquee } from "@/components/motion/Marquee";
 import { RevealGroup, RevealItem } from "@/components/motion/Reveal";
+import { SpotlightGroup } from "@/components/motion/Spotlight";
+import { Tilt } from "@/components/motion/Tilt";
 import { SPEAKER_KIND_LABEL, SPEAKER_SESSIONS, type Speaker } from "@/content/speakers";
 
 function initials(name: string): string {
@@ -12,65 +14,67 @@ function initials(name: string): string {
     .join("");
 }
 
-function SpeakerCard({ speaker }: { speaker: Speaker }) {
+/**
+ * Speakers wall, built like the partners wall: identical cards that flip in
+ * on scroll, tilt and light up under the pointer; SpeakerMarquee adds the
+ * scrolling band of names. Ordered by session (programme order), then by the
+ * admin order.
+ */
+function bySession(speakers: readonly Speaker[]) {
+  return SPEAKER_SESSIONS.flatMap((s) => speakers.filter((x) => x.sessionRef === s.ref).map((x) => ({ speaker: x, session: s.kind })));
+}
+
+export function SpeakerGrid({ speakers }: { speakers: readonly Speaker[] }) {
   return (
-    <figure className="panel flex h-full flex-col overflow-hidden">
-      <div className="relative aspect-square bg-ink/5">
-        {speaker.photo ? (
-          <Image
-            src={speaker.photo.src}
-            alt={`Photo de ${speaker.name}`}
-            fill
-            sizes="(min-width: 1024px) 280px, (min-width: 640px) 33vw, 50vw"
-            className="object-cover"
-          />
-        ) : (
-          <span aria-hidden="true" className="type-condensed absolute inset-0 flex items-center justify-center text-display text-ink/25">
-            {initials(speaker.name)}
-          </span>
-        )}
-      </div>
-      <figcaption className="flex flex-1 flex-col gap-1 p-4 sm:p-5">
-        <span className="type-meta text-accent">{SPEAKER_KIND_LABEL[speaker.kind]}</span>
-        <span className="text-heading leading-tight font-semibold">{speaker.name}</span>
-        {speaker.role && <span className="text-small text-muted">{speaker.role}</span>}
-      </figcaption>
-    </figure>
+    <SpotlightGroup>
+      <RevealGroup as="ul" className="mx-auto mt-12 grid max-w-5xl grid-cols-2 gap-3 md:grid-cols-3 lg:gap-4">
+        {bySession(speakers).map(({ speaker, session }) => (
+          <RevealItem as="li" effect="flip" key={speaker.id}>
+            <Tilt max={6}>
+              <figure className="panel card-interactive spotlight flex h-full flex-col overflow-hidden bg-paper! p-3 sm:p-4">
+                <div className="relative aspect-square overflow-hidden rounded-input bg-ink/5">
+                  {speaker.photo ? (
+                    <Image
+                      src={speaker.photo.src}
+                      alt={`Photo de ${speaker.name}`}
+                      fill
+                      sizes="(min-width: 1024px) 320px, (min-width: 768px) 30vw, 45vw"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <span aria-hidden="true" className="type-condensed absolute inset-0 flex items-center justify-center text-display text-ink/20">
+                      {initials(speaker.name)}
+                    </span>
+                  )}
+                </div>
+                {/* Fixed room for every line (2 for the name, 2 for the job, 1 + 1 for the part): all cards keep the same height. */}
+                <figcaption className="flex flex-col items-center gap-1 px-1 pt-4 pb-1 text-center">
+                  <span className="line-clamp-2 min-h-[2lh] text-body leading-tight font-semibold sm:text-heading">{speaker.name}</span>
+                  <span className="line-clamp-2 min-h-[2lh] text-small text-muted">{speaker.role}</span>
+                  <span className="type-meta mt-2 block truncate text-accent">{SPEAKER_KIND_LABEL[speaker.kind]}</span>
+                  <span className="type-meta block truncate text-muted">{session}</span>
+                </figcaption>
+              </figure>
+            </Tilt>
+          </RevealItem>
+        ))}
+      </RevealGroup>
+    </SpotlightGroup>
   );
 }
 
-/**
- * The speakers entered in the admin, session by session in the order of the
- * programme. Each heading links to the session's description.
- */
-export function SpeakerGrid({ speakers }: { speakers: readonly Speaker[] }) {
-  const sessions = SPEAKER_SESSIONS.map((s) => ({ ...s, speakers: speakers.filter((x) => x.sessionRef === s.ref) })).filter((s) => s.speakers.length > 0);
-
+/** Full-width band of names, placed after the grid outside the page shell. */
+export function SpeakerMarquee({ speakers }: { speakers: readonly Speaker[] }) {
   return (
-    <div className="space-y-14">
-      {sessions.map((s) => (
-        <div key={s.ref}>
-          <h3 className="flex flex-wrap items-baseline gap-x-3 gap-y-1 border-t border-rule-strong pt-4">
-            <span className="type-label">{s.kind}</span>
-            {s.title && (
-              <Link
-                href={`#${s.ref.startsWith("form-") ? "formations" : s.ref}`}
-                className="text-heading font-semibold hover:underline hover:decoration-mark hover:underline-offset-4"
-              >
-                {s.title}
-              </Link>
-            )}
-          </h3>
-          <RevealGroup as="ul" className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
-            {s.speakers.map((speaker) => (
-              <RevealItem as="li" key={speaker.id}>
-                <SpeakerCard speaker={speaker} />
-              </RevealItem>
-            ))}
-          </RevealGroup>
-        </div>
+    <Marquee
+      duration={26}
+      className="mt-16 border-y border-rule py-5"
+      items={bySession(speakers).map(({ speaker }) => (
+        <span key={speaker.id} className="type-condensed flex items-center gap-8 px-8 text-title text-ink/15">
+          {speaker.name} <span className="size-3 rotate-45 bg-signal" />
+        </span>
       ))}
-    </div>
+    />
   );
 }
 

@@ -14,7 +14,7 @@ import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { RevealText } from "@/components/motion/RevealText";
 import { SpotlightGroup } from "@/components/motion/Spotlight";
 import { DayTabs } from "@/components/programme/DayTabs";
-import { SpeakerGrid, speakerNames } from "@/components/programme/SpeakerGrid";
+import { SpeakerGrid, SpeakerMarquee, speakerNames } from "@/components/programme/SpeakerGrid";
 import { Accent } from "@/components/ui/Accent";
 import { ButtonLink } from "@/components/ui/Button";
 import { SignalSquare } from "@/components/ui/icons";
@@ -282,10 +282,9 @@ export default async function ProgrammePage() {
               lines={["Ils prennent", <span key="p">la <Accent>parole</Accent>.</span>]}
               className="type-headline text-title mt-8"
             />
-            <div className="mt-14">
-              <SpeakerGrid speakers={speakers} />
-            </div>
+            <SpeakerGrid speakers={speakers} />
           </div>
+          <SpeakerMarquee speakers={speakers} />
         </Section>
       )}
 
