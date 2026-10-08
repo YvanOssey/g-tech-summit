@@ -19,7 +19,7 @@ export function SiteFooter() {
           <div className="col-span-4 md:col-span-3 lg:col-span-4">
             <GhostechLogo width={88} variant="light" />
             <p className="mt-4 max-w-xs text-small text-muted">
-              {EVENT.name} {EVENT.year} est organisé par {EVENT.organiser.name}, {EVENT.organiser.description.charAt(0).toLowerCase() + EVENT.organiser.description.slice(1)}.
+              {EVENT.name} {EVENT.year} est organisé par {EVENT.organiser.name}.
             </p>
           </div>
 

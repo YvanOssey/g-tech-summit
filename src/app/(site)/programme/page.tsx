@@ -99,7 +99,7 @@ export default async function ProgrammePage() {
         label="Programme · 18 & 19 décembre 2026"
         title="Deux jours, heure par heure"
         lines={["Deux jours,", <span key="h"><Accent>heure</Accent> par heure</span>]}
-        lead="Conférences, panels, formations express, ateliers et la finale du hackathon le samedi après-midi. Programme susceptible d’évoluer ; les intervenants seront annoncés ici."
+        lead="Deux jours de conférences, de panels, de formations express et d’ateliers, jusqu’à la finale du hackathon le samedi après-midi."
         actions={
           <>
             <ButtonLink href="#deroule" arrow>
