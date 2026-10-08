@@ -1,21 +1,39 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { isMaintenance, isOpenDuringMaintenance } from "@/lib/maintenance";
 import { SESSION_COOKIE_OPTIONS, withSessionLifetime } from "@/server/auth/cookie-policy";
 
 /** Admin pages reachable without a session. */
 const PUBLIC_ADMIN_PATHS = ["/admin/login", "/admin/callback", "/admin/mot-de-passe-oublie"];
 
 /**
- * Runs for /admin only (see `config.matcher`): the public site never goes
- * through it.
- *
+ * Every page request (not static files, see `config.matcher`):
+ * - /admin → adminProxy();
+ * - maintenance mode on → the public pages show /maintenance (same address
+ *   kept in the browser); the back office, the APIs and tickets stay open;
+ * - otherwise → untouched.
+ */
+export async function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  if (pathname === "/admin" || pathname.startsWith("/admin/")) return adminProxy(request);
+
+  if (isMaintenance() && !isOpenDuringMaintenance(pathname)) {
+    const response = NextResponse.rewrite(new URL("/maintenance", request.url));
+    response.headers.set("Cache-Control", "private, no-store");
+    response.headers.set("X-Robots-Tag", "noindex");
+    return response;
+  }
+  return NextResponse.next();
+}
+
+/**
  * 1. Refreshes the Supabase session and writes the new cookies.
  * 2. Optimistic check: no valid session → login page.
  *
  * This is NOT the authorisation: every admin page, action and route calls
  * requireAdmin() (src/server/auth/require-admin.ts), and RLS protects the data.
  */
-export async function proxy(request: NextRequest) {
+async function adminProxy(request: NextRequest) {
   let response = NextResponse.next({ request });
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -56,5 +74,6 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin", "/admin/:path*"],
+  // Pages only: never Next.js assets, optimised images or files from /public.
+  matcher: ["/((?!_next/static|_next/image|favicon\\.ico|.*\\.(?:png|jpe?g|webp|svg|ico|txt|xml|webmanifest|woff2?)$).*)"],
 };

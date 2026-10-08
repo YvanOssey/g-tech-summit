@@ -71,6 +71,7 @@ Mêmes noms que dans `.env.example`. Les valeurs ne doivent jamais être envoyé
 | `GENIUSPAY_WEBHOOK_SECRET` | Secret du webhook (étape 4) |
 | `TURNSTILE_SITE_KEY` | Clé de site Cloudflare Turnstile (étape 5) |
 | `TURNSTILE_SECRET_KEY` | Clé secrète Cloudflare Turnstile (étape 5) |
+| `MAINTENANCE_MODE` | `1` = site en maintenance (les visiteurs voient « Le site revient très vite », l'admin reste accessible) ; vide ou `0` = site ouvert. Relancer l'application après changement |
 | `SMTP_HOST` | `smtp.hostinger.com` |
 | `SMTP_PORT` | `465` |
 | `SMTP_USER` | `billetterie@ghostech.tech` |
