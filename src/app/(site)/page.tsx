@@ -129,11 +129,8 @@ export default async function HomePage() {
                 </Tilt>
                 <Reveal delay={0.3} className="mt-5 flex items-center gap-4">
                   <GhostechLogo width={64} className="shrink-0" />
-                  <p className="text-small text-muted">
-                    <span className="block font-semibold text-fg">
-                      {EVENT.edition}, organisée par {EVENT.organiser.name}
-                    </span>
-                    Communauté tech fondée à l’Institut Universitaire d’Abidjan.
+                  <p className="text-small font-semibold text-fg">
+                    {EVENT.edition}, organisée par {EVENT.organiser.name}
                   </p>
                 </Reveal>
               </div>

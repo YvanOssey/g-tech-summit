@@ -22,7 +22,6 @@ export const EVENT = {
   ],
   organiser: {
     name: "Ghostech",
-    description: "Communauté tech fondée à l’Institut Universitaire d’Abidjan",
     motto: "Construire. Impacter. Conquérir.",
     tagline: "La tech, pour tous, en Afrique.",
   },
