@@ -33,7 +33,7 @@ export default function MaintenancePage() {
           </h1>
           <p className="type-headline mt-10 text-title">Le site revient très vite.</p>
           <p className="mt-5 max-w-[56ch] text-lead text-mist">
-            Nous finalisons le programme et les intervenants. La billetterie ouvrira dans les prochains jours : revenez bientôt.
+            Le site est actuellement en maintenance. Revenez dans quelques jours.
           </p>
         </div>
 
