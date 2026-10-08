@@ -56,6 +56,7 @@ export function DaySchedule({ slots, compact = false }: DayScheduleProps) {
               ) : (
                 title
               )}
+              {slot.speakers && <p className="mt-1 text-small">Avec {slot.speakers}</p>}
               {slot.detail && <p className="mt-1 text-small text-muted">{slot.detail}</p>}
             </div>
           </li>

@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 };
 
 /** Talks stack on top of each other while scrolling (sticky, offset per card). */
-function TalkCard({ talk, index }: { talk: Talk; index: number }) {
+function TalkCard({ talk, index, speakers }: { talk: Talk; index: number; speakers?: string }) {
   return (
     <article
       id={talk.id}
@@ -71,9 +71,7 @@ function TalkCard({ talk, index }: { talk: Talk; index: number }) {
           )}
           <div>
             <dt className="type-meta text-muted">Intervenants</dt>
-            <dd className="mt-1">
-              <Pending label="Intervenants">À confirmer</Pending>
-            </dd>
+            <dd className="mt-1">{speakers ?? <Pending label="Intervenants">À confirmer</Pending>}</dd>
           </div>
         </dl>
       </div>
@@ -84,6 +82,8 @@ function TalkCard({ talk, index }: { talk: Talk; index: number }) {
 export default async function ProgrammePage() {
   const days = await getProgramme();
   const talks = [...CONFERENCES, ...PANELS];
+  // Speakers come from the admin, on the slot linked to each talk.
+  const speakersOf = (id: string) => days.flatMap((d) => d.slots).find((s) => s.ref === id && s.speakers)?.speakers;
 
   return (
     <>
@@ -140,7 +140,7 @@ export default async function ProgrammePage() {
             {talks.map((t, i) => (
               <Fragment key={t.id}>
                 {t.id === PANELS[0].id && <span id="panels" aria-hidden="true" className="block h-0 scroll-mt-32" />}
-                <TalkCard talk={t} index={i} />
+                <TalkCard talk={t} index={i} speakers={speakersOf(t.id)} />
               </Fragment>
             ))}
           </div>

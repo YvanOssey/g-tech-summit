@@ -50,6 +50,8 @@ export interface Slot {
   zone: string;
   /** Anchor of the detailed description on /programme */
   ref?: string;
+  /** Confirmed speakers, as typed in the admin (e.g. "Awa Koné, Jean Yao"). */
+  speakers?: string;
 }
 
 export interface Day {

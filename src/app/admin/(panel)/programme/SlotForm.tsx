@@ -79,7 +79,7 @@ export function SlotForm({
         name="speakers"
         defaultValue={slot?.speakers ?? ""}
         error={e?.speakers}
-        hint="Uniquement des intervenants confirmés. Enregistré pour l’équipe, pas encore affiché sur le site."
+        hint="Affiché sur le site (programme). Uniquement des intervenants confirmés, séparés par des virgules. Ex. « Awa Koné (Orange CI), Jean Yao (modérateur) »."
       />
       <Field
         label="Salle (facultatif)"

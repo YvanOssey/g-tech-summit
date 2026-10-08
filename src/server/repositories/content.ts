@@ -59,14 +59,14 @@ async function loadFaq(): Promise<readonly FaqItem[]> {
 /**
  * The two days with their PUBLISHED slots, ordered by start time. Day names,
  * dates and themes stay in content/programme.ts. Rooms are never exposed
- * publicly (zone left empty), speakers are not shown yet.
+ * publicly (zone left empty). Speakers are shown once entered in the admin.
  */
 async function loadProgramme(): Promise<readonly Day[]> {
   if (!hasDatabase) return DAYS;
   try {
     const { data, error } = await createPublicClient()
       .from("programme_slots")
-      .select("day, start_time, end_time, type, title, subtitle, detail, ref")
+      .select("day, start_time, end_time, type, title, subtitle, detail, speakers, ref")
       .eq("published", true)
       .order("day")
       .order("start_time")
@@ -88,6 +88,7 @@ async function loadProgramme(): Promise<readonly Day[]> {
           ...(s.detail ? { detail: s.detail } : {}),
           zone: "",
           ...(s.ref ? { ref: s.ref } : {}),
+          ...(s.speakers?.trim() ? { speakers: s.speakers.trim() } : {}),
         })),
     }));
   } catch (e) {
