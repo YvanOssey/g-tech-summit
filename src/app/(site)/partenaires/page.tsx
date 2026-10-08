@@ -63,7 +63,7 @@ export default async function PartnersPage() {
           <RevealText inView id="titre-logos" lines={["Nos partenaires"]} className="type-headline text-title mt-8" />
 
           <SpotlightGroup>
-            <RevealGroup as="ul" className="mt-12 grid max-w-5xl grid-cols-2 gap-3 lg:gap-4">
+            <RevealGroup as="ul" className="mx-auto mt-12 grid max-w-5xl grid-cols-2 gap-3 lg:gap-4">
               {partners.map((p) => (
                 <RevealItem as="li" effect="flip" key={p.name}>
                   <Tilt max={6}>
