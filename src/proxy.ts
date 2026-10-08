@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { SESSION_COOKIE_OPTIONS, withSessionLifetime } from "@/server/auth/cookie-policy";
 
 /** Admin pages reachable without a session. */
 const PUBLIC_ADMIN_PATHS = ["/admin/login", "/admin/callback", "/admin/mot-de-passe-oublie"];
@@ -25,12 +26,13 @@ export async function proxy(request: NextRequest) {
   let signedIn = false;
   if (url && key) {
     const supabase = createServerClient(url, key, {
+      cookieOptions: SESSION_COOKIE_OPTIONS,
       cookies: {
         getAll: () => request.cookies.getAll(),
         setAll(toSet, headers) {
           for (const { name, value } of toSet) request.cookies.set(name, value);
           response = NextResponse.next({ request });
-          for (const { name, value, options } of toSet) response.cookies.set(name, value, options);
+          for (const { name, value, options } of toSet) response.cookies.set(name, value, withSessionLifetime(options));
           for (const [h, v] of Object.entries(headers ?? {})) response.headers.set(h, v);
         },
       },

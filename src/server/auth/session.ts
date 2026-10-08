@@ -3,14 +3,15 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { requireEnv, supabaseEnv } from "@/server/db/env";
 import type { Database } from "@/server/db/types";
+import { SESSION_COOKIE_OPTIONS, withSessionLifetime } from "./cookie-policy";
 
 /**
  * Supabase client acting AS the signed-in admin: every query goes through Row
  * Level Security with their identity. Create one per request, never share it.
  *
- * Session cookies are HttpOnly, Secure in production and SameSite=Lax (set by
- * @supabase/ssr). Server Components cannot write cookies: there, token
- * refreshes are written by the proxy (src/proxy.ts) instead.
+ * Session cookies: HttpOnly, Secure in production, SameSite=Lax, 12 hours
+ * (see cookie-policy.ts). Server Components cannot write cookies: there,
+ * token refreshes are written by the proxy (src/proxy.ts) instead.
  */
 export async function createSessionClient() {
   const cookieStore = await cookies();
@@ -19,11 +20,12 @@ export async function createSessionClient() {
     requireEnv(supabaseEnv.url, "NEXT_PUBLIC_SUPABASE_URL"),
     requireEnv(supabaseEnv.publishableKey, "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"),
     {
+      cookieOptions: SESSION_COOKIE_OPTIONS,
       cookies: {
         getAll: () => cookieStore.getAll(),
         setAll(toSet) {
           try {
-            for (const { name, value, options } of toSet) cookieStore.set(name, value, options);
+            for (const { name, value, options } of toSet) cookieStore.set(name, value, withSessionLifetime(options));
           } catch {
             // Called from a Server Component: the proxy refreshes the session.
           }
