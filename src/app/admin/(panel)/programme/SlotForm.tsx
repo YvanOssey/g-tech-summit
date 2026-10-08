@@ -79,7 +79,7 @@ export function SlotForm({
         name="speakers"
         defaultValue={slot?.speakers ?? ""}
         error={e?.speakers}
-        hint="Affiché sur le site (programme). Uniquement des intervenants confirmés, séparés par des virgules. Ex. « Awa Koné (Orange CI), Jean Yao (modérateur) »."
+        hint="Pour les conférences, panels et formations, utilisez plutôt la page Intervenants (avec photo) : elle remplace ce champ. Ici, pour les autres créneaux (ex. cérémonie)."
       />
       <Field
         label="Salle (facultatif)"

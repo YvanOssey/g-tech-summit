@@ -4,7 +4,7 @@
 import { fileURLToPath } from "node:url";
 import { CSP_HEADER } from "./src/config/csp.mjs";
 
-// Partner logos uploaded from the admin are served by Supabase Storage.
+// Partner logos and speaker photos uploaded from the admin are served by Supabase Storage.
 const supabaseHost = process.env.NEXT_PUBLIC_SUPABASE_URL ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname : null;
 
 /**
@@ -38,15 +38,18 @@ const nextConfig = {
   },
   experimental: {
     serverActions: {
-      // Admin forms send partner logos (1 MB max): keep room for the form overhead.
-      bodySizeLimit: "1.2mb",
+      // Admin forms send partner logos (1 MB max) and speaker photos (2.5 MB max): keep room for the form overhead.
+      bodySizeLimit: "3mb",
       // Production address, accepted even if the host's proxy rewrites the Host header.
       allowedOrigins: ["summit.ghostech.tech"],
     },
   },
   images: {
     remotePatterns: supabaseHost
-      ? [{ protocol: "https", hostname: supabaseHost, pathname: "/storage/v1/object/public/partners/**" }]
+      ? [
+          { protocol: "https", hostname: supabaseHost, pathname: "/storage/v1/object/public/partners/**" },
+          { protocol: "https", hostname: supabaseHost, pathname: "/storage/v1/object/public/speakers/**" },
+        ]
       : [],
   },
 };

@@ -3,8 +3,10 @@ import { unstable_cache } from "next/cache";
 import { PARTNERS, type Partner } from "@/config/partners";
 import { FAQ, type FaqItem } from "@/content/faq";
 import { DAYS, type Day, type Slot } from "@/content/programme";
+import type { Speaker } from "@/content/speakers";
 import { partnerLogoUrl } from "@/lib/partner-logo";
-import { FAQ_TAG, PARTNERS_TAG, PROGRAMME_TAG } from "@/server/cache-tags";
+import { speakerPhotoUrl } from "@/lib/speaker-photo";
+import { FAQ_TAG, PARTNERS_TAG, PROGRAMME_TAG, SPEAKERS_TAG } from "@/server/cache-tags";
 import { createPublicClient } from "@/server/db/clients";
 import { hasDatabase } from "@/server/db/env";
 
@@ -97,6 +99,38 @@ async function loadProgramme(): Promise<readonly Day[]> {
   }
 }
 
+/**
+ * Published speakers, in the admin order. No file fallback: without the
+ * database (or before migration 0008), the site shows "À confirmer".
+ */
+async function loadSpeakers(): Promise<readonly Speaker[]> {
+  if (!hasDatabase) return [];
+  try {
+    const { data, error } = await createPublicClient()
+      .from("speakers")
+      .select("id, name, role, kind, session_ref, photo_path, photo_width, photo_height")
+      .eq("published", true)
+      .order("position")
+      .order("created_at");
+    if (error || !data) {
+      console.warn(`[content] intervenants indisponibles (${error?.code || error?.message || "aucune donnée"})`);
+      return [];
+    }
+    return data.map((s) => ({
+      id: s.id,
+      name: s.name,
+      role: s.role,
+      kind: s.kind,
+      sessionRef: s.session_ref,
+      photo: s.photo_path && s.photo_width && s.photo_height ? { src: speakerPhotoUrl(s.photo_path), width: s.photo_width, height: s.photo_height } : null,
+    }));
+  } catch (e) {
+    console.warn(`[content] intervenants injoignables (${e instanceof Error ? e.name : "erreur"})`);
+    return [];
+  }
+}
+
+export const getSpeakers = unstable_cache(loadSpeakers, ["speakers"], { tags: [SPEAKERS_TAG], revalidate: 300 });
 export const getProgramme = unstable_cache(loadProgramme, ["programme"], { tags: [PROGRAMME_TAG], revalidate: 300 });
 export const getPartners = unstable_cache(loadPartners, ["partners"], { tags: [PARTNERS_TAG], revalidate: 300 });
 export const getFaq = unstable_cache(loadFaq, ["faq"], { tags: [FAQ_TAG], revalidate: 300 });

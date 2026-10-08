@@ -2,20 +2,25 @@ import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/server/db/types";
 
-type OrderedTable = "faq_items" | "partners";
+type OrderedTable = "faq_items" | "partners" | "speakers";
 
 /**
  * Swaps a row with its neighbour above or below. Positions are renumbered
  * 1…n first, so gaps or duplicates left by earlier edits never block a move.
  * Returns false when the row is already first/last or does not exist.
+ * `session`: speakers are ordered within their session only.
  */
 export async function moveRow(
   db: SupabaseClient<Database>,
   table: OrderedTable,
   id: string,
   direction: "up" | "down",
+  session?: string,
 ): Promise<boolean> {
-  const { data, error } = await db.from(table).select("id, position").order("position").order("created_at");
+  const { data, error } =
+    table === "speakers" && session
+      ? await db.from("speakers").select("id, position").eq("session_ref", session).order("position").order("created_at")
+      : await db.from(table).select("id, position").order("position").order("created_at");
   if (error || !data) throw new Error(`[ordering] ${table}: ${error?.code}`);
 
   const ids = data.map((r) => r.id);

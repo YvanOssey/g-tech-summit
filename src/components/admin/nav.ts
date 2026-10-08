@@ -29,6 +29,7 @@ export const ADMIN_NAV: readonly AdminNavGroup[] = [
     label: "Événement",
     items: [
       { href: "/admin/programme", label: "Programme" },
+      { href: "/admin/intervenants", label: "Intervenants" },
       { href: "/admin/hackathon", label: "Hackathon" },
       { href: "/admin/partenaires", label: "Partenaires" },
     ],

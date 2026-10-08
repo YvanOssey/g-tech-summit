@@ -35,6 +35,7 @@ const ENTITY: Record<string, string> = {
   admin_users: "Administrateurs",
   faq_items: "FAQ",
   partners: "Partenaires",
+  speakers: "Intervenants",
   event_settings: "Paramètres",
   programme_slots: "Programme",
   participants: "Participants",

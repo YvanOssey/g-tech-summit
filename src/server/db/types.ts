@@ -156,6 +156,19 @@ export type PartnerRow = Timestamps & {
   published: boolean;
 };
 
+export type SpeakerRow = Timestamps & {
+  id: string;
+  name: string;
+  role: string | null;
+  kind: "speaker" | "panelist" | "moderator" | "trainer";
+  session_ref: string;
+  photo_path: string | null;
+  photo_width: number | null;
+  photo_height: number | null;
+  position: number;
+  published: boolean;
+};
+
 export type FaqItemRow = Timestamps & {
   id: string;
   question: string;
@@ -211,6 +224,7 @@ export type Database = {
         WithTimestamps | "end_time" | "subtitle" | "detail" | "speakers" | "room" | "ref" | "position" | "published"
       >;
       partners: Table<PartnerRow, WithTimestamps | "website_url" | "category" | "position" | "published">;
+      speakers: Table<SpeakerRow, WithTimestamps | "role" | "kind" | "photo_path" | "photo_width" | "photo_height" | "position" | "published">;
       faq_items: Table<FaqItemRow, WithTimestamps | "position" | "published">;
       event_settings: Table<
         EventSettingsRow,

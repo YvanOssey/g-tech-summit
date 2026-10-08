@@ -14,10 +14,11 @@ import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { RevealText } from "@/components/motion/RevealText";
 import { SpotlightGroup } from "@/components/motion/Spotlight";
 import { DayTabs } from "@/components/programme/DayTabs";
+import { SpeakerGrid, speakerNames } from "@/components/programme/SpeakerGrid";
 import { Accent } from "@/components/ui/Accent";
 import { ButtonLink } from "@/components/ui/Button";
 import { SignalSquare } from "@/components/ui/icons";
-import { getProgramme } from "@/server/repositories/content";
+import { getProgramme, getSpeakers } from "@/server/repositories/content";
 import { Pending } from "@/components/ui/Pending";
 import { Section } from "@/components/ui/Section";
 import { SectionLabel } from "@/components/ui/SectionLabel";
@@ -80,10 +81,17 @@ function TalkCard({ talk, index, speakers }: { talk: Talk; index: number; speake
 }
 
 export default async function ProgrammePage() {
-  const days = await getProgramme();
+  const [programme, speakers] = await Promise.all([getProgramme(), getSpeakers()]);
   const talks = [...CONFERENCES, ...PANELS];
-  // Speakers come from the admin, on the slot linked to each talk.
-  const speakersOf = (id: string) => days.flatMap((d) => d.slots).find((s) => s.ref === id && s.speakers)?.speakers;
+  // Speakers entered in the admin (Intervenants) win over the free text of a slot.
+  const days = programme.map((d) => ({
+    ...d,
+    slots: d.slots.map((s) => {
+      const names = s.ref ? speakerNames(speakers, s.ref) : null;
+      return names ? { ...s, speakers: names } : s;
+    }),
+  }));
+  const speakersOf = (id: string) => days.flatMap((d) => d.slots).find((s) => s.ref === id && s.speakers)?.speakers ?? speakerNames(speakers, id) ?? undefined;
 
   return (
     <>
@@ -201,7 +209,7 @@ export default async function ProgrammePage() {
                   </ul>
                   <p className="mt-auto flex items-center justify-between gap-4 border-t border-dashed border-rule-strong/40 pt-6">
                     <span className="type-meta text-muted">Formateurs</span>
-                    <Pending label="Formateurs">À confirmer</Pending>
+                    {speakerNames(speakers, f.id) ?? <Pending label="Formateurs">À confirmer</Pending>}
                   </p>
                 </RevealItem>
               ))}
@@ -261,6 +269,25 @@ export default async function ProgrammePage() {
           </div>
         </div>
       </Section>
+
+      {/* ── Speakers, with their photo (entered in the admin) ────────── */}
+      {speakers.length > 0 && (
+        <Section tone="stone" id="intervenants" aria-labelledby="titre-intervenants" className="sheet section-standard">
+          <div className="shell">
+            <SectionLabel index="04">Intervenants</SectionLabel>
+            <RevealText
+              inView
+              id="titre-intervenants"
+              label="Ils prennent la parole."
+              lines={["Ils prennent", <span key="p">la <Accent>parole</Accent>.</span>]}
+              className="type-headline text-title mt-8"
+            />
+            <div className="mt-14">
+              <SpeakerGrid speakers={speakers} />
+            </div>
+          </div>
+        </Section>
+      )}
 
       <CtaBand title="Un seul pass pour les deux jours" />
     </>
