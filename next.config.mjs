@@ -2,6 +2,7 @@
 // native Next.js compiler (Hostinger: glibc < 2.29), the WebAssembly fallback
 // cannot load a TypeScript config. See docs/mise-en-ligne.md.
 import { fileURLToPath } from "node:url";
+import { CSP_HEADER } from "./src/config/csp.mjs";
 
 // Partner logos uploaded from the admin are served by Supabase Storage.
 const supabaseHost = process.env.NEXT_PUBLIC_SUPABASE_URL ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname : null;
@@ -9,17 +10,13 @@ const supabaseHost = process.env.NEXT_PUBLIC_SUPABASE_URL ? new URL(process.env.
 /**
  * Security headers on every response:
  * - the site cannot be shown inside another site's frame (clickjacking);
- * - forms only post to this site or to the Genius Pay checkout;
- * - no plugin content, no <base> hijacking, no MIME sniffing;
+ * - Content Security Policy (src/config/csp.mjs, also set as a <meta> tag
+ *   because Hostinger's CDN replaces this header);
+ * - no MIME sniffing;
  * - HTTPS remembered by the browser (ignored on http://localhost).
- * Scripts are not restricted by CSP yet: Next.js and the intro curtain use
- * inline scripts, which would need nonces.
  */
 const SECURITY_HEADERS = [
-  {
-    key: "Content-Security-Policy",
-    value: "frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self' https://geniuspay.ci",
-  },
+  { key: "Content-Security-Policy", value: CSP_HEADER },
   { key: "X-Frame-Options", value: "DENY" },
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },

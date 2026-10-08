@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, IBM_Plex_Mono } from "next/font/google";
 import { EVENT } from "@/config/event";
+import { CSP_META } from "@/config/csp.mjs";
 import { SITE_URL } from "@/config/site";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import "./globals.css";
@@ -41,6 +42,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   // The intro script (IntroCurtain) adds the class "intro-seen" to <html> before hydration.
   return (
     <html lang="fr" className={`${archivo.variable} ${plexMono.variable}`} suppressHydrationWarning>
+      <head>
+        {/* Same policy as the header, which Hostinger's CDN replaces (see csp.mjs). */}
+        <meta httpEquiv="Content-Security-Policy" content={CSP_META} />
+      </head>
       <body>
         {/* Without JavaScript, entrance animations never run: show their content as is. */}
         <noscript>
