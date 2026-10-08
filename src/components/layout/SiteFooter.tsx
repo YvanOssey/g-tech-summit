@@ -14,17 +14,18 @@ export function SiteFooter() {
   return (
     <footer className="theme-ink overflow-hidden border-t border-rule bg-canvas pb-28 text-fg lg:pb-8">
       <div className="shell pt-12 md:pt-14">
-        <div className="grid-12 gap-y-10">
+        {/* Three columns from tablet up: organiser on the left, pages centred, contact against the right edge. */}
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-3">
           {/* Organiser — left */}
-          <div className="col-span-4 md:col-span-3 lg:col-span-4">
+          <div className="col-span-2 md:col-span-1">
             <GhostechLogo width={88} variant="light" />
             <p className="mt-4 max-w-xs text-small text-muted">
               {EVENT.name} {EVENT.year} est organisé par {EVENT.organiser.name}.
             </p>
           </div>
 
-          {/* Links — middle */}
-          <nav aria-label="Pages" className="col-span-2 md:col-span-2 md:col-start-5 lg:col-span-2 lg:col-start-5">
+          {/* Pages — centre */}
+          <nav aria-label="Pages" className="md:justify-self-center md:text-center">
             <p className="type-label">Le site</p>
             <ul className="mt-4 space-y-2 text-small sm:text-body">
               {[...MAIN_NAV, TICKETING].map((item) => (
@@ -37,7 +38,8 @@ export function SiteFooter() {
             </ul>
           </nav>
 
-          <div className="col-span-2 md:col-span-2 lg:col-span-3">
+          {/* Contact — right */}
+          <div className="min-w-0 md:justify-self-end md:text-right">
             <p className="type-label">Contact</p>
             <ul className="mt-4 space-y-2 text-small break-words sm:text-body">
               <li>
