@@ -69,6 +69,8 @@ Mêmes noms que dans `.env.example`. Les valeurs ne doivent jamais être envoyé
 | `GENIUSPAY_API_KEY` | Clé API Genius Pay — **sandbox** pour la recette, **live** pour l'ouverture |
 | `GENIUSPAY_API_SECRET` | Secret API Genius Pay (même mode que la clé) |
 | `GENIUSPAY_WEBHOOK_SECRET` | Secret du webhook (étape 4) |
+| `TURNSTILE_SITE_KEY` | Clé de site Cloudflare Turnstile (étape 5) |
+| `TURNSTILE_SECRET_KEY` | Clé secrète Cloudflare Turnstile (étape 5) |
 | `SMTP_HOST` | `smtp.hostinger.com` |
 | `SMTP_PORT` | `465` |
 | `SMTP_USER` | `billetterie@ghostech.tech` |
@@ -88,7 +90,18 @@ Mêmes noms que dans `.env.example`. Les valeurs ne doivent jamais être envoyé
 
 ---
 
-## 5. Vérifications après déploiement (clés sandbox)
+## 5. Protection anti-robot (Cloudflare Turnstile)
+
+Sans elle, un script peut enchaîner les fausses commandes pour bloquer toutes les places pendant leur réservation (15 minutes).
+
+1. Créer un compte gratuit sur dash.cloudflare.com, puis **Turnstile** → **Add widget**.
+2. Nom : `G-TECH SUMMIT` ; domaine : `summit.ghostech.tech` ; mode : **Managed**.
+3. Copier la **Site Key** dans `TURNSTILE_SITE_KEY` et la **Secret Key** dans `TURNSTILE_SECRET_KEY`, puis relancer l'application.
+4. Admin → **Paramètres** : l'avertissement « protection anti-robot non configurée » disparaît.
+
+---
+
+## 6. Vérifications après déploiement (clés sandbox)
 
 - [ ] `https://summit.ghostech.tech` s'affiche, en HTTPS, sans erreur.
 - [ ] Connexion à `/admin` (et code de double authentification si activée).
@@ -99,7 +112,7 @@ Mêmes noms que dans `.env.example`. Les valeurs ne doivent jamais être envoyé
 
 ---
 
-## 6. Ouverture réelle des ventes
+## 7. Ouverture réelle des ventes
 
 À faire dans cet ordre, le jour de l'ouverture :
 
@@ -113,7 +126,7 @@ Mêmes noms que dans `.env.example`. Les valeurs ne doivent jamais être envoyé
 
 ---
 
-## 7. À surveiller ensuite
+## 8. À surveiller ensuite
 
 - **Domaine `ghostech.tech`** : expire le 7 octobre 2027, renouvellement automatique conseillé.
 - **Boîte e-mail** : essai gratuit jusqu'au **7 novembre 2026**, renouvellement automatique activé — vérifier le moyen de paiement du compte Hostinger.

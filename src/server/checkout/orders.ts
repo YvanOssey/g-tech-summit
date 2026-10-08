@@ -1,14 +1,11 @@
 import "server-only";
 import { randomBytes, randomInt } from "node:crypto";
-import { PASSES, orderTotal, type PassId } from "@/config/passes";
+import { HOLD_MINUTES, PASSES, orderTotal, type PassId } from "@/config/passes";
 import { createServiceClient } from "@/server/db/clients";
 import { sendOrderEmails } from "@/server/email/tickets";
 import type { OrderStatus } from "@/server/db/types";
 import { GeniusPayError, createPayment, getPayment, isSandbox, type GeniusPayStatus } from "@/server/payments/geniuspay";
 import type { CheckoutInput } from "./schema";
-
-/** Places held by an unpaid order (validated by the organisers: 30 minutes). */
-export const HOLD_MINUTES = 30;
 
 const CAPACITIES = Object.fromEntries(Object.values(PASSES).map((p) => [p.id, p.capacity.total])) as Record<PassId, number>;
 
@@ -27,6 +24,7 @@ export type StartResult = { ok: true; checkoutUrl: string } | { ok: false; error
  */
 export async function startOrder(input: CheckoutInput, siteUrl: string): Promise<StartResult> {
   const db = createServiceClient();
+  await releaseEarlierHolds(input.buyer.email, input.buyer.phone);
   const accessToken = randomBytes(32).toString("base64url");
   const total = orderTotal(input.passes);
 
@@ -106,6 +104,32 @@ export async function startOrder(input: CheckoutInput, siteUrl: string): Promise
     console.error(`[checkout] paiement non créé pour ${reference} (${e instanceof GeniusPayError ? e.code : "erreur réseau"})`);
     return { ok: false, error: "Le service de paiement ne répond pas. Aucun montant n’a été prélevé : réessayez dans un instant." };
   }
+}
+
+/**
+ * One buyer holds places for one order at a time: a new order cancels the
+ * same buyer's unpaid orders still on hold (same e-mail or same phone). A
+ * buyer starting again frees their earlier places, and one person cannot
+ * stack orders to block a pass. Should an earlier order be paid anyway, it is
+ * only accepted if places are left, otherwise flagged for refund
+ * (finalize_order).
+ */
+async function releaseEarlierHolds(email: string, phone: string): Promise<void> {
+  const db = createServiceClient();
+  const [byEmail, byPhone] = await Promise.all([
+    db.from("participants").select("id").eq("email", email),
+    db.from("participants").select("id").eq("phone", phone),
+  ]);
+  const ids = [...new Set([...(byEmail.data ?? []), ...(byPhone.data ?? [])].map((p) => p.id))];
+  if (ids.length === 0) return;
+  const { error } = await db
+    .from("orders")
+    .update({ status: "CANCELLED", cancelled_at: new Date().toISOString() })
+    .in("participant_id", ids)
+    .eq("status", "PENDING")
+    .eq("is_test", isSandbox())
+    .gt("expires_at", new Date().toISOString());
+  if (error) console.error(`[checkout] anciennes réservations non libérées (${error.code})`);
 }
 
 /**

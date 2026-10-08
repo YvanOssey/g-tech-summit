@@ -7,7 +7,17 @@ import { saveSettings } from "./actions";
 
 type Settings = Pick<EventSettingsRow, "venue_name" | "venue_address" | "venue_map_url" | "registration_open">;
 
-export function SettingsForm({ settings, checkoutReady, webhookReady }: { settings: Settings; checkoutReady: boolean; webhookReady: boolean }) {
+export function SettingsForm({
+  settings,
+  checkoutReady,
+  webhookReady,
+  captchaReady,
+}: {
+  settings: Settings;
+  checkoutReady: boolean;
+  webhookReady: boolean;
+  captchaReady: boolean;
+}) {
   const [state, action] = useActionState(saveSettings, null);
 
   return (
@@ -44,6 +54,12 @@ export function SettingsForm({ settings, checkoutReady, webhookReady }: { settin
               <p className="border-l-2 border-signal bg-signal/10 px-3 py-2 text-small">
                 Le webhook Genius Pay n’est pas configuré : un paiement n’est confirmé que lorsque l’acheteur revient sur le site. À configurer
                 avant d’ouvrir les ventes réelles.
+              </p>
+            )}
+            {!captchaReady && (
+              <p className="border-l-2 border-signal bg-signal/10 px-3 py-2 text-small">
+                La protection anti-robot (Cloudflare Turnstile) n’est pas configurée : un script pourrait enchaîner les fausses commandes
+                pour bloquer les places. À configurer avant d’ouvrir les ventes réelles.
               </p>
             )}
           </>

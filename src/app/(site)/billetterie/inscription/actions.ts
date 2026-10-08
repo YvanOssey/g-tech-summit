@@ -2,12 +2,13 @@
 
 import { redirect } from "next/navigation";
 import type { FormState } from "@/components/admin/forms";
-import { TEAM_SIZE } from "@/config/passes";
+import { HOLD_MINUTES, TEAM_SIZE } from "@/config/passes";
 import { SITE_URL } from "@/config/site";
 import { startOrder } from "@/server/checkout/orders";
 import { checkoutSchema, parsePassList } from "@/server/checkout/schema";
 import { createServiceClient } from "@/server/db/clients";
 import { isCheckoutReady } from "@/server/payments/readiness";
+import { verifyCaptcha } from "@/server/captcha";
 import { allow, clientIp } from "@/server/rate-limit";
 
 /** Field name in the form for each path of the schema. */
@@ -29,9 +30,15 @@ function typed(formData: FormData): Record<string, string> {
 }
 
 export async function startCheckout(_prev: FormState, formData: FormData): Promise<FormState> {
-  // Each attempt holds places for 30 minutes: 10 attempts per 10 minutes per network.
-  if (!allow(`checkout:${await clientIp()}`, 10, 600_000)) {
+  // Form submissions: 10 per 10 minutes per network.
+  const ip = await clientIp();
+  if (!allow(`checkout:${ip}`, 10, 600_000)) {
     return { error: "Trop de tentatives depuis votre connexion. Patientez quelques minutes avant de réessayer.", values: typed(formData) };
+  }
+
+  // Anti-robot check (Cloudflare Turnstile), before anything touches the database.
+  if (!(await verifyCaptcha(formData.get("cf-turnstile-response"), ip))) {
+    return { error: "La vérification anti-robot a échoué. Patientez un instant puis cliquez de nouveau sur « Payer ».", values: typed(formData) };
   }
 
   const passes = parsePassList(formData.get("passes"));
@@ -65,6 +72,11 @@ export async function startCheckout(_prev: FormState, formData: FormData): Promi
     const fieldErrors: Record<string, string> = {};
     for (const issue of parsed.error.issues) fieldErrors[fieldName(issue.path)] ??= issue.message;
     return { error: "Certains champs sont à corriger.", fieldErrors, values: typed(formData) };
+  }
+
+  // Each order holds places for HOLD_MINUTES: at most 3 orders per network in that time.
+  if (!allow(`hold:${ip}`, 3, HOLD_MINUTES * 60_000)) {
+    return { error: "Plusieurs commandes sont déjà en attente de paiement depuis votre connexion. Finalisez-les ou patientez quelques minutes.", values: typed(formData) };
   }
 
   const result = await startOrder(parsed.data, SITE_URL);

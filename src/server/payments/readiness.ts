@@ -1,4 +1,5 @@
 import "server-only";
+import { isCaptchaConfigured } from "@/server/captcha";
 import { isGeniusPayConfigured } from "./geniuspay";
 
 /**
@@ -13,4 +14,9 @@ export function isCheckoutReady(): boolean {
 /** Without the webhook secret, payments are only confirmed when the buyer comes back to the site. */
 export function hasWebhookSecret(): boolean {
   return Boolean(process.env.GENIUSPAY_WEBHOOK_SECRET?.trim());
+}
+
+/** Without Turnstile keys, the checkout has no anti-robot check. */
+export function hasCaptcha(): boolean {
+  return isCaptchaConfigured();
 }

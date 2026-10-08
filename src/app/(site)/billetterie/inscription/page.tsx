@@ -7,6 +7,7 @@ import { TRACKS } from "@/content/hackathon";
 import { Section } from "@/components/ui/Section";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { formatFCFA } from "@/lib/format";
+import { captchaSiteKey } from "@/server/captcha";
 import { parsePassList } from "@/server/checkout/schema";
 import { isCheckoutReady } from "@/server/payments/readiness";
 import { CheckoutForm } from "./CheckoutForm";
@@ -32,7 +33,7 @@ export default async function CheckoutPage({ searchParams }: { searchParams: Pro
           <SectionLabel>Billetterie · Étape 2</SectionLabel>
           <h1 className="type-headline text-title mt-6">Vos informations</h1>
           <div className="mt-10">
-            <CheckoutForm passes={passes.join(",")} hackathon={hackathon} total={formatFCFA(total)} tracks={TRACKS.map((t) => ({ code: t.code, name: t.name }))} />
+            <CheckoutForm passes={passes.join(",")} hackathon={hackathon} total={formatFCFA(total)} tracks={TRACKS.map((t) => ({ code: t.code, name: t.name }))} captchaSiteKey={captchaSiteKey()} />
           </div>
         </div>
 

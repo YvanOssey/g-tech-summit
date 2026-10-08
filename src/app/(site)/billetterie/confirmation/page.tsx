@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { PASSES } from "@/config/passes";
+import { HOLD_MINUTES, PASSES } from "@/config/passes";
 import { Section } from "@/components/ui/Section";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { ButtonLink } from "@/components/ui/Button";
@@ -126,7 +126,7 @@ export default async function ConfirmationPage({ searchParams }: { searchParams:
         {order.status === "PENDING" && holdOver && (
           <div className="mt-10">
             <p className="text-muted">
-              Le délai de réservation de 30 minutes est passé. Si vous avez payé, la confirmation peut encore arriver : cette page se met à jour.
+              Le délai de réservation de {HOLD_MINUTES} minutes est passé. Si vous avez payé, la confirmation peut encore arriver : cette page se met à jour.
               Sinon, recommencez votre inscription.
             </p>
             <PaymentWatcher token={token} />

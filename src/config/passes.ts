@@ -55,6 +55,12 @@ export const PASSES: Record<PassId, Pass> = {
   },
 };
 
+/**
+ * Places held by an unpaid order. 15 minutes (organisers, 2026-10-08, was 30):
+ * enough to pay by mobile money, and halves how long a fake order blocks places.
+ */
+export const HOLD_MINUTES = 15;
+
 /** People per hackathon team, the buyer included. */
 export const TEAM_SIZE = 5;
 

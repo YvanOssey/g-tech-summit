@@ -1,7 +1,8 @@
 "use client";
 
 import { useActionState } from "react";
-import { TEAM_SIZE } from "@/config/passes";
+import { HOLD_MINUTES, TEAM_SIZE } from "@/config/passes";
+import { Turnstile } from "@/components/ticket/Turnstile";
 import { Field, FormMessage, SubmitButton } from "@/components/admin/forms";
 import { startCheckout } from "./actions";
 
@@ -10,6 +11,8 @@ interface CheckoutFormProps {
   hackathon: boolean;
   total: string;
   tracks: readonly { code: string; name: string }[];
+  /** Cloudflare Turnstile public key; null when the anti-robot check is not configured. */
+  captchaSiteKey: string | null;
 }
 
 function Person({
@@ -47,7 +50,7 @@ function Person({
   );
 }
 
-export function CheckoutForm({ passes, hackathon, total, tracks }: CheckoutFormProps) {
+export function CheckoutForm({ passes, hackathon, total, tracks, captchaSiteKey }: CheckoutFormProps) {
   const [state, action] = useActionState(startCheckout, null);
   const values = state?.values;
   const errors = state?.fieldErrors;
@@ -97,13 +100,14 @@ export function CheckoutForm({ passes, hackathon, total, tracks }: CheckoutFormP
       )}
 
       <div className="space-y-5 border-t border-rule-strong pt-8">
+        {captchaSiteKey && <Turnstile siteKey={captchaSiteKey} resetKey={state} />}
         <FormMessage state={state} />
         <div className="max-w-sm">
           <SubmitButton pendingLabel="Redirection vers le paiement…">{`Payer ${total}`}</SubmitButton>
         </div>
         <p className="text-small text-muted">
           Vous allez être redirigé vers la page de paiement sécurisée Genius Pay (Wave, Orange Money, MTN Money, Moov Money ou carte).
-          Vos places sont réservées 30 minutes.
+          Vos places sont réservées {HOLD_MINUTES} minutes.
         </p>
       </div>
     </form>
