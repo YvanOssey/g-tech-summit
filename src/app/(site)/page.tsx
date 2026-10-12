@@ -418,7 +418,7 @@ export default async function HomePage() {
               icon: "pin",
               k: "Lieu",
               v: settings.venue ? settings.venue.name : EVENT.city,
-              note: settings.venue ? EVENT.country : <Pending label="Lieu exact">Lieu exact à annoncer</Pending>,
+              note: settings.venue ? EVENT.country : <Pending label="Lieu exact">IMPACT HUB ABIDJAN</Pending>,
             },
             { icon: "clock", k: "Accueil", v: "Dès 08:00", note: "Vendredi 18 et samedi 19 décembre" },
             { icon: "ticket", k: "Billet", v: "Nominatif, par e-mail", note: "Avec un QR code unique, scanné à l’entrée." },

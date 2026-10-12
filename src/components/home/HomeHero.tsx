@@ -176,7 +176,7 @@ export function HomeHero({ venue }: HomeHeroProps) {
                 venue.name
               ) : (
                 <>
-                  {EVENT.city} <Pending label="Lieu exact">Lieu exact à annoncer</Pending>
+                  {EVENT.city} <Pending label="Lieu exact">IMPACT HUB ABIDJAN</Pending>
                 </>
               )}
             </p>

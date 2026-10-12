@@ -152,7 +152,7 @@ export default async function PracticalPage() {
           </SpotlightGroup>
           {!venue && (
             <p className="mt-10 text-muted">
-              Lieu exact : <Pending label="Lieu exact">à annoncer</Pending>
+              Lieu exact : <Pending label="Lieu exact">IMPACT HUB ABIDJAN</Pending>
             </p>
           )}
         </div>
