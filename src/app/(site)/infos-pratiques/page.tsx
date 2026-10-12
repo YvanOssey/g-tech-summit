@@ -30,7 +30,7 @@ const JOURNEY = [
   {
     icon: Clock,
     k: "Accueil dès 08:00",
-    v: "Les deux jours. Le samedi 19, inscription sur place aux formations express : 25 à 30 participants par module.",
+    v: "Les deux jours. Le samedi 19, inscription sur place aux formations express",
   },
   {
     icon: ArrowRight,

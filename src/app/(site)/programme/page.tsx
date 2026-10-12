@@ -70,10 +70,7 @@ function TalkCard({ talk, index, speakers }: { talk: Talk; index: number; speake
               <dd className="mt-1 text-small">{talk.format}</dd>
             </div>
           )}
-          <div>
-            <dt className="type-meta text-muted">Intervenants</dt>
-            <dd className="mt-1">{speakers ?? <Pending label="Intervenants">À confirmer</Pending>}</dd>
-          </div>
+          
         </dl>
       </div>
     </article>
@@ -207,10 +204,7 @@ export default async function ProgrammePage() {
                       </li>
                     ))}
                   </ul>
-                  <p className="mt-auto flex items-center justify-between gap-4 border-t border-dashed border-rule-strong/40 pt-6">
-                    <span className="type-meta text-muted">Formateurs</span>
-                    {speakerNames(speakers, f.id) ?? <Pending label="Formateurs">À confirmer</Pending>}
-                  </p>
+                  
                 </RevealItem>
               ))}
             </RevealGroup>

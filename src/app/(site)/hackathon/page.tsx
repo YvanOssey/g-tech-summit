@@ -190,22 +190,6 @@ export default async function HackathonPage() {
           </SpotlightGroup>
 
           <div className="grid-12 mt-16 gap-y-12">
-            <div className="col-span-4 md:col-span-4 lg:col-span-5">
-              <h3 className="type-headline text-heading">Jury</h3>
-              <div className="mt-6">
-                {s.jury?.length ? (
-                  <ul className="space-y-2">
-                    {s.jury.map((j) => (
-                      <li key={j}>{j}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  <Pending variant="block" label="Jury">
-                    Composition du jury à annoncer
-                  </Pending>
-                )}
-              </div>
-            </div>
             <div className="col-span-4 md:col-span-4 lg:col-span-6 lg:col-start-7">
               <h3 className="type-headline text-heading">Récompenses</h3>
               <p className="mt-3 text-muted">Les meilleures équipes bénéficieront :</p>
