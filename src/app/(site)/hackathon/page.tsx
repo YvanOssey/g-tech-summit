@@ -402,23 +402,28 @@ export default async function HackathonPage() {
             </p>
           </Reveal>
 
-          {/* Partner rewards: not confirmed yet, shown frozen and greyed out (only with "Informations à venir" on). */}
-          {show && (
-            <Reveal className="mt-3 lg:mt-4">
-              <div
-                aria-disabled="true"
-                className="panel flex select-none flex-wrap items-center justify-between gap-x-6 gap-y-3 p-6 opacity-50 sm:p-8"
-              >
-                <div className="flex items-center gap-4">
-                  <Lock className="size-8 text-muted" />
+          {/* Partner rewards (Simplon, Genius Pay): not revealed yet, always shown frozen and greyed out. */}
+          <Reveal className="mt-3 lg:mt-4">
+            <div
+              aria-disabled="true"
+              className="panel flex select-none flex-wrap items-center justify-between gap-x-6 gap-y-3 p-6 opacity-50 sm:p-8"
+            >
+              <div className="flex items-center gap-4">
+                <Lock className="size-8 text-muted" />
+                <div>
                   <h3 className="type-headline text-heading leading-tight text-muted">
                     Récompenses partenaires
                   </h3>
+                  <p className="mt-1 text-small text-muted">
+                    Simplon · Genius Pay
+                  </p>
                 </div>
-                <Pending label="Récompenses partenaires" />
               </div>
-            </Reveal>
-          )}
+              <Pending label="Récompenses partenaires">
+                À découvrir bientôt
+              </Pending>
+            </div>
+          </Reveal>
         </div>
       </Section>
 

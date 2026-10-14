@@ -66,7 +66,7 @@ export const TRACK_CAPACITY: Record<string, number> = { "01": 5, "02": 5 };
  * Places held by an unpaid order. 15 minutes (organisers, 2026-10-08, was 30):
  * enough to pay by mobile money, and halves how long a fake order blocks places.
  */
-export const HOLD_MINUTES = 15;
+export const HOLD_MINUTES = 5;
 
 /** People per hackathon team, the buyer included. */
 export const TEAM_SIZE = 5;
