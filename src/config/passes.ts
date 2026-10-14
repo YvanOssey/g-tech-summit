@@ -7,6 +7,7 @@
  * - Pass En ligne     5 000 FCFA — 100 places
  * - Pass Présentiel  10 000 FCFA — 40 places   (id "event", kept so ?pass=event links still work)
  * - Pass Hackathon   15 000 FCFA per TEAM — 10 teams of 5 people (team size changed on 2026-10-07)
+ *   Two Cups, 5 teams each (see TRACK_CAPACITY): AFRO DEV CUP and CYBER CUP.
  * Numbers of passes already sold live in settings (`getEventSettings().sold`).
  */
 export type PassId = "online" | "event" | "hackathon";
@@ -54,6 +55,12 @@ export const PASSES: Record<PassId, Pass> = {
     summary: "Par équipe de 5 personnes, chacune avec accès à l’événement. Une thématique par équipe.",
   },
 };
+
+/**
+ * Teams per hackathon Cup. Keys are the track codes of src/content/hackathon.ts:
+ * "01" = CYBER CUP, "02" = AFRO DEV CUP. The sum must equal PASSES.hackathon.capacity.total.
+ */
+export const TRACK_CAPACITY: Record<string, number> = { "01": 5, "02": 5 };
 
 /**
  * Places held by an unpaid order. 15 minutes (organisers, 2026-10-08, was 30):

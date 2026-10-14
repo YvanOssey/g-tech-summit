@@ -12,10 +12,17 @@ import { isCheckoutReady } from "@/server/payments/readiness";
 
 export const metadata: Metadata = {
   title: "Billetterie",
-  description: "Pass En ligne 5 000 FCFA, Pass Présentiel 10 000 FCFA, Pass Hackathon 15 000 FCFA par équipe. Paiement via Wave, billet nominatif envoyé par e-mail.",
+  description:
+    "Pass En ligne 5 000 FCFA, Pass Présentiel 10 000 FCFA, Pass Hackathon 15 000 FCFA par équipe. Paiement via Wave, billet nominatif envoyé par e-mail.",
 };
 
-const STEPS = ["Choisir", "Vos informations", "Récapitulatif", "Paiement Wave", "Billet par e-mail"] as const;
+const STEPS = [
+  "Choisir",
+  "Vos informations",
+  "Récapitulatif",
+  "Paiement Wave",
+  "Billet par e-mail",
+] as const;
 
 function parsePass(value: string | string[] | undefined): PassId[] {
   const v = Array.isArray(value) ? value[0] : value;
@@ -27,7 +34,10 @@ export default async function TicketingPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const [{ pass }, settings] = await Promise.all([searchParams, getEventSettings()]);
+  const [{ pass }, settings] = await Promise.all([
+    searchParams,
+    getEventSettings(),
+  ]);
   const initial = parsePass(pass);
   // Online sale only when registrations are open AND payment can be taken.
   const open = settings.registrationOpen && isCheckoutReady();
@@ -40,10 +50,19 @@ export default async function TicketingPage({
           <h1 className="type-headline text-display mt-6 md:mt-8">
             Choisissez <Accent>votre pass</Accent>
           </h1>
-          <ol className="mt-10 flex flex-wrap gap-x-6 gap-y-3 border-t border-rule-strong pt-5" aria-label="Étapes de l’inscription">
+          <ol
+            className="mt-10 flex flex-wrap gap-x-6 gap-y-3 border-t border-rule-strong pt-5"
+            aria-label="Étapes de l’inscription"
+          >
             {STEPS.map((step, i) => (
-              <li key={step} className={`flex items-center gap-2 text-small ${i === 0 ? "font-semibold" : "text-muted"}`} aria-current={i === 0 ? "step" : undefined}>
-                <span className={`type-meta flex size-6 items-center justify-center ${i === 0 ? "bg-ink text-paper" : "border border-rule-strong"}`}>
+              <li
+                key={step}
+                className={`flex items-center gap-2 text-small ${i === 0 ? "font-semibold" : "text-muted"}`}
+                aria-current={i === 0 ? "step" : undefined}
+              >
+                <span
+                  className={`type-meta flex size-6 items-center justify-center ${i === 0 ? "bg-ink text-paper" : "border border-rule-strong"}`}
+                >
                   {i + 1}
                 </span>
                 {step}
@@ -57,34 +76,47 @@ export default async function TicketingPage({
         <div className="shell">
           <h2 className="sr-only">Les trois pass</h2>
           {open ? (
-            <CheckoutStart key={initial.join()} initial={initial} sold={settings.sold} />
+            <CheckoutStart
+              key={initial.join()}
+              initial={initial}
+              sold={settings.sold}
+              trackSold={settings.soldByTrack}
+            />
           ) : (
             <>
-              <PassSelector key={initial.join()} initial={initial} sold={settings.sold} />
+              <PassSelector
+                key={initial.join()}
+                initial={initial}
+                sold={settings.sold}
+                trackSold={settings.soldByTrack}
+              />
 
               <div className="mt-12 grid gap-8 border-t border-rule-strong pt-8 lg:grid-cols-[1fr_auto] lg:items-start">
-              <div className="max-w-2xl">
-                <p className="type-headline text-heading">Les inscriptions en ligne ouvrent prochainement</p>
-                <p className="mt-4 text-muted">
-                  Le paiement se fera directement sur ce site via Wave, sans frais ajoutés au prix affiché. Votre billet
-                  nominatif vous sera envoyé par e-mail dès la confirmation du paiement. Pour être informé de l’ouverture,
-                  écrivez-nous.
-                </p>
+                <div className="max-w-2xl">
+                  <p className="type-headline text-heading">
+                    Les inscriptions en ligne ouvrent prochainement
+                  </p>
+                  <p className="mt-4 text-muted">
+                    Le paiement se fera directement sur ce site via Wave, sans
+                    frais ajoutés au prix affiché. Votre billet nominatif vous
+                    sera envoyé par e-mail dès la confirmation du paiement. Pour
+                    être informé de l’ouverture, écrivez-nous.
+                  </p>
+                </div>
+                <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
+                  <button
+                    type="button"
+                    disabled
+                    aria-disabled="true"
+                    className="min-h-12 cursor-not-allowed rounded-pill bg-stone px-6 font-semibold text-grey"
+                  >
+                    Continuer — bientôt disponible
+                  </button>
+                  <ButtonLink href={whatsappUrl} variant="link">
+                    Être prévenu sur WhatsApp
+                  </ButtonLink>
+                </div>
               </div>
-              <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
-                <button
-                  type="button"
-                  disabled
-                  aria-disabled="true"
-                  className="min-h-12 cursor-not-allowed rounded-pill bg-stone px-6 font-semibold text-grey"
-                >
-                  Continuer — bientôt disponible
-                </button>
-                <ButtonLink href={whatsappUrl} variant="link">
-                  Être prévenu sur WhatsApp
-                </ButtonLink>
-              </div>
-            </div>
             </>
           )}
         </div>

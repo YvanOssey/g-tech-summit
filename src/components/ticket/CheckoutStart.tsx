@@ -11,13 +11,21 @@ import { PassSelector } from "./PassSelector";
  * link to step 2 carrying the selection (?pass=hackathon). The server
  * validates the selection again and recomputes the total.
  */
-export function CheckoutStart({ initial, sold }: { initial: readonly PassId[]; sold?: Partial<Record<PassId, number>> }) {
+export function CheckoutStart({
+  initial,
+  sold,
+  trackSold,
+}: {
+  initial: readonly PassId[];
+  sold?: Partial<Record<PassId, number>>;
+  trackSold?: Record<string, number>;
+}) {
   const [selection, setSelection] = useState<PassId[]>([...initial]);
   const empty = selection.length === 0;
 
   return (
     <>
-      <PassSelector initial={initial} sold={sold} onChange={setSelection} />
+      <PassSelector initial={initial} sold={sold} trackSold={trackSold} onChange={setSelection} />
       <div className="mt-10 flex flex-wrap items-center justify-between gap-6 border-t border-rule-strong pt-8">
         <p className="max-w-xl text-muted">
           Étape suivante : vos informations, puis le paiement sécurisé. Votre billet nominatif vous est remis dès la confirmation du

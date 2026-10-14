@@ -29,16 +29,15 @@ export interface Track {
 export const TRACKS: readonly Track[] = [
   {
     code: "01",
-    name: "Cybersécurité & Réseaux",
-    claim: "Sécuriser et connecter l’Afrique numérique",
-    description:
-      "Protéger les systèmes, réseaux et données contre les cybermenaces, et imaginer des infrastructures et des solutions réseau adaptées aux réalités africaines.",
+    name: "CYBER CUP",
+    claim: "Défendre le numérique : sécuriser les infrastructures de demain",
+    description: "Cybersécurité · Réseaux · Cloud",
   },
   {
     code: "02",
-    name: "Développement & IA",
-    claim: "Innover pour l’impact social africain",
-    description: "Concevoir des applications web, mobile et IA utiles aux populations et aux entreprises africaines.",
+    name: "AFRO DEV CUP",
+    claim: "Innover pour l’Afrique : du code à l’impact",
+    description: "Développement logiciel · Intelligence artificielle",
   },
 ];
 

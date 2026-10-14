@@ -21,9 +21,10 @@ export async function loadEventSettings(fallback: EventSettings): Promise<EventS
 
   try {
     const db = createPublicClient();
-    const [settings, sales] = await Promise.all([
+    const [settings, sales, trackSales] = await Promise.all([
       db.from("event_settings").select(PUBLIC_COLUMNS).eq("id", 1).maybeSingle(),
       db.rpc("pass_sales"),
+      db.rpc("track_sales"),
     ]);
     if (settings.error || sales.error || !settings.data) {
       console.warn(`[settings] base indisponible, valeurs par défaut utilisées (${settings.error?.code || sales.error?.code || settings.error?.message || sales.error?.message || "ligne absente"})`);
@@ -34,9 +35,18 @@ export async function loadEventSettings(fallback: EventSettings): Promise<EventS
     const sold = { ...fallback.sold };
     for (const row of sales.data ?? []) sold[row.pass_id] = Number(row.sold);
 
+    // Per-Cup counts: if this call alone fails, only the Cup gauges fall back to 0.
+    const soldByTrack = { ...fallback.soldByTrack };
+    if (trackSales.error) {
+      console.warn(`[settings] compteurs par Cup indisponibles (${trackSales.error.code || trackSales.error.message})`);
+    } else {
+      for (const row of trackSales.data ?? []) soldByTrack[row.track_code] = Number(row.sold);
+    }
+
     return {
       venue: s.venue_name && s.venue_address ? { name: s.venue_name, address: s.venue_address, mapUrl: s.venue_map_url ?? undefined } : null,
       sold,
+      soldByTrack,
       registrationOpen: s.registration_open,
       showUpcoming: s.show_upcoming === true,
       hackathon: {

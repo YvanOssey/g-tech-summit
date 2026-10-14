@@ -12,13 +12,15 @@ interface PassSelectorProps {
   onChange?: (selection: PassId[]) => void;
   /** Passes already sold, for the registration gauges. */
   sold?: Partial<Record<PassId, number>>;
+  /** Hackathon teams registered per Cup (track code → count). */
+  trackSold?: Record<string, number>;
 }
 
 /**
  * Step 1 of registration: one participant picks one pass (passes do not combine).
  * The total shown here is informative — the server recomputes it from `config/passes`.
  */
-export function PassSelector({ initial = ["event"], onChange, sold }: PassSelectorProps) {
+export function PassSelector({ initial = ["event"], onChange, sold, trackSold }: PassSelectorProps) {
   const [selection, setSelection] = useState<PassId[]>([...initial]);
   const reduce = useReducedMotion();
   const total = orderTotal(selection);
@@ -52,6 +54,7 @@ export function PassSelector({ initial = ["event"], onChange, sold }: PassSelect
                 index={i + 1}
                 selected={checked}
                 sold={sold?.[id]}
+                trackSold={id === "hackathon" ? trackSold : undefined}
                 className="transition-transform duration-(--duration-micro) ease-out-quart group-hover:-translate-y-0.5"
               >
                 <span

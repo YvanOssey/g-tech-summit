@@ -247,6 +247,7 @@ export type Database = {
     Views: Record<string, never>;
     Functions: {
       pass_sales: { Args: Record<string, never>; Returns: { pass_id: PassId; sold: number }[] };
+      track_sales: { Args: Record<string, never>; Returns: { track_code: string; sold: number }[] };
       is_admin: { Args: Record<string, never>; Returns: boolean };
       is_super_admin: { Args: Record<string, never>; Returns: boolean };
       create_order: { Args: { p_order: Record<string, unknown>; p_capacities: Record<string, number>; p_hold_minutes: number }; Returns: string };

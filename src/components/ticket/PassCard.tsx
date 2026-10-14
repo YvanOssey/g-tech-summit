@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import type { Pass, PassId } from "@/config/passes";
+import { TRACK_CAPACITY, type Pass, type PassId } from "@/config/passes";
+import { TRACKS } from "@/content/hackathon";
 import { formatAmount } from "@/lib/format";
 import { CapacityGauge } from "./CapacityGauge";
 
@@ -15,6 +16,8 @@ interface PassCardProps {
   selected?: boolean;
   /** Passes already sold — shows the registration gauge when given. */
   sold?: number;
+  /** Hackathon only: teams registered per Cup (track code → count). Shows one gauge per Cup. */
+  trackSold?: Record<string, number>;
   className?: string;
 }
 
@@ -23,7 +26,7 @@ interface PassCardProps {
  * the e-mailed ticket and the printed badge.
  * En ligne & Présentiel = paper tickets, Hackathon = ink ticket — they read apart at a glance, even in print.
  */
-export function PassCard({ pass, index, children, selected, sold, className = "" }: PassCardProps) {
+export function PassCard({ pass, index, children, selected, sold, trackSold, className = "" }: PassCardProps) {
   const dark = pass.id === "hackathon";
   const surface = dark ? "bg-ink text-paper" : "bg-(--pass-surface) text-ink";
   const muted = dark ? "text-mist" : "text-smoke";
@@ -56,8 +59,17 @@ export function PassCard({ pass, index, children, selected, sold, className = ""
           <p className={`text-small leading-normal ${muted}`}>{pass.summary}</p>
         </div>
 
-        {sold !== undefined && (
-          <CapacityGauge sold={sold} total={pass.capacity.total} unit={pass.capacity.unit} dark={dark} />
+        {pass.id === "hackathon" && trackSold ? (
+          <div className="space-y-4">
+            {TRACKS.map((t) => (
+              <div key={t.code}>
+                <p className={`type-meta mb-2 ${muted}`}>{t.name}</p>
+                <CapacityGauge sold={trackSold[t.code] ?? 0} total={TRACK_CAPACITY[t.code] ?? 0} unit="équipes" dark={dark} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          sold !== undefined && <CapacityGauge sold={sold} total={pass.capacity.total} unit={pass.capacity.unit} dark={dark} />
         )}
       </div>
 

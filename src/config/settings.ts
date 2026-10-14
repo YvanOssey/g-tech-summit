@@ -24,6 +24,8 @@ export interface EventSettings {
    * 0 until registrations open; updated from the admin / orders later.
    */
   sold: Record<PassId, number>;
+  /** Hackathon teams registered per Cup, by track code ("01" CYBER CUP, "02" AFRO DEV CUP). */
+  soldByTrack: Record<string, number>;
   /** Online registration + payment. Stays false until Genius Pay is connected and tested. */
   registrationOpen: boolean;
   /**
@@ -47,6 +49,7 @@ export interface EventSettings {
 const DEFAULT_SETTINGS: EventSettings = {
   venue: null,
   sold: { online: 0, event: 0, hackathon: 0 },
+  soldByTrack: { "01": 0, "02": 0 },
   registrationOpen: false,
   showUpcoming: false,
   hackathon: {

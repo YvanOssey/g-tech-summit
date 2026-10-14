@@ -1,6 +1,13 @@
 import "server-only";
 import { randomBytes, randomInt } from "node:crypto";
-import { HOLD_MINUTES, PASSES, orderTotal, type PassId } from "@/config/passes";
+import {
+  HOLD_MINUTES,
+  PASSES,
+  TRACK_CAPACITY,
+  orderTotal,
+  type PassId,
+} from "@/config/passes";
+import { TRACKS } from "@/content/hackathon";
 import { createServiceClient } from "@/server/db/clients";
 import { sendOrderEmails } from "@/server/email/tickets";
 import type { OrderStatus } from "@/server/db/types";
@@ -15,7 +22,18 @@ import {
 } from "@/server/payments/geniuspay";
 import type { CheckoutInput } from "./schema";
 
-const CAPACITIES = Object.fromEntries(Object.values(PASSES).map((p) => [p.id, p.capacity.total])) as Record<PassId, number>;
+/** Capacities sent to the database: one per pass, plus one per hackathon Cup ("hackathon_01", "hackathon_02"). */
+const CAPACITIES: Record<string, number> = {
+  ...Object.fromEntries(
+    Object.values(PASSES).map((p) => [p.id, p.capacity.total]),
+  ),
+  ...Object.fromEntries(
+    Object.entries(TRACK_CAPACITY).map(([code, places]) => [
+      `hackathon_${code}`,
+      places,
+    ]),
+  ),
+};
 
 /** GTS- + 6 characters without look-alikes (0/O, 1/I/L). */
 function newReference(): string {
@@ -23,14 +41,19 @@ function newReference(): string {
   return `GTS-${Array.from({ length: 6 }, () => alphabet[randomInt(alphabet.length)]).join("")}`;
 }
 
-export type StartResult = { ok: true; checkoutUrl: string } | { ok: false; error: string };
+export type StartResult =
+  | { ok: true; checkoutUrl: string }
+  | { ok: false; error: string };
 
 /**
  * Creates the order (places checked and held atomically in the database),
  * then the Genius Pay checkout. Prices and the total come from passes.ts,
  * never from the browser.
  */
-export async function startOrder(input: CheckoutInput, siteUrl: string): Promise<StartResult> {
+export async function startOrder(
+  input: CheckoutInput,
+  siteUrl: string,
+): Promise<StartResult> {
   const db = createServiceClient();
   await releaseEarlierHolds(input.buyer.email, input.buyer.phone);
   const accessToken = randomBytes(32).toString("base64url");
@@ -43,7 +66,11 @@ export async function startOrder(input: CheckoutInput, siteUrl: string): Promise
         members: [
           // Captain not asked online: can be set later from the admin.
           { is_buyer: true, is_captain: false },
-          ...input.team.teammates.map((t) => ({ is_buyer: false, is_captain: false, ...t })),
+          ...input.team.teammates.map((t) => ({
+            is_buyer: false,
+            is_captain: false,
+            ...t,
+          })),
         ],
       }
     : null;
@@ -59,23 +86,46 @@ export async function startOrder(input: CheckoutInput, siteUrl: string): Promise
         is_test: isSandbox(),
         total,
         buyer: input.buyer,
-        items: input.passes.map((id) => ({ pass_id: id, unit_price: PASSES[id].price })),
+        items: input.passes.map((id) => ({
+          pass_id: id,
+          unit_price: PASSES[id].price,
+        })),
         team,
       },
       p_capacities: CAPACITIES,
       p_hold_minutes: HOLD_MINUTES,
     });
     if (error?.message.startsWith("SOLD_OUT:")) {
-      const pass = error.message.split(":")[1] as PassId;
-      return { ok: false, error: `Il n’y a plus de place pour le ${PASSES[pass]?.name ?? "pass choisi"}.` };
+      const [, passId, trackCode] = error.message.split(":");
+      const cup = TRACKS.find((t) => t.code === trackCode);
+      if (cup) {
+        return {
+          ok: false,
+          error: `La ${cup.name} est complète : les ${TRACK_CAPACITY[cup.code]} équipes sont déjà inscrites. Choisissez l’autre Cup si elle a encore de la place.`,
+        };
+      }
+      const pass = passId as PassId;
+      return {
+        ok: false,
+        error: `Il n’y a plus de place pour le ${PASSES[pass]?.name ?? "pass choisi"}.`,
+      };
     }
     if (error && error.code !== "23505") {
       console.error(`[checkout] commande non créée (${error.code})`);
-      return { ok: false, error: "Votre commande n’a pas pu être enregistrée. Réessayez dans un instant." };
+      return {
+        ok: false,
+        error:
+          "Votre commande n’a pas pu être enregistrée. Réessayez dans un instant.",
+      };
     }
     orderId = data ?? null; // 23505 = reference already used: try another one
   }
-  if (!orderId) return { ok: false, error: "Votre commande n’a pas pu être enregistrée. Réessayez dans un instant." };
+  if (!orderId)
+    return {
+      ok: false,
+      error:
+        "Votre commande n’a pas pu être enregistrée. Réessayez dans un instant.",
+    };
 
   const back = `${siteUrl}/billetterie/confirmation?c=${accessToken}`;
   try {
@@ -83,12 +133,17 @@ export async function startOrder(input: CheckoutInput, siteUrl: string): Promise
       amount: total,
       description: `G-TECH SUMMIT 2026 — ${input.passes.map((id) => PASSES[id].name).join(" + ")} — ${reference}`,
       externalReference: reference,
-      customer: { name: `${input.buyer.first_name} ${input.buyer.last_name}`, email: input.buyer.email, phone: input.buyer.phone },
+      customer: {
+        name: `${input.buyer.first_name} ${input.buyer.last_name}`,
+        email: input.buyer.email,
+        phone: input.buyer.phone,
+      },
       successUrl: back,
       errorUrl: back,
     });
     const checkoutUrl = payment.checkout_url ?? "";
-    if (!isGeniusPayCheckoutUrl(checkoutUrl)) throw new GeniusPayError("UNEXPECTED_CHECKOUT_URL", 0);
+    if (!isGeniusPayCheckoutUrl(checkoutUrl))
+      throw new GeniusPayError("UNEXPECTED_CHECKOUT_URL", 0);
 
     const saved = await db.from("payments").insert({
       order_id: orderId,
@@ -102,15 +157,26 @@ export async function startOrder(input: CheckoutInput, siteUrl: string): Promise
     });
     // Without this row the payment could never be matched to the order: stop before the buyer pays.
     if (saved.error) {
-      console.error(`[checkout] paiement ${payment.reference} non enregistré (${saved.error.code}: ${saved.error.message})`);
+      console.error(
+        `[checkout] paiement ${payment.reference} non enregistré (${saved.error.code}: ${saved.error.message})`,
+      );
       throw new GeniusPayError("PAYMENT_NOT_RECORDED", 0);
     }
     return { ok: true, checkoutUrl };
   } catch (e) {
     // Free the places straight away.
-    await db.from("orders").update({ status: "CANCELLED", cancelled_at: new Date().toISOString() }).eq("id", orderId);
-    console.error(`[checkout] paiement non créé pour ${reference} (${e instanceof GeniusPayError ? e.code : "erreur réseau"})`);
-    return { ok: false, error: "Le service de paiement ne répond pas. Aucun montant n’a été prélevé : réessayez dans un instant." };
+    await db
+      .from("orders")
+      .update({ status: "CANCELLED", cancelled_at: new Date().toISOString() })
+      .eq("id", orderId);
+    console.error(
+      `[checkout] paiement non créé pour ${reference} (${e instanceof GeniusPayError ? e.code : "erreur réseau"})`,
+    );
+    return {
+      ok: false,
+      error:
+        "Le service de paiement ne répond pas. Aucun montant n’a été prélevé : réessayez dans un instant.",
+    };
   }
 }
 
@@ -122,13 +188,20 @@ export async function startOrder(input: CheckoutInput, siteUrl: string): Promise
  * only accepted if places are left, otherwise flagged for refund
  * (finalize_order).
  */
-async function releaseEarlierHolds(email: string, phone: string): Promise<void> {
+async function releaseEarlierHolds(
+  email: string,
+  phone: string,
+): Promise<void> {
   const db = createServiceClient();
   const [byEmail, byPhone] = await Promise.all([
     db.from("participants").select("id").eq("email", email),
     db.from("participants").select("id").eq("phone", phone),
   ]);
-  const ids = [...new Set([...(byEmail.data ?? []), ...(byPhone.data ?? [])].map((p) => p.id))];
+  const ids = [
+    ...new Set(
+      [...(byEmail.data ?? []), ...(byPhone.data ?? [])].map((p) => p.id),
+    ),
+  ];
   if (ids.length === 0) return;
   const { error } = await db
     .from("orders")
@@ -137,7 +210,10 @@ async function releaseEarlierHolds(email: string, phone: string): Promise<void> 
     .eq("status", "PENDING")
     .eq("is_test", isSandbox())
     .gt("expires_at", new Date().toISOString());
-  if (error) console.error(`[checkout] anciennes réservations non libérées (${error.code})`);
+  if (error)
+    console.error(
+      `[checkout] anciennes réservations non libérées (${error.code})`,
+    );
 }
 
 /**
@@ -145,9 +221,15 @@ async function releaseEarlierHolds(email: string, phone: string): Promise<void> 
  * Never trusts the browser nor the webhook body: the API is the source.
  * Safe to call any number of times. Returns the order status afterwards.
  */
-export async function syncOrder(orderId: string): Promise<{ status: OrderStatus; changed: boolean }> {
+export async function syncOrder(
+  orderId: string,
+): Promise<{ status: OrderStatus; changed: boolean }> {
   const db = createServiceClient();
-  const { data: order } = await db.from("orders").select("id, reference, status, total, refund_required").eq("id", orderId).maybeSingle();
+  const { data: order } = await db
+    .from("orders")
+    .select("id, reference, status, total, refund_required")
+    .eq("id", orderId)
+    .maybeSingle();
   if (!order) throw new Error("[checkout] commande introuvable");
 
   const { data: payment } = await db
@@ -157,7 +239,8 @@ export async function syncOrder(orderId: string): Promise<{ status: OrderStatus;
     .order("created_at", { ascending: false })
     .limit(1)
     .maybeSingle();
-  if (!payment?.provider_reference || order.status === "REFUNDED") return { status: order.status, changed: false };
+  if (!payment?.provider_reference || order.status === "REFUNDED")
+    return { status: order.status, changed: false };
 
   const gp = await getPayment(payment.provider_reference);
 
@@ -174,8 +257,14 @@ export async function syncOrder(orderId: string): Promise<{ status: OrderStatus;
 
   if (gp.status === "completed") {
     // Same amount, in CFA francs, for this very order: otherwise the order is not validated.
-    if (gp.amount !== order.total || gp.currency !== "XOF" || paymentOrderReference(gp) !== order.reference) {
-      console.error(`[checkout] ${order.reference} : montant, devise ou référence Genius Pay incohérents, commande non validée`);
+    if (
+      gp.amount !== order.total ||
+      gp.currency !== "XOF" ||
+      paymentOrderReference(gp) !== order.reference
+    ) {
+      console.error(
+        `[checkout] ${order.reference} : montant, devise ou référence Genius Pay incohérents, commande non validée`,
+      );
       return { status: order.status, changed: false };
     }
     const { data: result, error } = await db.rpc("finalize_order", {
@@ -183,17 +272,36 @@ export async function syncOrder(orderId: string): Promise<{ status: OrderStatus;
       p_completed_at: gp.completed_at ?? new Date().toISOString(),
       p_capacities: CAPACITIES,
     });
-    if (error) throw new Error(`[checkout] validation impossible (${error.code})`);
-    if (result === "no_place") console.warn(`[checkout] ${order.reference} payée sans place restante : à rembourser`);
+    if (error)
+      throw new Error(`[checkout] validation impossible (${error.code})`);
+    if (result === "no_place")
+      console.warn(
+        `[checkout] ${order.reference} payée sans place restante : à rembourser`,
+      );
     // Tickets by e-mail, in the background: a mail failure never blocks the order (admins can re-send).
     if (result === "paid") {
-      void sendOrderEmails(order.id).catch((e) => console.error(`[email] billets de ${order.reference} non envoyés (${e instanceof Error ? e.message.slice(0, 120) : "erreur"})`));
+      void sendOrderEmails(order.id).catch((e) =>
+        console.error(
+          `[email] billets de ${order.reference} non envoyés (${e instanceof Error ? e.message.slice(0, 120) : "erreur"})`,
+        ),
+      );
     }
-    const { data: after } = await db.from("orders").select("status").eq("id", order.id).single();
-    return { status: after?.status ?? order.status, changed: result !== "already_paid" };
+    const { data: after } = await db
+      .from("orders")
+      .select("status")
+      .eq("id", order.id)
+      .single();
+    return {
+      status: after?.status ?? order.status,
+      changed: result !== "already_paid",
+    };
   }
 
-  const next: Partial<Record<GeniusPayStatus, OrderStatus>> = { failed: "FAILED", cancelled: "CANCELLED", refunded: "REFUNDED" };
+  const next: Partial<Record<GeniusPayStatus, OrderStatus>> = {
+    failed: "FAILED",
+    cancelled: "CANCELLED",
+    refunded: "REFUNDED",
+  };
   const target = next[gp.status ?? "pending"];
   if (target && (order.status === "PENDING" || target === "REFUNDED")) {
     const now = new Date().toISOString();
@@ -201,7 +309,9 @@ export async function syncOrder(orderId: string): Promise<{ status: OrderStatus;
       .from("orders")
       .update({
         status: target,
-        ...(target === "REFUNDED" ? { refunded_at: now, refund_required: false } : { cancelled_at: now }),
+        ...(target === "REFUNDED"
+          ? { refunded_at: now, refund_required: false }
+          : { cancelled_at: now }),
       })
       .eq("id", order.id);
     return { status: target, changed: true };
