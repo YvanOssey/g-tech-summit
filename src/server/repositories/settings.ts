@@ -14,7 +14,7 @@ import { hasDatabase } from "@/server/db/env";
  * not who last changed the settings, nor when.
  */
 const PUBLIC_COLUMNS =
-  "id, venue_name, venue_address, venue_map_url, registration_open, team_size_min, team_size_max, registration_deadline, challenges_start, jury";
+  "id, venue_name, venue_address, venue_map_url, registration_open, show_upcoming, team_size_min, team_size_max, registration_deadline, challenges_start, jury";
 
 export async function loadEventSettings(fallback: EventSettings): Promise<EventSettings> {
   if (!hasDatabase) return fallback;
@@ -38,6 +38,7 @@ export async function loadEventSettings(fallback: EventSettings): Promise<EventS
       venue: s.venue_name && s.venue_address ? { name: s.venue_name, address: s.venue_address, mapUrl: s.venue_map_url ?? undefined } : null,
       sold,
       registrationOpen: s.registration_open,
+      showUpcoming: s.show_upcoming === true,
       hackathon: {
         teamSize: s.team_size_min && s.team_size_max ? { min: s.team_size_min, max: s.team_size_max } : fallback.hackathon.teamSize,
         registrationDeadline: s.registration_deadline,

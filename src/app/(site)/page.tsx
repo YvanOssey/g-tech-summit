@@ -66,7 +66,7 @@ export default async function HomePage() {
   return (
     <>
       <EventJsonLd settings={settings} />
-      <HomeHero venue={settings.venue} />
+      <HomeHero venue={settings.venue} showUpcoming={settings.showUpcoming} />
 
       {/* ── Figures ────────────────────────────────────────────────── */}
       <Section tone="ink" id="chiffres" aria-label="L’événement en chiffres" className="pt-4 pb-20 md:pb-28">
@@ -279,7 +279,7 @@ export default async function HomePage() {
           </SpotlightGroup>
 
           <h3 className="type-label mt-20">Le déroulé</h3>
-          <HackathonSteps className="mt-6" />
+          <HackathonSteps className="mt-6" showUpcoming={settings.showUpcoming} />
         </div>
       </Section>
 
@@ -418,7 +418,7 @@ export default async function HomePage() {
               icon: "pin",
               k: "Lieu",
               v: settings.venue ? settings.venue.name : EVENT.city,
-              note: settings.venue ? EVENT.country : <Pending label="Lieu exact">IMPACT HUB ABIDJAN</Pending>,
+              note: settings.venue || !settings.showUpcoming ? EVENT.country : <Pending label="Lieu exact">IMPACT HUB ABIDJAN</Pending>,
             },
             { icon: "clock", k: "Accueil", v: "Dès 08:00", note: "Vendredi 18 et samedi 19 décembre" },
             { icon: "ticket", k: "Billet", v: "Nominatif, par e-mail", note: "Avec un QR code unique, scanné à l’entrée." },

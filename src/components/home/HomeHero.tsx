@@ -15,6 +15,8 @@ import { Section } from "@/components/ui/Section";
 
 interface HomeHeroProps {
   venue: Venue | null;
+  /** Show the "exact venue to be announced" placeholder when the venue is not set. */
+  showUpcoming?: boolean;
 }
 
 /** First-paint entrance delay (CSS — runs before hydration, and without JavaScript). */
@@ -65,7 +67,7 @@ const SPRING = { stiffness: 60, damping: 20, mass: 0.8 };
  * - scroll: the picture drifts slower than the page and zooms, the lockup
  *   lifts and fades.
  */
-export function HomeHero({ venue }: HomeHeroProps) {
+export function HomeHero({ venue, showUpcoming = false }: HomeHeroProps) {
   const photo = PHOTOS.hero;
   const ref = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
@@ -174,10 +176,12 @@ export function HomeHero({ venue }: HomeHeroProps) {
             <p className="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-lead">
               {venue ? (
                 venue.name
-              ) : (
+              ) : showUpcoming ? (
                 <>
                   {EVENT.city} <Pending label="Lieu exact">IMPACT HUB ABIDJAN</Pending>
                 </>
+              ) : (
+                EVENT.city
               )}
             </p>
             <p className="mt-3 text-body text-paper">{EVENT.summary}</p>

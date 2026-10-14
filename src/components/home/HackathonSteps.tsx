@@ -24,12 +24,16 @@ const STEPS = [
 export function HackathonSteps({
   className = "",
   headingLevel = 4,
+  showUpcoming = false,
 }: {
   className?: string;
   /** Level of the step titles, one below the section's own heading. */
   headingLevel?: 3 | 4;
+  /** false: the jury is not mentioned (see "Informations à venir" in the admin settings). */
+  showUpcoming?: boolean;
 }) {
   const Heading = headingLevel === 3 ? "h3" : "h4";
+  const steps = STEPS.map((s) => (showUpcoming ? s : { ...s, text: s.text.replace(" avec le jury", "") }));
   const ref = useRef<HTMLOListElement>(null);
   const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 85%", "end 55%"] });
@@ -51,7 +55,7 @@ export function HackathonSteps({
         style={{ scaleX: fill }}
       />
 
-      {STEPS.map((s, i) => (
+      {steps.map((s, i) => (
         <motion.li
           key={s.title}
           data-reveal=""

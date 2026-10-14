@@ -94,3 +94,36 @@ export function Search(props: IconProps) {
     </svg>
   );
 }
+
+/** Cup with handles — first prize. */
+export function Trophy(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" {...props}>
+      <path {...line} d="M7 4h10v5a5 5 0 0 1-10 0Z" />
+      <path {...line} d="M7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3" />
+      <path {...line} d="M12 14v4M9.5 18h5M8 20.5h8" />
+    </svg>
+  );
+}
+
+/** Medal on its ribbon — second prize. */
+export function Medal(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" {...props}>
+      <path {...line} d="M6.5 3.5H10l2 4.5 2-4.5h3.5L15 9.9M9 9.9 6.5 3.5" />
+      <circle {...line} cx="12" cy="15" r="5.5" />
+      <circle {...line} cx="12" cy="15" r="2.5" />
+    </svg>
+  );
+}
+
+/** Padlock — content that is not unlocked yet. */
+export function Lock(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" {...props}>
+      <path {...line} d="M5.5 11h13v9h-13Z" />
+      <path {...line} d="M8.5 11V8a3.5 3.5 0 0 1 7 0v3" />
+      <path {...line} d="M12 14.5V17" />
+    </svg>
+  );
+}

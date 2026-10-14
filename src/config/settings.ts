@@ -26,6 +26,12 @@ export interface EventSettings {
   sold: Record<PassId, number>;
   /** Online registration + payment. Stays false until Genius Pay is connected and tested. */
   registrationOpen: boolean;
+  /**
+   * false: the public site hides speakers, trainers, the jury and every
+   * "à annoncer" / "à confirmer" placeholder. true: they are shown again.
+   * Switched from the admin (Paramètres).
+   */
+  showUpcoming: boolean;
   hackathon: {
     teamSize: { min: number; max: number } | null;
     /** ISO date */
@@ -42,6 +48,7 @@ const DEFAULT_SETTINGS: EventSettings = {
   venue: null,
   sold: { online: 0, event: 0, hackathon: 0 },
   registrationOpen: false,
+  showUpcoming: false,
   hackathon: {
     teamSize: { min: 5, max: 5 }, // confirmed by the organisers, 2026-10-07
     registrationDeadline: null,

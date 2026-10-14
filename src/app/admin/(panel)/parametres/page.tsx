@@ -12,7 +12,7 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
   const db = await createSessionClient();
   const { data: settings } = await db
     .from("event_settings")
-    .select("venue_name, venue_address, venue_map_url, registration_open")
+    .select("venue_name, venue_address, venue_map_url, registration_open, show_upcoming")
     .eq("id", 1)
     .maybeSingle();
 

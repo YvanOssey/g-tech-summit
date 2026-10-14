@@ -5,7 +5,7 @@ import { Checkbox, Field, FormMessage, SubmitButton } from "@/components/admin/f
 import type { EventSettingsRow } from "@/server/db/types";
 import { saveSettings } from "./actions";
 
-type Settings = Pick<EventSettingsRow, "venue_name" | "venue_address" | "venue_map_url" | "registration_open">;
+type Settings = Pick<EventSettingsRow, "venue_name" | "venue_address" | "venue_map_url" | "registration_open" | "show_upcoming">;
 
 export function SettingsForm({
   settings,
@@ -72,6 +72,16 @@ export function SettingsForm({
             </span>
           </p>
         )}
+      </fieldset>
+
+      <fieldset className="space-y-4 border border-ink/10 bg-paper p-6">
+        <legend className="px-1 font-semibold">Informations à venir</legend>
+        <Checkbox
+          label="Afficher les informations à venir sur le site"
+          name="show_upcoming"
+          defaultChecked={settings.show_upcoming}
+          hint="Désactivé, le site masque les intervenants, les formateurs, le jury et toutes les mentions « à annoncer » ou « à confirmer ». Activé, ils réapparaissent : les intervenants une fois saisis dans l’admin, les mentions « à annoncer » là où une information manque encore."
+        />
       </fieldset>
 
       <FormMessage state={state} />

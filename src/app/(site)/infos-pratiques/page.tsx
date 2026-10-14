@@ -40,7 +40,7 @@ const JOURNEY = [
 ] as const;
 
 export default async function PracticalPage() {
-  const [{ venue }, faq] = await Promise.all([getEventSettings(), getFaq()]);
+  const [{ venue, showUpcoming }, faq] = await Promise.all([getEventSettings(), getFaq()]);
 
   return (
     <>
@@ -150,7 +150,7 @@ export default async function PracticalPage() {
               ))}
             </RevealGroup>
           </SpotlightGroup>
-          {!venue && (
+          {!venue && showUpcoming && (
             <p className="mt-10 text-muted">
               Lieu exact : <Pending label="Lieu exact">IMPACT HUB ABIDJAN</Pending>
             </p>

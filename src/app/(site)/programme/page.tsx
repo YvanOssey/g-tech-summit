@@ -18,6 +18,7 @@ import { SpeakerGrid, SpeakerMarquee, speakerNames } from "@/components/programm
 import { Accent } from "@/components/ui/Accent";
 import { ButtonLink } from "@/components/ui/Button";
 import { SignalSquare } from "@/components/ui/icons";
+import { getEventSettings } from "@/config/settings";
 import { getProgramme, getSpeakers } from "@/server/repositories/content";
 import { Pending } from "@/components/ui/Pending";
 import { Section } from "@/components/ui/Section";
@@ -78,17 +79,21 @@ function TalkCard({ talk, index, speakers }: { talk: Talk; index: number; speake
 }
 
 export default async function ProgrammePage() {
-  const [programme, speakers] = await Promise.all([getProgramme(), getSpeakers()]);
-  const talks = [...CONFERENCES, ...PANELS];
+  const [programme, speakers, settings] = await Promise.all([getProgramme(), getSpeakers(), getEventSettings()]);
+  // "Informations à venir" (admin → Paramètres): when off, no speakers, trainers or "à confirmer" titles.
+  const show = settings.showUpcoming;
+  const talks = [...CONFERENCES, ...PANELS].filter((t) => show || t.title);
   // Speakers entered in the admin (Intervenants) win over the free text of a slot.
   const days = programme.map((d) => ({
     ...d,
     slots: d.slots.map((s) => {
+      if (!show) return { ...s, speakers: undefined, subtitle: s.subtitle === null ? undefined : s.subtitle };
       const names = s.ref ? speakerNames(speakers, s.ref) : null;
       return names ? { ...s, speakers: names } : s;
     }),
   }));
-  const speakersOf = (id: string) => days.flatMap((d) => d.slots).find((s) => s.ref === id && s.speakers)?.speakers ?? speakerNames(speakers, id) ?? undefined;
+  const speakersOf = (id: string) =>
+    show ? (days.flatMap((d) => d.slots).find((s) => s.ref === id && s.speakers)?.speakers ?? speakerNames(speakers, id) ?? undefined) : undefined;
 
   return (
     <>
@@ -265,7 +270,7 @@ export default async function ProgrammePage() {
       </Section>
 
       {/* ── Speakers, with their photo (entered in the admin) ────────── */}
-      {speakers.length > 0 && (
+      {show && speakers.length > 0 && (
         <Section tone="stone" id="intervenants" aria-labelledby="titre-intervenants" className="sheet section-standard">
           <div className="shell">
             <SectionLabel index="04">Intervenants</SectionLabel>

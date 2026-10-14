@@ -183,6 +183,7 @@ export type EventSettingsRow = {
   venue_address: string | null;
   venue_map_url: string | null;
   registration_open: boolean;
+  show_upcoming: boolean;
   team_size_min: number | null;
   team_size_max: number | null;
   registration_deadline: string | null;
@@ -233,6 +234,7 @@ export type Database = {
         | "venue_address"
         | "venue_map_url"
         | "registration_open"
+        | "show_upcoming"
         | "team_size_min"
         | "team_size_max"
         | "registration_deadline"
