@@ -28,7 +28,8 @@ export const metadata: Metadata = {
     template: `%s — ${EVENT.name} ${EVENT.year}`,
   },
   description: `${EVENT.name} ${EVENT.year}, à ${EVENT.city} les 18 et 19 décembre 2026. ${EVENT.summary}`,
-  openGraph: { type: "website", locale: "fr_CI", siteName: `${EVENT.name} ${EVENT.year}` },
+    openGraph: { type: "website", locale: "fr_CI", siteName: `${EVENT.name} ${EVENT.year}` },
+  verification: { google: "c5CUxVfcyR_Ekjq27oFXVLbuv4uA32GhK94SRzw6CNs" },
 };
 
 /** Elements that start hidden for an entrance animation carry `data-reveal`. */
