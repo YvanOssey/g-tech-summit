@@ -9,14 +9,27 @@
 export const HACKATHON = {
   name: "Hackathon Ghostech",
   edition: "2ᵉ édition",
-  theme: "Digitalisation & Innovation pour l’Afrique d’aujourd’hui et de demain",
+  theme:
+    "Digitalisation & Innovation pour l’Afrique d’aujourd’hui et de demain",
   intro:
     "Un hackathon multithématique qui réunit développeurs, designers, data scientists, ingénieurs et entrepreneurs autour de défis à fort impact social pour la Côte d’Ivoire et l’Afrique.",
   finale: {
-    pitch: { date: "Samedi 19 décembre", time: "15:00", label: "Pitch & présentations finales — projets finalistes + vote du public" },
-    awards: { date: "Samedi 19 décembre", time: "17:00", label: "Annonce des vainqueurs & remise des prix" },
+    pitch: {
+      date: "Samedi 19 décembre",
+      time: "15:00",
+      label:
+        "Pitch & présentations finales — projets finalistes + vote du public",
+    },
+    awards: {
+      date: "Samedi 19 décembre",
+      time: "17:00",
+      label: "Annonce des vainqueurs & remise des prix",
+    },
   },
-  pitchFormat: { presentation: "4 minutes de présentation", questions: "2 minutes de questions-réponses avec le jury" },
+  pitchFormat: {
+    presentation: "4 minutes de présentation",
+    questions: "2 minutes de questions-réponses avec le jury",
+  },
 } as const;
 
 export interface Track {
@@ -82,15 +95,35 @@ export interface Prize {
   rank: string;
   /** In FCFA. */
   amount: number;
+  /** What the winning team gets besides the cash prize. */
+  perks: readonly string[];
 }
 
-/** Cash prizes: two per category. The total is computed, never typed twice. */
-export const PRIZES: readonly Prize[] = [
-  { category: "Développement & IA", rank: "1er prix", amount: 40_000 },
-  { category: "Développement & IA", rank: "2e prix", amount: 20_000 },
-  { category: "Cybersécurité", rank: "1er prix", amount: 40_000 },
-  { category: "Cybersécurité", rank: "2e prix", amount: 20_000 },
-];
+const FIRST_PERKS = [
+  "Médaille et trophée",
+  "Certificats de distinction",
+  "Accompagnement et mentorat Ghostech pendant 2 mois",
+  "Mise en avant du projet sur les réseaux de Ghostech",
+  "Hébergement du projet lauréat sur un sous-domaine de Ghostech pendant 1 mois",
+  "Incubation et évolution des projets",
+  "Formation spécialisée en cybersécurité offerte par Ghostech en 2 séances",
+] as const;
+
+const SECOND_PERKS = [
+  "Médaille",
+  "Certificats de distinction",
+  "Accompagnement et mentorat Ghostech pendant 2 mois",
+  "Incubation et évolution des projets",
+  "Formation spécialisée en cybersécurité offerte par Ghostech en 2 séances",
+] as const;
+
+/** Same prizes in both Cups. The total is computed, never typed twice. */
+export const PRIZES: readonly Prize[] = (
+  ["AFRO DEV CUP", "CYBER CUP"] as const
+).flatMap((category) => [
+  { category, rank: "1er prix", amount: 100_000, perks: FIRST_PERKS },
+  { category, rank: "2e prix", amount: 70_000, perks: SECOND_PERKS },
+]);
 
 export const PRIZES_TOTAL = {
   winners: PRIZES.length,

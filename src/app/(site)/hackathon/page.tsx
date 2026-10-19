@@ -1,17 +1,7 @@
 import type { Metadata } from "next";
 import { PASSES, TRACK_CAPACITY } from "@/config/passes";
 import { getEventSettings } from "@/config/settings";
-import {
-  CRITERIA,
-  CYBER_TRAINING,
-  ELIGIBLE,
-  HACKATHON,
-  PRIZES,
-  PRIZES_TOTAL,
-  RULES,
-  SUPPORT,
-  TRACKS,
-} from "@/content/hackathon";
+import { CRITERIA, ELIGIBLE, HACKATHON, PRIZES, PRIZES_TOTAL, RULES, TRACKS } from "@/content/hackathon";
 import { RuleChecklist } from "@/components/hackathon/RuleChecklist";
 import { HackathonSteps } from "@/components/home/HackathonSteps";
 import { PageIntro } from "@/components/layout/PageIntro";
@@ -321,7 +311,7 @@ export default async function HackathonPage() {
         </div>
       </Section>
 
-      {/* ── Prizes: cash prizes per category ─────────────────────────── */}
+      {/* ── Prizes: cash prizes and perks per Cup ────────────────────── */}
       <Section
         tone="ink"
         id="recompenses"
@@ -346,8 +336,7 @@ export default async function HackathonPage() {
               />
             </div>
             <p className="max-w-sm text-muted">
-              Deux prix par catégorie, soit {PRIZES_TOTAL.winners} équipes
-              lauréates.
+              Deux prix par Cup, soit {PRIZES_TOTAL.winners} équipes lauréates.
             </p>
           </div>
 
@@ -366,28 +355,29 @@ export default async function HackathonPage() {
                   <h3 className="type-headline text-heading leading-tight">
                     {g.category}
                   </h3>
-                  <dl className="mt-8 border-t border-rule-strong">
+                  <ol className="mt-8 border-t border-rule-strong">
                     {g.prizes.map((p, i) => (
-                      <div
-                        key={p.rank}
-                        className="flex items-center justify-between gap-4 border-b border-rule-strong py-5"
-                      >
-                        <dt className="type-label flex items-center gap-3">
-                          {i === 0 ? (
-                            <Trophy className="size-10 text-accent" />
-                          ) : (
-                            <Medal className="size-8 text-muted" />
-                          )}
-                          {p.rank}
-                        </dt>
-                        <dd
-                          className={`type-condensed whitespace-nowrap leading-none ${i === 0 ? "text-title text-accent" : "text-heading"}`}
-                        >
-                          {formatFCFA(p.amount)}
-                        </dd>
-                      </div>
+                      <li key={p.rank} className="border-b border-rule-strong py-5">
+                        <div className="flex items-center justify-between gap-4">
+                          <span className="type-label flex items-center gap-3">
+                            {i === 0 ? <Trophy className="size-10 text-accent" /> : <Medal className="size-8 text-muted" />}
+                            {p.rank}
+                          </span>
+                          <span className={`type-condensed whitespace-nowrap leading-none ${i === 0 ? "text-title text-accent" : "text-heading"}`}>
+                            {formatFCFA(p.amount)}
+                          </span>
+                        </div>
+                        <ul className="mt-5 space-y-2 text-small text-muted">
+                          {p.perks.map((perk) => (
+                            <li key={perk} className="flex gap-3">
+                              <SignalSquare className="mt-1.5" />
+                              <span>{perk}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </li>
                     ))}
-                  </dl>
+                  </ol>
                 </RevealItem>
               ))}
             </RevealGroup>
@@ -415,87 +405,13 @@ export default async function HackathonPage() {
                     Récompenses partenaires
                   </h3>
                   <p className="mt-1 text-small text-muted">
-                    Simplon · Genius Pay
+                    Simplon · Genius Pay · H-Electro · Centre Ivoirien de Robotique
                   </p>
                 </div>
               </div>
               <Pending label="Récompenses partenaires">
                 À découvrir bientôt
               </Pending>
-            </div>
-          </Reveal>
-        </div>
-      </Section>
-
-      {/* ── Afro Dev Cup: support offered to the winning teams ────────── */}
-      <Section
-        tone="stone"
-        id="accompagnement"
-        aria-labelledby="titre-accompagnement"
-        className="sheet section-standard"
-      >
-        <div className="shell">
-          <SectionLabel index="06">Accompagnement</SectionLabel>
-          <RevealText
-            inView
-            id="titre-accompagnement"
-            label={SUPPORT.title}
-            lines={[
-              "Afro Dev Cup",
-              <span key="a">
-                Récompenses et <Accent>accompagnement</Accent>
-              </span>,
-              "des lauréats",
-            ]}
-            className="type-headline text-title mt-8"
-          />
-          <p className="mt-6 max-w-2xl text-muted">{SUPPORT.intro}</p>
-
-          <SpotlightGroup>
-            <RevealGroup
-              as="ol"
-              className="mt-12 grid gap-3 md:grid-cols-3 lg:gap-4"
-            >
-              {SUPPORT.groups.map((g, i) => (
-                <RevealItem
-                  as="li"
-                  effect="flip"
-                  key={g.title}
-                  className="panel card-interactive spotlight flex flex-col p-5 sm:p-6"
-                >
-                  <span className="card-index type-condensed text-title leading-none text-accent">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <h3 className="type-headline mt-6 text-lead leading-tight">
-                    {g.title}
-                  </h3>
-                  <ul className="mt-5 space-y-4">
-                    {g.items.map((it) => (
-                      <li key={it.label} className="flex gap-3">
-                        <SignalSquare className="mt-2.5" />
-                        <span>
-                          <span className="font-semibold">{it.label}</span>
-                          &nbsp;: {it.text}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </RevealItem>
-              ))}
-            </RevealGroup>
-          </SpotlightGroup>
-          <p className="mt-6 max-w-2xl text-small text-muted">{SUPPORT.note}</p>
-
-          <Reveal className="grid-12 mt-16 gap-y-6 border-t border-rule-strong pt-10">
-            <div className="col-span-4 md:col-span-8 lg:col-span-4">
-              <span className="type-meta text-muted">04</span>
-              <h3 className="type-headline mt-2 text-heading">
-                {CYBER_TRAINING.title}
-              </h3>
-            </div>
-            <div className="col-span-4 space-y-3 md:col-span-8 lg:col-span-8">
-              <p className="font-semibold">{CYBER_TRAINING.subtitle}</p>
-              <p className="max-w-2xl text-muted">{CYBER_TRAINING.text}</p>
             </div>
           </Reveal>
         </div>
@@ -509,7 +425,7 @@ export default async function HackathonPage() {
       >
         <div className="shell grid-12 gap-y-10">
           <div className="col-span-4 md:col-span-8 lg:col-span-6">
-            <SectionLabel index="07">Inscription</SectionLabel>
+            <SectionLabel index="06">Inscription</SectionLabel>
             <h2 id="inscription" className="type-headline text-title mt-8">
               Un pass <Accent>par équipe</Accent>
             </h2>
