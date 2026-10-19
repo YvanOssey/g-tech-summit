@@ -26,6 +26,9 @@ export const HACKATHON = {
       label: "Annonce des vainqueurs & remise des prix",
     },
   },
+  /** Confirmed by the organisers: registrations close on 14 December, the competition starts on 17 December 2026. */
+  registrationDeadline: "2026-12-14T12:00:00Z",
+  challengesStart: "2026-12-17T12:00:00Z",
   pitchFormat: {
     presentation: "4 minutes de présentation",
     questions: "2 minutes de questions-réponses avec le jury",

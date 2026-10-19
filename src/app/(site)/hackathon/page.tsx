@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { PASSES, TRACK_CAPACITY } from "@/config/passes";
 import { getEventSettings } from "@/config/settings";
 import { CRITERIA, ELIGIBLE, HACKATHON, PRIZES, PRIZES_TOTAL, RULES, TRACKS } from "@/content/hackathon";
+import { TOPICS, themesRevealed } from "@/content/hackathonTopics";
 import { RuleChecklist } from "@/components/hackathon/RuleChecklist";
 import { HackathonSteps } from "@/components/home/HackathonSteps";
 import { PageIntro } from "@/components/layout/PageIntro";
@@ -22,6 +23,9 @@ export const metadata: Metadata = {
   description: `Hackathon Ghostech, 2ᵉ édition : 2 thématiques, participation en équipe, finale le 19 décembre 2026 à Abidjan. Thème : ${HACKATHON.theme}.`,
 };
 
+/** Rebuilt at most once a minute, so the topics appear within a minute of their reveal time. */
+export const revalidate = 60;
+
 const dateFr = new Intl.DateTimeFormat("fr-FR", {
   day: "numeric",
   month: "long",
@@ -41,6 +45,10 @@ export default async function HackathonPage() {
   const s = settings.hackathon;
   // "Informations à venir" (admin → Paramètres): when off, anything not confirmed yet is left out.
   const show = settings.showUpcoming;
+  // Topics stay hidden until 16 December 2026, 23:59:59 (see THEMES_REVEAL_AT).
+  const topicsOpen = themesRevealed();
+  const registrationDeadline = s.registrationDeadline ?? HACKATHON.registrationDeadline;
+  const challengesStart = s.challengesStart ?? HACKATHON.challengesStart;
 
   const facts: { k: string; v: string | null }[] = [
     { k: "Participation", v: "En équipe uniquement" },
@@ -55,9 +63,7 @@ export default async function HackathonPage() {
     { k: "Pass", v: `${formatFCFA(PASSES.hackathon.price)} / équipe` },
     {
       k: "Date limite",
-      v: s.registrationDeadline
-        ? dateFr.format(new Date(s.registrationDeadline))
-        : null,
+      v: dateFr.format(new Date(registrationDeadline)),
     },
   ].filter((item) => show || item.v !== null);
   const factColumns: Record<number, string> = {
@@ -169,6 +175,16 @@ export default async function HackathonPage() {
                       {t.name}
                     </h3>
                     <p className="mt-3 font-semibold">{t.claim}</p>
+                    {topicsOpen && TOPICS[t.code] && (
+                      <div className="mt-6 max-w-md space-y-2">
+                        <p className="type-label">Thème</p>
+                        <p className="font-semibold">{TOPICS[t.code].title}</p>
+                        <p className="text-muted transition-colors group-hover:text-ink">{TOPICS[t.code].brief}</p>
+                        <p className="text-small">
+                          <span className="font-semibold">Défi technique :</span> {TOPICS[t.code].challenge}
+                        </p>
+                      </div>
+                    )}
                     <p className="mt-auto max-w-md pt-6 text-muted transition-colors group-hover:text-ink">
                       {t.description}
                     </p>
@@ -248,16 +264,10 @@ export default async function HackathonPage() {
             ]}
             className="type-headline text-title mt-8"
           />
-          {(show || s.challengesStart) && (
-            <p className="mt-6 max-w-xl text-muted">
-              Début officiel des challenges :{" "}
-              {s.challengesStart ? (
-                dateFr.format(new Date(s.challengesStart))
-              ) : (
-                <Pending label="Date" />
-              )}
-            </p>
-          )}
+          <p className="mt-6 max-w-xl text-muted">
+            Début officiel des challenges :{" "}
+            {dateFr.format(new Date(challengesStart))}
+          </p>
           <HackathonSteps
             className="mt-14"
             headingLevel={3}
@@ -441,18 +451,12 @@ export default async function HackathonPage() {
               plus.
             </p>
             <dl className="grid grid-cols-2 gap-6 border-t border-rule-strong pt-5">
-              {(show || s.registrationDeadline) && (
-                <div>
-                  <dt className="type-label">Date limite</dt>
-                  <dd className="mt-1.5">
-                    {s.registrationDeadline ? (
-                      dateFr.format(new Date(s.registrationDeadline))
-                    ) : (
-                      <Pending label="Date limite" />
-                    )}
-                  </dd>
-                </div>
-              )}
+              <div>
+                <dt className="type-label">Date limite</dt>
+                <dd className="mt-1.5">
+                  {dateFr.format(new Date(registrationDeadline))}
+                </dd>
+              </div>
               <div>
                 <dt className="type-label">Équipes</dt>
                 <dd className="mt-1.5">

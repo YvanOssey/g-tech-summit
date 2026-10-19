@@ -196,11 +196,11 @@ export default async function ProgrammePage() {
 
                   <div className="flex items-baseline gap-4 pr-24">
                     <span className="type-condensed text-display leading-none text-accent">{String(i + 1).padStart(2, "0")}</span>
-                    <span className="type-meta text-muted">{f.seats} places</span>
+                    {f.seats !== undefined && <span className="type-meta text-muted">{f.seats} places</span>}
                   </div>
                   <h3 className="type-headline mt-6 text-heading">{f.title}</h3>
-                  <p className="mt-2 font-semibold">{f.tagline}</p>
-                  <p className="mt-4 text-muted">{f.description}</p>
+                  {f.tagline && <p className="mt-2 font-semibold">{f.tagline}</p>}
+                  {f.description && <p className="mt-4 text-muted">{f.description}</p>}
                   <ul className="mt-6 space-y-2 text-small">
                     {f.goals.map((g) => (
                       <li key={g} className="flex gap-3">

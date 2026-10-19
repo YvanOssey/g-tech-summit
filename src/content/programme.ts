@@ -90,7 +90,7 @@ export const DAYS: readonly Day[] = [
     theme: "Formations, panels, hackathon & clôture",
     slots: [
       { start: "08:00", type: "accueil", title: "Accueil & récap de la première journée", zone: "Hall d’entrée" },
-      { start: "09:15", end: "12:15", type: "formation", title: "Formations express", detail: "4 modules en parallèle — attestation de participation", zone: "Salles A · B · C · D", ref: "formations" },
+      { start: "09:15", end: "12:15", type: "formation", title: "Formations express", detail: "5 modules en parallèle — attestation de participation", zone: "Salles A · B · C · D · E", ref: "formations" },
       { start: "11:30", type: "pause", title: "Pause déjeuner & visite des stands", detail: "Networking exposants", zone: "Hall / Stands" },
       { start: "12:00", type: "panel", title: "Panel 2", subtitle: "Cybersécurité & Données : enjeux et bonnes pratiques", zone: "Salle principale", ref: "panel-2" },
       { start: "12:45", end: "14:00", type: "atelier", title: "Ateliers pratiques — session 2", detail: "3 ateliers + nouvelles démonstrations live", zone: "Salles A · B · C", ref: "ateliers" },
@@ -183,76 +183,76 @@ export interface Formation {
   id: string;
   code: string;
   title: string;
-  tagline: string;
-  description: string;
+  /** Optional: only shown when given. */
+  tagline?: string;
+  description?: string;
   goals: readonly string[];
-  seats: number;
+  /** Optional: the places are shown only once confirmed by the organisers. */
+  seats?: number;
 }
 
 export const FORMATIONS_INFO = {
   when: "Samedi 19 · 09:15 — 12:15",
   intro:
-    "Quatre modules intensifs de trois heures, en parallèle. Accessibles aux débutants comme aux initiés, chacun donne lieu à une attestation de participation. Inscription sur place, places limitées.",
+    "Cinq modules intensifs de trois heures, en parallèle. Accessibles aux débutants comme aux initiés, chacun donne lieu à une attestation de participation. Inscription sur place, places limitées.",
 } as const;
 
 export const FORMATIONS: readonly Formation[] = [
   {
     id: "form-1",
     code: "Form 1",
-    title: "Initiation au développement web",
-    tagline: "De zéro à votre première page web",
-    description:
-      "Une approche pratique et progressive : en trois heures, vous créez votre première page web fonctionnelle avec les bases de HTML, CSS et une introduction à JavaScript. Aucun prérequis.",
+    title: "Développement logiciel & création d’API REST",
     goals: [
-      "Comprendre la structure d’une page web (HTML / CSS / JavaScript)",
-      "Créer une page simple, responsive et publiable en ligne",
-      "Découvrir les outils essentiels : VS Code, DevTools du navigateur",
-      "Savoir comment progresser ensuite",
+      "Bases du développement web et JavaScript",
+      "Création d’une API REST avec Node.js",
+      "Tests des routes avec Postman",
+      "Git & GitHub : gestion de code et collaboration",
     ],
     seats: 30,
   },
   {
     id: "form-2",
     code: "Form 2",
-    title: "Introduction à l’IA",
-    tagline: "Comprendre et utiliser l’intelligence artificielle au quotidien",
-    description:
-      "Les concepts fondamentaux de l’IA sans jargon, les outils grand public (ChatGPT, Gemini, outils no-code) et la manière de les intégrer à votre travail, avec des cas d’usage africains concrets.",
+    title: "Intelligence artificielle & Data Science",
     goals: [
-      "Comprendre les bases de l’IA et du machine learning",
-      "Utiliser les principaux outils IA gratuits",
-      "Identifier des cas d’usage pertinents pour l’Afrique francophone",
-      "Repartir avec un plan d’action",
+      "Découverte de ChatGPT, Claude et des outils IA",
+      "Techniques de prompting et cas d’usage professionnels",
+      "Analyse et nettoyage de données avec Pandas",
+      "Visualisation des données avec Matplotlib",
     ],
     seats: 30,
   },
   {
     id: "form-3",
     code: "Form 3",
-    title: "Design graphique",
-    tagline: "Créer des visuels percutants avec Canva & Figma",
-    description:
-      "Les bases du design graphique appliquées aux projets tech et aux réseaux sociaux : visuels professionnels, maquettes d’interface simples et contenus pour vos projets et votre image.",
+    title: "Cybersécurité, Cloud Computing & DevOps",
     goals: [
-      "Maîtriser les bases : typographie, couleurs, composition",
-      "Créer des visuels professionnels avec Canva",
-      "Réaliser une maquette d’interface simple avec Figma",
-      "Appliquer ces principes à vos projets",
+      "Détection du phishing et analyse des menaces",
+      "Protection des comptes, des systèmes et des données",
+      "Fondamentaux du cloud et découverte de Docker",
+      "Déploiement sécurisé et bonnes pratiques DevOps",
     ],
-    seats: 25,
   },
   {
     id: "form-4",
     code: "Form 4",
-    title: "Personal branding & community management",
-    tagline: "Bâtir sa marque digitale",
-    description:
-      "Construire une identité en ligne cohérente, animer une communauté et utiliser les réseaux sociaux de façon stratégique pour votre carrière ou votre projet tech.",
+    title: "IoT & Systèmes intelligents connectés",
     goals: [
-      "Définir votre positionnement",
-      "Optimiser vos profils LinkedIn, X et autres réseaux professionnels",
-      "Construire une stratégie de contenu",
-      "Mesurer et améliorer l’engagement",
+      "Découverte d’Arduino et ESP32",
+      "Connexion et exploitation de capteurs",
+      "Transmission de données via MQTT ou HTTP",
+      "Réalisation d’un prototype d’objet connecté",
+    ],
+  },
+  {
+    id: "form-5",
+    code: "Form 5",
+    title: "Personal Branding & Community Management",
+    goals: [
+      "Optimiser son profil LinkedIn et son portfolio",
+      "Construire une identité professionnelle numérique",
+      "Concevoir une stratégie de contenu avec l’IA",
+      "Développer sa visibilité et mesurer l’engagement",
     ],
     seats: 30,
   },

@@ -40,7 +40,7 @@ import {
 const PROFILES = [
   {
     who: "Vous découvrez la tech",
-    what: "Initiation au développement web sans prérequis, introduction à l’IA, ateliers de découverte des outils IA.",
+    what: "Bases du développement web, découverte de ChatGPT, Claude et des outils IA, ateliers de découverte.",
   },
   {
     who: "Étudiants",
@@ -52,7 +52,7 @@ const PROFILES = [
   },
   {
     who: "Designers",
-    what: "Formation design graphique avec Canva & Figma, atelier UI/UX, et une place dans une équipe du hackathon.",
+    what: "Atelier UI/UX, formation personal branding & portfolio, et une place dans une équipe du hackathon.",
   },
   {
     who: "Entrepreneurs & startups",
