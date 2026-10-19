@@ -187,8 +187,6 @@ export interface Formation {
   tagline?: string;
   description?: string;
   goals: readonly string[];
-  /** Optional: the places are shown only once confirmed by the organisers. */
-  seats?: number;
 }
 
 export const FORMATIONS_INFO = {
@@ -208,7 +206,6 @@ export const FORMATIONS: readonly Formation[] = [
       "Tests des routes avec Postman",
       "Git & GitHub : gestion de code et collaboration",
     ],
-    seats: 30,
   },
   {
     id: "form-2",
@@ -220,7 +217,6 @@ export const FORMATIONS: readonly Formation[] = [
       "Analyse et nettoyage de données avec Pandas",
       "Visualisation des données avec Matplotlib",
     ],
-    seats: 30,
   },
   {
     id: "form-3",
@@ -249,38 +245,10 @@ export const FORMATIONS: readonly Formation[] = [
     code: "Form 5",
     title: "Personal Branding & Community Management",
     goals: [
-      "Optimiser son profil LinkedIn et son portfolio",
-      "Construire une identité professionnelle numérique",
-      "Concevoir une stratégie de contenu avec l’IA",
-      "Développer sa visibilité et mesurer l’engagement",
-    ],
-    seats: 30,
-  },
-];
-
-export interface Workshop {
-  code: string;
-  title: string;
-  content: string;
-}
-
-export const WORKSHOP_SESSIONS: readonly { label: string; when: string; workshops: readonly Workshop[] }[] = [
-  {
-    label: "Session 1",
-    when: "Vendredi 18 · 14:00 — 15:30",
-    workshops: [
-      { code: "A", title: "Découverte de ChatGPT & des outils IA", content: "Prompting efficace, cas d’usage professionnels, outils gratuits, démo live" },
-      { code: "B", title: "Git & GitHub — gérer son code comme un pro", content: "Commandes de base, workflow collaboratif, portfolio GitHub" },
-      { code: "C", title: "UI/UX design — créer une maquette en 90 min", content: "Wireframing, prototype interactif Figma, retours utilisateurs" },
-    ],
-  },
-  {
-    label: "Session 2",
-    when: "Samedi 19 · 12:45 — 14:00",
-    workshops: [
-      { code: "D", title: "Créer une API REST (Node.js)", content: "Structure REST, routes, tests Postman, déploiement rapide" },
-      { code: "E", title: "Data visualisation avec Python", content: "Pandas / Matplotlib : import, nettoyage, visualisation, lecture métier" },
-      { code: "F", title: "Cybersécurité — les bons réflexes au quotidien", content: "Mots de passe, phishing, protection des données, outils gratuits" },
+      "Optimisation du profil LinkedIn et du portfolio",
+      "Construction d’une identité professionnelle numérique",
+      "Stratégie de contenu avec l’IA",
+      "Développement de la visibilité et mesure de l’engagement",
     ],
   },
 ];

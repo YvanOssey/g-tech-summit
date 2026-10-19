@@ -5,12 +5,11 @@ import {
   FORMATIONS,
   FORMATIONS_INFO,
   PANELS,
-  WORKSHOP_SESSIONS,
   type Talk,
 } from "@/content/programme";
 import { CtaBand } from "@/components/layout/CtaBand";
 import { PageIntro } from "@/components/layout/PageIntro";
-import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
+import { RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { RevealText } from "@/components/motion/RevealText";
 import { SpotlightGroup } from "@/components/motion/Spotlight";
 import { DayTabs } from "@/components/programme/DayTabs";
@@ -27,7 +26,7 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
 export const metadata: Metadata = {
   title: "Programme",
   description:
-    "Le programme des 18 et 19 décembre 2026 : conférences, panels, formations express, ateliers pratiques et finale du hackathon.",
+    "Le programme des 18 et 19 décembre 2026 : conférences, panels, formations express et finale du hackathon.",
 };
 
 /** Talks stack on top of each other while scrolling (sticky, offset per card). */
@@ -101,7 +100,7 @@ export default async function ProgrammePage() {
         label="Programme · 18 & 19 décembre 2026"
         title="Deux jours, heure par heure"
         lines={["Deux jours,", <span key="h"><Accent>heure</Accent> par heure</span>]}
-        lead="Deux jours de conférences, de panels, de formations express et d’ateliers, jusqu’à la finale du hackathon le samedi après-midi."
+        lead="Deux jours de conférences, de panels, et de formations express, jusqu’à la finale du hackathon le samedi après-midi."
         actions={
           <>
             <ButtonLink href="#deroule" arrow>
@@ -196,7 +195,6 @@ export default async function ProgrammePage() {
 
                   <div className="flex items-baseline gap-4 pr-24">
                     <span className="type-condensed text-display leading-none text-accent">{String(i + 1).padStart(2, "0")}</span>
-                    {f.seats !== undefined && <span className="type-meta text-muted">{f.seats} places</span>}
                   </div>
                   <h3 className="type-headline mt-6 text-heading">{f.title}</h3>
                   {f.tagline && <p className="mt-2 font-semibold">{f.tagline}</p>}
@@ -217,63 +215,11 @@ export default async function ProgrammePage() {
         </div>
       </Section>
 
-      {/* ── Workshops: letter tiles ──────────────────────────────────── */}
-      <Section tone="ink" id="ateliers" aria-labelledby="titre-ateliers" className="sheet section-standard">
-        <div className="shell">
-          <SectionLabel index="03">Ateliers pratiques & démonstrations</SectionLabel>
-          <div className="grid-12 mt-8 gap-y-6">
-            <RevealText
-              inView
-              id="titre-ateliers"
-              label="Six ateliers, de A à F."
-              lines={["Six ateliers,", <span key="a">de <Accent>A à F</Accent>.</span>]}
-              className="type-headline text-title col-span-4 md:col-span-8 lg:col-span-6"
-            />
-            <p className="col-span-4 self-end text-muted md:col-span-6 lg:col-span-5 lg:col-start-8">
-              Des sessions courtes, en parallèle, pour expérimenter des technologies en direct, dans un format pratique.
-            </p>
-          </div>
-
-          <div className="mt-14 space-y-12">
-            {WORKSHOP_SESSIONS.map((s) => (
-              <div key={s.label}>
-                <Reveal className="flex flex-wrap items-baseline justify-between gap-4 border-b border-rule pb-4">
-                  <h3 className="type-headline text-heading">{s.label}</h3>
-                  <span className="type-meta text-muted">{s.when}</span>
-                </Reveal>
-                <SpotlightGroup>
-                  <RevealGroup as="ul" className="mt-6 grid gap-3 md:grid-cols-3 lg:gap-4">
-                    {s.workshops.map((w) => (
-                      <RevealItem
-                        as="li"
-                        effect="flip"
-                        key={w.code}
-                        className="panel card-interactive spotlight group relative min-h-60 overflow-hidden p-6"
-                      >
-                        <span
-                          aria-hidden="true"
-                          className="text-outline type-condensed pointer-events-none absolute -right-2 -bottom-8 text-[11rem] leading-none transition-colors duration-(--duration-component) group-hover:text-signal/15"
-                        >
-                          {w.code}
-                        </span>
-                        <span className="type-label">Atelier {w.code}</span>
-                        <h4 className="type-headline relative mt-4 text-heading leading-tight">{w.title}</h4>
-                        <p className="relative mt-3 text-small text-muted">{w.content}</p>
-                      </RevealItem>
-                    ))}
-                  </RevealGroup>
-                </SpotlightGroup>
-              </div>
-            ))}
-          </div>
-        </div>
-      </Section>
-
       {/* ── Speakers, with their photo (entered in the admin) ────────── */}
       {show && speakers.length > 0 && (
         <Section tone="stone" id="intervenants" aria-labelledby="titre-intervenants" className="sheet section-standard">
           <div className="shell">
-            <SectionLabel index="04">Intervenants</SectionLabel>
+            <SectionLabel index="03">Intervenants</SectionLabel>
             <RevealText
               inView
               id="titre-intervenants"
