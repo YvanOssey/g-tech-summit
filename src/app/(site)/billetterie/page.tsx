@@ -13,7 +13,7 @@ import { isCheckoutReady } from "@/server/payments/readiness";
 export const metadata: Metadata = {
   title: "Billetterie",
   description:
-    "Pass En ligne 5 000 FCFA, Pass Présentiel 10 000 FCFA, Pass Hackathon 15 000 FCFA par équipe. Paiement via Wave, billet nominatif envoyé par e-mail.",
+    "Pass En ligne 2 000 FCFA, Pass Présentiel 5 000 FCFA, Pass Hackathon 15 000 FCFA par équipe. Paiement via Wave, billet nominatif envoyé par e-mail.",
 };
 
 const STEPS = [

@@ -4,8 +4,8 @@
  * are never trusted.
  *
  * Validated by the organisers on 2026-10-06:
- * - Pass En ligne     5 000 FCFA — 100 places
- * - Pass Présentiel  10 000 FCFA — 40 places   (id "event", kept so ?pass=event links still work)
+ * - Pass En ligne     2 000 FCFA — 100 places
+ * - Pass Présentiel   5 000 FCFA — 40 places   (id "event", kept so ?pass=event links still work)
  * - Pass Hackathon   15 000 FCFA per TEAM — 10 teams of 5 people (team size changed on 2026-10-07)
  *   Two Cups, 5 teams each (see TRACK_CAPACITY): AFRO DEV CUP and CYBER CUP.
  * Numbers of passes already sold live in settings (`getEventSettings().sold`).
@@ -30,7 +30,7 @@ export const PASSES: Record<PassId, Pass> = {
   online: {
     id: "online",
     name: "Pass En ligne",
-    price: 5_000,
+    price: 2_000,
     per: "personne",
     capacity: { total: 100, unit: "places" },
     access: "Suivre G-TECH SUMMIT à distance — 2 jours",
@@ -39,7 +39,7 @@ export const PASSES: Record<PassId, Pass> = {
   event: {
     id: "event",
     name: "Pass Présentiel",
-    price: 10_000,
+    price: 5_000,
     per: "personne",
     capacity: { total: 40, unit: "places" },
     access: "Accès sur place à G-TECH SUMMIT — 2 jours",
