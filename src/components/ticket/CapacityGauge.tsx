@@ -48,7 +48,7 @@ export function CapacityGauge({ sold, total, unit, dark = false, className = "" 
       </div>
       <div
         role="progressbar"
-        aria-label={`Inscriptions : ${taken} ${unit} sur ${total}`}
+        aria-label={`Inscriptions : ${taken} ${taken > 1 ? unit : unit.slice(0, -1)} sur ${total}`}
         aria-valuemin={0}
         aria-valuemax={total}
         aria-valuenow={taken}
