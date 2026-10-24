@@ -8,6 +8,16 @@ import { allow, clientIp } from "@/server/rate-limit";
 /** A Genius Pay notification is a few kilobytes: anything far larger is refused unread. */
 const MAX_BODY = 64_000;
 
+/** The Genius Pay payment reference named by an unsigned message, if it looks like one. Nothing else is read. */
+function unsignedReference(raw: string): string | null {
+  try {
+    const ref = (JSON.parse(raw) as { data?: { transaction?: { reference?: unknown } } })?.data?.transaction?.reference;
+    return typeof ref === "string" && /^[A-Z0-9_-]{6,64}$/.test(ref) ? ref : null;
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Genius Pay notifications. Only signed, recent ones are acted upon, and even
  * then the payment state is re-read from the Genius Pay API rather than taken
@@ -28,8 +38,35 @@ export async function POST(request: Request) {
   const db = createServiceClient();
 
   if (!valid) {
-    if (allow(`webhook-invalid:${await clientIp()}`, 20, 600_000)) {
-      await db.from("payment_events").insert({ provider_reference: null, event: "non signé", payload: { raw_length: raw.length }, signature_valid: false });
+    const ip = await clientIp();
+    // Safety net (2026-10-24): a real Genius Pay notification refused because
+    // the webhook secret on the server is wrong left a paid order without
+    // tickets. The message itself is never trusted, but if it names a payment
+    // we created whose order is still waiting, that payment is re-read from
+    // the Genius Pay API (the only source of truth), as the confirmation page
+    // does. Rate-limited, so nobody can use it to flood the API.
+    const reference = unsignedReference(raw);
+    let resync: string | null = null;
+    if (reference && allow(`webhook-resync:${ip}`, 30, 600_000)) {
+      const { data: payment } = await db.from("payments").select("order_id").eq("provider_reference", reference).maybeSingle();
+      if (payment) {
+        try {
+          const { status, changed } = await syncOrder(payment.order_id);
+          if (changed) revalidateTag(EVENT_SETTINGS_TAG, "max");
+          resync = `revérifié auprès de Genius Pay : ${status}`;
+        } catch {
+          resync = "revérification impossible";
+        }
+      }
+    }
+    if (allow(`webhook-invalid:${ip}`, 20, 600_000)) {
+      await db.from("payment_events").insert({
+        provider_reference: resync ? reference : null,
+        event: "non signé",
+        payload: { raw_length: raw.length },
+        signature_valid: false,
+        ...(resync ? { error: `signature invalide (vérifiez GENIUSPAY_WEBHOOK_SECRET) — ${resync}` } : {}),
+      });
     }
     return new Response("Signature invalide", { status: 401 });
   }
