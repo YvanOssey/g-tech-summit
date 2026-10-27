@@ -1,7 +1,7 @@
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { EVENT } from "@/config/event";
-import { PASS_ORDER, type PassId } from "@/config/passes";
+import { ALL_PASSES, type PassId } from "@/config/passes";
 import type { Database, OrderStatus, ProgrammeSlotRow } from "@/server/db/types";
 
 type Db = SupabaseClient<Database>;
@@ -70,7 +70,7 @@ export async function getDashboardData(db: Db, now = new Date()): Promise<Dashbo
   const byOrder = new Map(orderRows.map((o) => [o.id, o]));
 
   // Sales per pass.
-  const sales: PassSales[] = PASS_ORDER.map((id) => ({ id, paid: 0, pending: 0 }));
+  const sales: PassSales[] = ALL_PASSES.map((id) => ({ id, paid: 0, pending: 0 }));
   for (const item of items.data ?? []) {
     const order = byOrder.get(item.order_id);
     const line = sales.find((s) => s.id === item.pass_id);

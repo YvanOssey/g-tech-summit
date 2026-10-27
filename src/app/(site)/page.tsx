@@ -2,23 +2,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { EVENT, whatsappUrl } from "@/config/event";
 import { PHOTOS } from "@/config/media";
-import { PASSES, PASS_ORDER, orderTotal } from "@/config/passes";
+import { PASSES, PASS_ORDER } from "@/config/passes";
 import { getEventSettings } from "@/config/settings";
 import { EventJsonLd } from "@/components/seo/EventJsonLd";
-import { HACKATHON, TRACKS } from "@/content/hackathon";
+import { PANELS } from "@/content/programme";
 import { GhostechLogo } from "@/components/brand/GhostechLogo";
-import { HackathonSteps } from "@/components/home/HackathonSteps";
 import { HomeHero } from "@/components/home/HomeHero";
 import { InfoDeck } from "@/components/home/InfoDeck";
 import { CountUp } from "@/components/motion/CountUp";
 import { Marquee } from "@/components/motion/Marquee";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { RevealText } from "@/components/motion/RevealText";
-import { ScrollWord } from "@/components/motion/ScrollWord";
 import { SpotlightGroup } from "@/components/motion/Spotlight";
 import { Tilt } from "@/components/motion/Tilt";
 import { HorizontalRail } from "@/components/motion/HorizontalRail";
-import { ParticleField } from "@/components/motion/ParticleField";
 import { DaySchedule } from "@/components/programme/DaySchedule";
 import { PassCard } from "@/components/ticket/PassCard";
 import { Accent } from "@/components/ui/Accent";
@@ -48,15 +45,15 @@ const PROFILES = [
   },
   {
     who: "Développeurs",
-    what: "Ateliers Git & GitHub, API REST avec Node.js, data visualisation avec Python — et le hackathon.",
+    what: "Ateliers Git & GitHub, API REST avec Node.js, data visualisation avec Python.",
   },
   {
     who: "Designers",
-    what: "Atelier UI/UX, formation personal branding & portfolio, et une place dans une équipe du hackathon.",
+    what: "Atelier UI/UX et formation personal branding & portfolio.",
   },
   {
     who: "Entrepreneurs & startups",
-    what: "Une conférence sur l’entrepreneuriat tech en Afrique, un espace d’exposition et des pitchs.",
+    what: "Une conférence sur l’entrepreneuriat tech en Afrique, un espace d’exposition et le Showcase Tech.",
   },
   {
     who: "Professionnels & experts",
@@ -87,7 +84,7 @@ const FORMATS = [
   },
   {
     name: "Stands & démos live",
-    text: "Un espace d’exposition pour les startups, des démonstrations et un quiz tech avec des lots à gagner.",
+    text: "Un espace d’exposition, des démonstrations live, un quiz tech et le Showcase Tech des projets et startups.",
     href: "/programme",
   },
   {
@@ -105,8 +102,8 @@ const FIGURES = [
     label: "Formats",
     detail: "Conférences, panels, formations…",
   },
-  { value: TRACKS.length, label: "Thématiques", detail: "au hackathon" },
-  { value: 3, label: "Pass", detail: "En ligne, présentiel, hackathon" },
+  { value: PANELS.length, label: "Panels", detail: "Inclusion, cybersécurité, écosystème" },
+  { value: PASSES.event.capacity.total, label: "Places", detail: `${PASSES.event.name} · ${formatFCFA(PASSES.event.price)}` },
 ] as const;
 
 export default async function HomePage() {
@@ -328,105 +325,6 @@ export default async function HomePage() {
         </SpotlightGroup>
       </Section>
 
-      {/* ── Hackathon — immersive ────────────────────────────────────── */}
-      <Section
-        tone="ink"
-        aria-labelledby="hackathon"
-        className="relative isolate pb-(--section-standard)"
-      >
-        <ParticleField className="absolute inset-0 -z-10 size-full opacity-70" />
-        <div
-          aria-hidden="true"
-          className="glow-signal top-[55%] left-[85%] -z-10 size-[50rem]"
-        />
-        <ScrollWord word="Hackathon" className="pt-4 pb-12 md:pb-16" />
-
-        <div className="shell">
-          <div className="mx-auto max-w-3xl text-center">
-            <SectionLabel className="justify-center">{`${HACKATHON.name} · ${HACKATHON.edition}`}</SectionLabel>
-            <RevealText
-              inView
-              id="hackathon"
-              label="Deux thématiques, une finale sur scène."
-              lines={[
-                "Deux thématiques,",
-                <span key="f">
-                  une <Accent>finale</Accent> sur scène.
-                </span>,
-              ]}
-              className="type-headline text-title mt-8"
-            />
-            <p className="mx-auto mt-8 max-w-xl text-muted">
-              {HACKATHON.intro}
-            </p>
-
-            <dl className="mt-10 grid grid-cols-2 border-t border-rule md:grid-cols-4">
-              {[
-                { k: "Format", v: "En équipe uniquement" },
-                {
-                  k: "Finale",
-                  v: `Sam. 19 déc. · ${HACKATHON.finale.pitch.time}`,
-                },
-                { k: "Pitch", v: "4 min + 2 min de questions" },
-                {
-                  k: "Pass",
-                  v: `${formatFCFA(PASSES.hackathon.price)} / équipe`,
-                },
-              ].map((item, i) => (
-                <div
-                  key={item.k}
-                  className={`border-b border-rule px-3 py-5 ${i % 2 ? "border-l" : ""} ${i === 2 ? "md:border-l" : ""}`}
-                >
-                  <dt className="type-label">{item.k}</dt>
-                  <dd className="mt-1.5 font-semibold">{item.v}</dd>
-                </div>
-              ))}
-            </dl>
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
-              <ButtonLink href="/hackathon" arrow>
-                Découvrir le hackathon
-              </ButtonLink>
-              <ButtonLink href="/billetterie?pass=hackathon" variant="link">
-                Pass Hackathon
-              </ButtonLink>
-            </div>
-          </div>
-        </div>
-
-        <div className="shell mt-20 lg:mt-28">
-          <h3 className="type-label">Les deux thématiques</h3>
-          <SpotlightGroup>
-            <RevealGroup
-              as="ol"
-              className="mt-6 grid gap-3 sm:grid-cols-2 lg:gap-4"
-            >
-              {TRACKS.map((t) => (
-                <RevealItem
-                  as="li"
-                  effect="flip"
-                  key={t.code}
-                  className="panel card-interactive spotlight flex min-h-56 flex-col bg-ink/85 p-6"
-                >
-                  <span className="card-index type-condensed text-title leading-none text-accent">
-                    {t.code}
-                  </span>
-                  <h4 className="type-headline mt-auto pt-8 text-heading leading-tight">
-                    {t.name}
-                  </h4>
-                  <p className="mt-1 text-small text-muted">{t.claim}</p>
-                </RevealItem>
-              ))}
-            </RevealGroup>
-          </SpotlightGroup>
-
-          <h3 className="type-label mt-20">Le déroulé</h3>
-          <HackathonSteps
-            className="mt-6"
-            showUpcoming={settings.showUpcoming}
-          />
-        </div>
-      </Section>
-
       {/* ── Two days — grey sheet ────────────────────────────────────── */}
       <Section
         tone="stone"
@@ -497,9 +395,9 @@ export default async function HomePage() {
               <RevealText
                 inView
                 id="pass"
-                label="Trois pass, un billet nominatif."
+                label="Un pass, un billet nominatif."
                 lines={[
-                  "Trois pass,",
+                  "Un pass,",
                   <span key="b">
                     un <Accent>billet nominatif</Accent>.
                   </span>,
@@ -508,12 +406,12 @@ export default async function HomePage() {
               />
             </div>
             <p className="col-span-4 self-end text-muted md:col-span-6 lg:col-span-4 lg:col-start-9">
-              À distance ou sur place, et le hackathon par équipe. Billet envoyé
-              par e-mail après paiement via Wave, sans frais ajoutés. Présentiel
-              + Hackathon : {formatFCFA(orderTotal(["event", "hackathon"]))}.
+              {PASSES.event.name} : {formatFCFA(PASSES.event.price)} pour les deux
+              jours, {PASSES.event.capacity.total} places. Billet nominatif envoyé par
+              e-mail après paiement via Wave, sans frais ajoutés.
             </p>
           </div>
-          <RevealGroup className="mt-14 grid gap-4 md:grid-cols-2 md:gap-(--gutter) lg:grid-cols-3">
+          <RevealGroup className="mt-14 grid max-w-xl gap-4">
             {PASS_ORDER.map((id, i) => (
               <RevealItem key={id}>
                 <Tilt className="h-full">
@@ -645,7 +543,7 @@ export default async function HomePage() {
               icon: "wallet",
               k: "Paiement",
               v: "Wave, sans frais ajoutés",
-              note: "Inscriptions en ligne : ouverture prochaine.",
+              note: "Paiement sécurisé par Genius Pay.",
             },
           ]}
         />

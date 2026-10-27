@@ -26,7 +26,7 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
 export const metadata: Metadata = {
   title: "Programme",
   description:
-    "Le programme des 18 et 19 décembre 2026 : conférences, panels, formations express et finale du hackathon.",
+    "Le programme des 18 et 19 décembre 2026 : conférences, panels, formations express, ateliers et Showcase Tech.",
 };
 
 /** Talks stack on top of each other while scrolling (sticky, offset per card). */
@@ -39,8 +39,11 @@ function TalkCard({ talk, index, speakers }: { talk: Talk; index: number; speake
     >
       <div className="grid-12 gap-y-6">
         <div className="col-span-4 md:col-span-2 lg:col-span-3">
-          <p className="type-condensed text-display leading-none text-accent">{talk.kind.split(" ")[1].padStart(2, "0")}</p>
-          <p className="type-label mt-4">{talk.kind.split(" ")[0]}</p>
+          {/* "Panel 3" → 03 + Panel; "Conférence-débat" (no number) → CD + Conférence-débat. */}
+          <p className="type-condensed text-display leading-none text-accent">
+            {/\d+/.exec(talk.kind)?.[0].padStart(2, "0") ?? "CD"}
+          </p>
+          <p className="type-label mt-4">{talk.kind.replace(/\s*\d+$/, "")}</p>
           <p className="type-meta mt-2 text-muted">{talk.when}</p>
         </div>
         <div className="col-span-4 md:col-span-6 lg:col-span-6">
@@ -100,7 +103,7 @@ export default async function ProgrammePage() {
         label="Programme · 18 & 19 décembre 2026"
         title="Deux jours, heure par heure"
         lines={["Deux jours,", <span key="h"><Accent>heure</Accent> par heure</span>]}
-        lead="Deux jours de conférences, de panels, et de formations express, jusqu’à la finale du hackathon le samedi après-midi."
+        lead="Technologie, innovation et intelligence artificielle : deux jours de conférences, de panels, de formations express et d’ateliers."
         actions={
           <>
             <ButtonLink href="#deroule" arrow>
@@ -138,8 +141,8 @@ export default async function ProgrammePage() {
               <RevealText
                 inView
                 id="titre-conferences"
-                label="Trois conférences, deux panels."
-                lines={["Trois conférences,", <span key="p">deux <Accent>panels</Accent>.</span>]}
+                label="Quatre conférences, trois panels."
+                lines={["Quatre conférences,", <span key="p">trois <Accent>panels</Accent>.</span>]}
                 className="type-headline text-title mt-8"
               />
             </div>

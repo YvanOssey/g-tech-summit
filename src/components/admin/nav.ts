@@ -21,7 +21,6 @@ export const ADMIN_NAV: readonly AdminNavGroup[] = [
       { href: "/admin/participants", label: "Participants" },
       { href: "/admin/commandes", label: "Commandes & billets" },
       { href: "/admin/paiements", label: "Paiements" },
-      { href: "/admin/equipes", label: "Équipes hackathon" },
       { href: "/admin/controle", label: "Contrôle à l’entrée" },
     ],
   },
@@ -30,7 +29,6 @@ export const ADMIN_NAV: readonly AdminNavGroup[] = [
     items: [
       { href: "/admin/programme", label: "Programme" },
       { href: "/admin/intervenants", label: "Intervenants" },
-      { href: "/admin/hackathon", label: "Hackathon" },
       { href: "/admin/partenaires", label: "Partenaires" },
     ],
   },

@@ -3,11 +3,12 @@
  * The server computes order totals from this file — amounts sent by the browser
  * are never trusted.
  *
- * Validated by the organisers on 2026-10-06:
- * - Pass En ligne     2 000 FCFA — 100 places
- * - Pass Présentiel   5 000 FCFA — 40 places   (id "event", kept so ?pass=event links still work)
- * - Pass Hackathon   15 000 FCFA per TEAM — 10 teams of 5 people (team size changed on 2026-10-07)
- *   Two Cups, 5 teams each (see TRACK_CAPACITY): AFRO DEV CUP and CYBER CUP.
+ * On sale since 2026-10-27 (organisers): ONE pass only.
+ * - Pass Entrée       2 500 FCFA — 50 places   (id "event", kept so ?pass=event links still work)
+ * No online pass and no hackathon this edition (the hackathon moves to the next
+ * one). Their definitions stay below because orders already paid reference them
+ * (tickets, admin, e-mails) and for a future edition: PASS_ORDER, not PASSES,
+ * decides what is on sale.
  * Numbers of passes already sold live in settings (`getEventSettings().sold`).
  */
 export type PassId = "online" | "event" | "hackathon";
@@ -38,12 +39,12 @@ export const PASSES: Record<PassId, Pass> = {
   },
   event: {
     id: "event",
-    name: "Pass Présentiel",
-    price: 5_000,
+    name: "Pass Entrée",
+    price: 2_500,
     per: "personne",
-    capacity: { total: 40, unit: "places" },
+    capacity: { total: 50, unit: "places" },
     access: "Accès sur place à G-TECH SUMMIT — 2 jours",
-    summary: "Conférences, panels, formations express, ateliers, stands et networking.",
+    summary: "Conférences, panels, formations express, ateliers, démonstrations, stands et networking.",
   },
   hackathon: {
     id: "hackathon",
@@ -71,7 +72,11 @@ export const HOLD_MINUTES = 10;
 /** People per hackathon team, the buyer included. */
 export const TEAM_SIZE = 5;
 
-export const PASS_ORDER: readonly PassId[] = ["online", "event", "hackathon"];
+/** Passes on sale, in display order. The checkout refuses any other. */
+export const PASS_ORDER: readonly PassId[] = ["event"];
+
+/** Every pass that may appear on an existing order (admin lists, filters, statistics). */
+export const ALL_PASSES: readonly PassId[] = ["online", "event", "hackathon"];
 
 /**
  * Passes that cannot be combined in one order. Since 2026-10-07 no pass combines

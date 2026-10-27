@@ -29,9 +29,9 @@ export function EventJsonLd({ settings }: { settings: EventSettings }) {
     startDate: EVENT.doorsOpen.iso,
     endDate: EVENT.days[EVENT.days.length - 1].iso,
     eventStatus: "https://schema.org/EventScheduled",
-    // On site, plus the online pass.
-    eventAttendanceMode: "https://schema.org/MixedEventAttendanceMode",
-    location: [place, { "@type": "VirtualLocation", url: SITE_URL }],
+    // On site only (no online pass this edition).
+    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    location: place,
     image: [`${SITE_URL}/opengraph-image`],
     url: SITE_URL,
     organizer: { "@type": "Organization", name: EVENT.organiser.name, email: EVENT.contact.email, url: SITE_URL },

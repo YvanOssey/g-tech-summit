@@ -26,6 +26,8 @@ export function PassSelector({ initial = ["event"], onChange, sold, trackSold }:
   const total = orderTotal(selection);
 
   function toggle(id: PassId) {
+    // A single pass on sale stays selected: there is nothing else to choose.
+    if (PASS_ORDER.length === 1) return;
     // Picking a pass drops the ones it cannot be combined with (all of them).
     const ordered = selection.includes(id) ? selection.filter((p) => p !== id) : withExclusions(selection, id);
     setSelection(ordered);
@@ -36,7 +38,7 @@ export function PassSelector({ initial = ["event"], onChange, sold, trackSold }:
     <fieldset>
       <legend className="sr-only">Choisissez votre pass</legend>
 
-      <div className="grid gap-4 md:grid-cols-2 md:gap-(--gutter) lg:grid-cols-3">
+      <div className={PASS_ORDER.length === 1 ? "grid max-w-xl gap-4" : "grid gap-4 md:grid-cols-2 md:gap-(--gutter) lg:grid-cols-3"}>
         {PASS_ORDER.map((id, i) => {
           const pass = PASSES[id];
           const checked = selection.includes(id);
@@ -75,7 +77,7 @@ export function PassSelector({ initial = ["event"], onChange, sold, trackSold }:
         })}
       </div>
 
-      {EXCLUSIVE.length > 0 && (
+      {PASS_ORDER.length > 1 && EXCLUSIVE.length > 0 && (
         <p className="mt-4 text-small text-muted">
           Un seul pass par inscription : choisir un pass retire l’autre. Le Pass Hackathon inclut l’accès sur place à
           l’événement pour chaque membre de l’équipe.

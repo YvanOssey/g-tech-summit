@@ -3,7 +3,7 @@ import Link from "next/link";
 import { FilterBar, FilterCheckbox, FilterSearch, FilterSelect, TestBadge } from "@/components/admin/filters";
 import { OrderStatusBadge } from "@/components/admin/status";
 import { EmptyState, PageHeader } from "@/components/admin/ui";
-import { PASSES, PASS_ORDER } from "@/config/passes";
+import { ALL_PASSES, PASSES } from "@/config/passes";
 import { requireAdmin } from "@/server/auth/require-admin";
 import { createSessionClient } from "@/server/auth/session";
 import { filterParticipants, loadRegistrations, participantStatus, readParticipantFilters } from "@/server/repositories/registrations";
@@ -38,7 +38,7 @@ export default async function ParticipantsPage({ searchParams }: { searchParams:
 
       <FilterBar resetHref="/admin/participants">
         <FilterSearch name="q" label="Recherche" defaultValue={filters.q} placeholder="Nom, e-mail ou téléphone" />
-        <FilterSelect name="pass" label="Pass" defaultValue={filters.pass} options={PASS_ORDER.map((id) => ({ value: id, label: PASSES[id].name }))} />
+        <FilterSelect name="pass" label="Pass" defaultValue={filters.pass} options={ALL_PASSES.map((id) => ({ value: id, label: PASSES[id].name }))} />
         <FilterSelect
           name="statut"
           label="Statut"

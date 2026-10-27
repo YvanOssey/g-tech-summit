@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { EVENT, whatsappUrl } from "@/config/event";
 import { getEventSettings } from "@/config/settings";
-import { HACKATHON } from "@/content/hackathon";
 import { FaqSearch } from "@/components/infos/FaqSearch";
 import { PageIntro } from "@/components/layout/PageIntro";
 import { RevealGroup, RevealItem } from "@/components/motion/Reveal";
@@ -34,8 +33,8 @@ const JOURNEY = [
   },
   {
     icon: ArrowRight,
-    k: "Finale du hackathon",
-    v: `Pitch et présentations finales le samedi 19 décembre à ${HACKATHON.finale.pitch.time}, remise des prix à ${HACKATHON.finale.awards.time}.`,
+    k: "Showcase Tech",
+    v: "Samedi 19 décembre à 15:00 : présentation de projets innovants, de solutions numériques et de startups.",
   },
 ] as const;
 
