@@ -1,8 +1,9 @@
 "use server";
 
+import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import type { FormState } from "@/components/admin/forms";
-import { HOLD_MINUTES, TEAM_SIZE } from "@/config/passes";
+import { HOLD_MINUTES, TEAM_SIZE, orderTotal } from "@/config/passes";
 import { SITE_URL } from "@/config/site";
 import { startOrder } from "@/server/checkout/orders";
 import { checkoutSchema, parsePassList } from "@/server/checkout/schema";
@@ -10,6 +11,7 @@ import { createServiceClient } from "@/server/db/clients";
 import { isCheckoutReady } from "@/server/payments/readiness";
 import { verifyCaptcha } from "@/server/captcha";
 import { allow, clientIp } from "@/server/rate-limit";
+import { EVENT_SETTINGS_TAG } from "@/server/cache-tags";
 
 /** Field name in the form for each path of the schema. */
 function fieldName(path: PropertyKey[]): string {
@@ -81,5 +83,7 @@ export async function startCheckout(_prev: FormState, formData: FormData): Promi
 
   const result = await startOrder(parsed.data, SITE_URL);
   if (!result.ok) return { error: result.error, values: typed(formData) };
+  // Free place: already counted, the gauges move now.
+  if (orderTotal(parsed.data.passes) === 0) revalidateTag(EVENT_SETTINGS_TAG, "max");
   redirect(result.checkoutUrl);
 }

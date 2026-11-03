@@ -8,6 +8,8 @@ import { Check } from "@/components/ui/icons";
 import { PassCard } from "./PassCard";
 
 interface PassSelectorProps {
+  /** Passes shown, in order (default: every pass the checkout accepts). */
+  available?: readonly PassId[];
   initial?: readonly PassId[];
   onChange?: (selection: PassId[]) => void;
   /** Passes already sold, for the registration gauges. */
@@ -20,14 +22,14 @@ interface PassSelectorProps {
  * Step 1 of registration: one participant picks one pass (passes do not combine).
  * The total shown here is informative — the server recomputes it from `config/passes`.
  */
-export function PassSelector({ initial = ["event"], onChange, sold, trackSold }: PassSelectorProps) {
+export function PassSelector({ available = PASS_ORDER, initial = ["event"], onChange, sold, trackSold }: PassSelectorProps) {
   const [selection, setSelection] = useState<PassId[]>([...initial]);
   const reduce = useReducedMotion();
   const total = orderTotal(selection);
 
   function toggle(id: PassId) {
     // A single pass on sale stays selected: there is nothing else to choose.
-    if (PASS_ORDER.length === 1) return;
+    if (available.length === 1) return;
     // Picking a pass drops the ones it cannot be combined with (all of them).
     const ordered = selection.includes(id) ? selection.filter((p) => p !== id) : withExclusions(selection, id);
     setSelection(ordered);
@@ -38,8 +40,8 @@ export function PassSelector({ initial = ["event"], onChange, sold, trackSold }:
     <fieldset>
       <legend className="sr-only">Choisissez votre pass</legend>
 
-      <div className={PASS_ORDER.length === 1 ? "grid max-w-xl gap-4" : "grid gap-4 md:grid-cols-2 md:gap-(--gutter) lg:grid-cols-3"}>
-        {PASS_ORDER.map((id, i) => {
+      <div className={available.length === 1 ? "grid max-w-xl gap-4" : "grid gap-4 md:grid-cols-2 md:gap-(--gutter) lg:grid-cols-3"}>
+        {available.map((id, i) => {
           const pass = PASSES[id];
           const checked = selection.includes(id);
           const dark = id === "hackathon";
@@ -77,7 +79,7 @@ export function PassSelector({ initial = ["event"], onChange, sold, trackSold }:
         })}
       </div>
 
-      {PASS_ORDER.length > 1 && EXCLUSIVE.length > 0 && (
+      {available.length > 1 && EXCLUSIVE.length > 0 && (
         <p className="mt-4 text-small text-muted">
           Un seul pass par inscription : choisir un pass retire l’autre. Le Pass Hackathon inclut l’accès sur place à
           l’événement pour chaque membre de l’équipe.
@@ -105,11 +107,11 @@ export function PassSelector({ initial = ["event"], onChange, sold, trackSold }:
                 exit={reduce ? undefined : { y: "-100%" }}
                 transition={{ duration: 0.32, ease: [0.25, 1, 0.5, 1] }}
               >
-                {formatAmount(total)}
+                {total === 0 && selection.length > 0 ? "Gratuit" : formatAmount(total)}
               </motion.span>
             </AnimatePresence>
           </span>
-          <span className="type-meta">FCFA</span>
+          {!(total === 0 && selection.length > 0) && <span className="type-meta">FCFA</span>}
         </p>
       </div>
     </fieldset>

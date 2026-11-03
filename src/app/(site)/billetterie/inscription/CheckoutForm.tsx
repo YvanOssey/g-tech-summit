@@ -10,6 +10,8 @@ interface CheckoutFormProps {
   passes: string;
   hackathon: boolean;
   total: string;
+  /** Free pass: no payment step. */
+  free: boolean;
   tracks: readonly { code: string; name: string }[];
   /** Cloudflare Turnstile public key; null when the anti-robot check is not configured. */
   captchaSiteKey: string | null;
@@ -50,7 +52,7 @@ function Person({
   );
 }
 
-export function CheckoutForm({ passes, hackathon, total, tracks, captchaSiteKey }: CheckoutFormProps) {
+export function CheckoutForm({ passes, hackathon, total, free, tracks, captchaSiteKey }: CheckoutFormProps) {
   const [state, action] = useActionState(startCheckout, null);
   const values = state?.values;
   const errors = state?.fieldErrors;
@@ -103,11 +105,16 @@ export function CheckoutForm({ passes, hackathon, total, tracks, captchaSiteKey 
         {captchaSiteKey && <Turnstile siteKey={captchaSiteKey} resetKey={state} />}
         <FormMessage state={state} />
         <div className="max-w-sm">
-          <SubmitButton pendingLabel="Redirection vers le paiement…">{`Payer ${total}`}</SubmitButton>
+          {free ? (
+            <SubmitButton pendingLabel="Inscription en cours…">Confirmer mon inscription</SubmitButton>
+          ) : (
+            <SubmitButton pendingLabel="Redirection vers le paiement…">{`Payer ${total}`}</SubmitButton>
+          )}
         </div>
         <p className="text-small text-muted">
-          Vous allez être redirigé vers la page de paiement sécurisée Genius Pay (Wave, Orange Money, MTN Money, Moov Money ou carte).
-          Vos places sont réservées {HOLD_MINUTES} minutes.
+          {free
+            ? "Place gratuite, une par personne : votre billet nominatif vous est envoyé par e-mail dès la confirmation."
+            : `Vous allez être redirigé vers la page de paiement sécurisée Genius Pay (Wave, Orange Money, MTN Money, Moov Money ou carte). Vos places sont réservées ${HOLD_MINUTES} minutes.`}
         </p>
       </div>
     </form>

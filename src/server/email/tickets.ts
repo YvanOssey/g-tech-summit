@@ -59,7 +59,7 @@ ${lines.map((l) => `<p style="margin:16px 0 0"><strong>${esc(l.pass)}</strong></
 function buyerMail(buyer: Person, all: (TicketInfo & { holder: string })[], reference: string, total: number, passes: PassId[], confirmUrl: string, isTest: boolean) {
   const text = `${isTest ? "Commande de TEST (paiement simulé).\n\n" : ""}Bonjour ${buyer.first_name},
 
-Votre paiement de ${formatFCFA(total)} est confirmé. Merci !
+${total === 0 ? "Votre inscription gratuite est confirmée. Merci !" : `Votre paiement de ${formatFCFA(total)} est confirmé. Merci !`}
 Commande ${reference} : ${passes.map((p) => PASSES[p].name).join(" + ")}
 
 Billets émis :
@@ -69,15 +69,15 @@ Chaque titulaire reçoit son billet par e-mail. Tous les billets restent accessi
 
 ${EVENT.organiser.name} — ${EVENT.contact.email}`;
   const html = layout(
-    "Paiement confirmé",
+    total === 0 ? "Inscription confirmée" : "Paiement confirmé",
     `${isTest ? `<p style="padding:8px 12px;border:1px solid #f28c18">Commande de test (paiement simulé).</p>` : ""}
-<p>Bonjour ${esc(buyer.first_name)}, votre paiement de <strong>${esc(formatFCFA(total))}</strong> est confirmé. Merci !</p>
+<p>Bonjour ${esc(buyer.first_name)}, ${total === 0 ? "votre inscription gratuite est confirmée" : `votre paiement de <strong>${esc(formatFCFA(total))}</strong> est confirmé`}. Merci !</p>
 <p>Commande <strong>${esc(reference)}</strong> : ${esc(passes.map((p) => PASSES[p].name).join(" + "))}</p>
 <ul style="padding-left:18px">${all.map((t) => `<li>${esc(t.holder)} — ${esc(PASSES[t.passId].name)}</li>`).join("")}</ul>
 <p>Chaque titulaire reçoit son billet par e-mail. Tous les billets restent accessibles sur la page de votre commande :</p>
 ${button(confirmUrl, "Voir ma commande")}`,
   );
-  return { to: buyer.email, subject: `${isTest ? "[TEST] " : ""}Paiement confirmé — ${EVENT.name} ${EVENT.year}`, text, html };
+  return { to: buyer.email, subject: `${isTest ? "[TEST] " : ""}${total === 0 ? "Inscription confirmée" : "Paiement confirmé"} — ${EVENT.name} ${EVENT.year}`, text, html };
 }
 
 /**

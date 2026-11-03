@@ -33,7 +33,7 @@ export default async function CheckoutPage({ searchParams }: { searchParams: Pro
           <SectionLabel>Billetterie · Étape 2</SectionLabel>
           <h1 className="type-headline text-title mt-6">Vos informations</h1>
           <div className="mt-10">
-            <CheckoutForm passes={passes.join(",")} hackathon={hackathon} total={formatFCFA(total)} tracks={TRACKS.map((t) => ({ code: t.code, name: t.name }))} captchaSiteKey={captchaSiteKey()} />
+            <CheckoutForm passes={passes.join(",")} hackathon={hackathon} total={formatFCFA(total)} free={total === 0} tracks={TRACKS.map((t) => ({ code: t.code, name: t.name }))} captchaSiteKey={captchaSiteKey()} />
           </div>
         </div>
 
@@ -49,7 +49,7 @@ export default async function CheckoutPage({ searchParams }: { searchParams: Pro
                   <span className="block text-small text-muted">{PASSES[id].access}</span>
                 </span>
                 <span className="whitespace-nowrap tabular-nums">
-                  {formatFCFA(PASSES[id].price)}
+                  {PASSES[id].price === 0 ? "Gratuit" : formatFCFA(PASSES[id].price)}
                   {PASSES[id].per === "équipe" && <span className="block text-right text-small text-muted">/ équipe</span>}
                 </span>
               </li>
@@ -57,9 +57,9 @@ export default async function CheckoutPage({ searchParams }: { searchParams: Pro
           </ul>
           <p className="mt-2 flex items-baseline justify-between border-t border-rule-strong pt-4">
             <span className="type-meta">Total</span>
-            <span className="type-condensed text-heading tabular-nums">{formatFCFA(total)}</span>
+            <span className="type-condensed text-heading tabular-nums">{total === 0 ? "Gratuit" : formatFCFA(total)}</span>
           </p>
-          <p className="mt-1 text-small text-muted">Sans frais ajoutés.</p>
+          <p className="mt-1 text-small text-muted">{total === 0 ? "Aucun paiement." : "Sans frais ajoutés."}</p>
           <Link href={`/billetterie?pass=${passes[0]}`} className="mt-5 inline-block text-small underline underline-offset-4">
             Modifier mes pass
           </Link>

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { whatsappUrl } from "@/config/event";
-import { PASS_ORDER, type PassId } from "@/config/passes";
+import { PASSES, passesOnSale, type PassId } from "@/config/passes";
 import { getEventSettings } from "@/config/settings";
 import { CheckoutStart } from "@/components/ticket/CheckoutStart";
 import { PassSelector } from "@/components/ticket/PassSelector";
@@ -8,12 +8,13 @@ import { Accent } from "@/components/ui/Accent";
 import { ButtonLink } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
 import { SectionLabel } from "@/components/ui/SectionLabel";
+import { formatFCFA } from "@/lib/format";
 import { isCheckoutReady } from "@/server/payments/readiness";
 
 export const metadata: Metadata = {
   title: "Billetterie",
   description:
-    "Pass Entrée 2 500 FCFA pour les deux jours, 50 places. Paiement via Wave, billet nominatif envoyé par e-mail.",
+    "Les 10 premières places sont gratuites, puis Pass Entrée à 2 500 FCFA pour les deux jours (40 places). Billet nominatif envoyé par e-mail.",
 };
 
 const STEPS = [
@@ -24,9 +25,10 @@ const STEPS = [
   "Billet par e-mail",
 ] as const;
 
-function parsePass(value: string | string[] | undefined): PassId[] {
+/** ?pass=… only when that pass is the one on sale (old ?pass=event links land on the free one while it lasts). */
+function parsePass(value: string | string[] | undefined, onSale: readonly PassId[]): PassId[] {
   const v = Array.isArray(value) ? value[0] : value;
-  return PASS_ORDER.includes(v as PassId) ? [v as PassId] : ["event"];
+  return onSale.includes(v as PassId) ? [v as PassId] : [onSale[0]];
 }
 
 export default async function TicketingPage({
@@ -38,7 +40,8 @@ export default async function TicketingPage({
     searchParams,
     getEventSettings(),
   ]);
-  const initial = parsePass(pass);
+  const onSale = passesOnSale(settings.sold);
+  const initial = parsePass(pass, onSale);
   // Online sale only when registrations are open AND payment can be taken.
   const open = settings.registrationOpen && isCheckoutReady();
 
@@ -74,10 +77,16 @@ export default async function TicketingPage({
 
       <Section tone="paper" className="pt-14 pb-24 md:pt-20 md:pb-32">
         <div className="shell">
-          <h2 className="sr-only">Les trois pass</h2>
+          <h2 className="sr-only">Le pass</h2>
+          <p className="mb-8 max-w-2xl text-muted">
+            {onSale[0] === "free"
+              ? `Les ${PASSES.free.capacity.total} premières places sont offertes, une par personne. Ensuite, le ${PASSES.event.name} est à ${formatFCFA(PASSES.event.price)} (${PASSES.event.capacity.total} places).`
+              : `Les ${PASSES.free.capacity.total} places gratuites sont parties. Il reste le ${PASSES.event.name}, à ${formatFCFA(PASSES.event.price)}.`}
+          </p>
           {open ? (
             <CheckoutStart
               key={initial.join()}
+              available={onSale}
               initial={initial}
               sold={settings.sold}
               trackSold={settings.soldByTrack}
@@ -86,6 +95,7 @@ export default async function TicketingPage({
             <>
               <PassSelector
                 key={initial.join()}
+                available={onSale}
                 initial={initial}
                 sold={settings.sold}
                 trackSold={settings.soldByTrack}

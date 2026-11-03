@@ -4,7 +4,7 @@ import type { PassId } from "@/config/passes";
 import { isSandbox } from "@/server/payments/geniuspay";
 
 /** Passes that give access on site. The online pass never opens the doors. */
-export const ON_SITE_PASSES: readonly PassId[] = ["event", "hackathon"];
+export const ON_SITE_PASSES: readonly PassId[] = ["free", "event", "hackathon"];
 
 /**
  * Test tickets come from simulated (sandbox) payments: free for anyone while

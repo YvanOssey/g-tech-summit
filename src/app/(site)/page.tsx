@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { EVENT, whatsappUrl } from "@/config/event";
 import { PHOTOS } from "@/config/media";
-import { PASSES, PASS_ORDER } from "@/config/passes";
+import { ON_SITE_PLACES, PASSES, passesOnSale } from "@/config/passes";
 import { getEventSettings } from "@/config/settings";
 import { EventJsonLd } from "@/components/seo/EventJsonLd";
 import { PANELS } from "@/content/programme";
@@ -103,7 +103,7 @@ const FIGURES = [
     detail: "Conférences, panels, formations…",
   },
   { value: PANELS.length, label: "Panels", detail: "Inclusion, cybersécurité, écosystème" },
-  { value: PASSES.event.capacity.total, label: "Places", detail: `${PASSES.event.name} · ${formatFCFA(PASSES.event.price)}` },
+  { value: ON_SITE_PLACES, label: "Places", detail: `${PASSES.free.capacity.total} gratuites, puis ${formatFCFA(PASSES.event.price)}` },
 ] as const;
 
 export default async function HomePage() {
@@ -406,13 +406,15 @@ export default async function HomePage() {
               />
             </div>
             <p className="col-span-4 self-end text-muted md:col-span-6 lg:col-span-4 lg:col-start-9">
-              {PASSES.event.name} : {formatFCFA(PASSES.event.price)} pour les deux
-              jours, {PASSES.event.capacity.total} places. Billet nominatif envoyé par
-              e-mail après paiement via Wave, sans frais ajoutés.
+              {ON_SITE_PLACES} places pour les deux jours : les{" "}
+              {PASSES.free.capacity.total} premières sont gratuites, les{" "}
+              {PASSES.event.capacity.total} suivantes à {formatFCFA(PASSES.event.price)}{" "}
+              (paiement via Wave, sans frais ajoutés). Billet nominatif envoyé par
+              e-mail.
             </p>
           </div>
           <RevealGroup className="mt-14 grid max-w-xl gap-4">
-            {PASS_ORDER.map((id, i) => (
+            {passesOnSale(settings.sold).map((id, i) => (
               <RevealItem key={id}>
                 <Tilt className="h-full">
                   <Link

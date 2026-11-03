@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import type { PassId } from "@/config/passes";
+import { orderTotal, type PassId } from "@/config/passes";
 import { ArrowRight } from "@/components/ui/icons";
 import { PassSelector } from "./PassSelector";
 
@@ -12,24 +12,28 @@ import { PassSelector } from "./PassSelector";
  * validates the selection again and recomputes the total.
  */
 export function CheckoutStart({
+  available,
   initial,
   sold,
   trackSold,
 }: {
+  available: readonly PassId[];
   initial: readonly PassId[];
   sold?: Partial<Record<PassId, number>>;
   trackSold?: Record<string, number>;
 }) {
   const [selection, setSelection] = useState<PassId[]>([...initial]);
   const empty = selection.length === 0;
+  const free = selection.length > 0 && orderTotal(selection) === 0;
 
   return (
     <>
-      <PassSelector initial={initial} sold={sold} trackSold={trackSold} onChange={setSelection} />
+      <PassSelector available={available} initial={initial} sold={sold} trackSold={trackSold} onChange={setSelection} />
       <div className="mt-10 flex flex-wrap items-center justify-between gap-6 border-t border-rule-strong pt-8">
         <p className="max-w-xl text-muted">
-          Étape suivante : vos informations, puis le paiement sécurisé. Votre billet nominatif vous est remis dès la confirmation du
-          paiement.
+          {free
+            ? "Étape suivante : vos informations. Aucun paiement : votre billet nominatif vous est envoyé par e-mail dès la confirmation."
+            : "Étape suivante : vos informations, puis le paiement sécurisé. Votre billet nominatif vous est remis dès la confirmation du paiement."}
         </p>
         {empty ? (
           <span aria-disabled="true" className="min-h-12 cursor-not-allowed content-center rounded-pill bg-stone px-6 font-semibold text-grey">

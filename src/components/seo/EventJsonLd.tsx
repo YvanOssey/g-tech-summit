@@ -1,5 +1,5 @@
 import { EVENT } from "@/config/event";
-import { PASSES, PASS_ORDER } from "@/config/passes";
+import { PASSES, passesOnSale } from "@/config/passes";
 import type { EventSettings } from "@/config/settings";
 import { SITE_URL } from "@/config/site";
 
@@ -35,7 +35,7 @@ export function EventJsonLd({ settings }: { settings: EventSettings }) {
     image: [`${SITE_URL}/opengraph-image`],
     url: SITE_URL,
     organizer: { "@type": "Organization", name: EVENT.organiser.name, email: EVENT.contact.email, url: SITE_URL },
-    offers: PASS_ORDER.map((id) => ({
+    offers: passesOnSale(settings.sold).map((id) => ({
       "@type": "Offer",
       name: PASSES[id].name,
       price: PASSES[id].price,

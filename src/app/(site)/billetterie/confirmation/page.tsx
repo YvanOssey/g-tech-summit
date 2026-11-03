@@ -51,7 +51,7 @@ export default async function ConfirmationPage({ searchParams }: { searchParams:
   let label = "Paiement en attente";
   let title = "Nous attendons la confirmation de votre paiement";
   if (order.status === "PAID") {
-    label = "Paiement confirmé";
+    label = order.total === 0 ? "Inscription confirmée" : "Paiement confirmé";
     title = "C’est confirmé, à très vite !";
   } else if (order.refund_required) {
     label = "Paiement reçu";
@@ -81,7 +81,7 @@ export default async function ConfirmationPage({ searchParams }: { searchParams:
           </div>
           <div>
             <dt className="type-meta text-muted">Montant</dt>
-            <dd className="mt-1 tabular-nums">{formatFCFA(order.total)}</dd>
+            <dd className="mt-1 tabular-nums">{order.total === 0 ? "Gratuit" : formatFCFA(order.total)}</dd>
           </div>
         </dl>
 

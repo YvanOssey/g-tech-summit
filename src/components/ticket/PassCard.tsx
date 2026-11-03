@@ -5,7 +5,7 @@ import { formatAmount } from "@/lib/format";
 import { CapacityGauge } from "./CapacityGauge";
 
 /** How each pass is attended — shown in the ticket header. */
-const MODE: Record<PassId, string> = { online: "À distance", event: "Sur place", hackathon: "Par équipe" };
+const MODE: Record<PassId, string> = { online: "À distance", free: "Sur place", event: "Sur place", hackathon: "Par équipe" };
 
 interface PassCardProps {
   pass: Pass;
@@ -78,9 +78,9 @@ export function PassCard({ pass, index, children, selected, sold, trackSold, cla
       >
         <p className="flex items-baseline gap-2">
           <span className="type-condensed text-title leading-none">
-            {formatAmount(pass.price)}
+            {pass.price === 0 ? "Gratuit" : formatAmount(pass.price)}
           </span>
-          <span className={`type-meta ${muted}`}>FCFA{pass.per === "équipe" ? " / équipe" : ""}</span>
+          {pass.price > 0 && <span className={`type-meta ${muted}`}>FCFA{pass.per === "équipe" ? " / équipe" : ""}</span>}
         </p>
         {children}
       </div>

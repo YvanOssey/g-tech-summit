@@ -8,6 +8,7 @@ import {
   type PassId,
 } from "@/config/passes";
 import { TRACKS } from "@/content/hackathon";
+import { formatFCFA } from "@/lib/format";
 import { createServiceClient } from "@/server/db/clients";
 import { sendOrderEmails } from "@/server/email/tickets";
 import type { OrderStatus } from "@/server/db/types";
@@ -55,9 +56,15 @@ export async function startOrder(
   siteUrl: string,
 ): Promise<StartResult> {
   const db = createServiceClient();
+  const total = orderTotal(input.passes);
+  if (total === 0 && (await hasFreeTicket(input.buyer.email, input.buyer.phone))) {
+    return {
+      ok: false,
+      error: `Une place gratuite a déjà été attribuée à cette adresse e-mail ou à ce numéro : une seule par personne. Le ${PASSES.event.name} reste disponible.`,
+    };
+  }
   await releaseEarlierHolds(input.buyer.email, input.buyer.phone);
   const accessToken = randomBytes(32).toString("base64url");
-  const total = orderTotal(input.passes);
 
   const team = input.team
     ? {
@@ -105,6 +112,12 @@ export async function startOrder(
         };
       }
       const pass = passId as PassId;
+      if (pass === "free") {
+        return {
+          ok: false,
+          error: `Les ${PASSES.free.capacity.total} places gratuites viennent d’être toutes attribuées. Le ${PASSES.event.name} reste disponible à ${formatFCFA(PASSES.event.price)}.`,
+        };
+      }
       return {
         ok: false,
         error: `Il n’y a plus de place pour le ${PASSES[pass]?.name ?? "pass choisi"}.`,
@@ -128,6 +141,33 @@ export async function startOrder(
     };
 
   const back = `${siteUrl}/billetterie/confirmation?c=${accessToken}`;
+
+  // Free pass: nothing to pay, the order is confirmed and the ticket issued now.
+  if (total === 0) {
+    const { data: result, error } = await db.rpc("finalize_order", {
+      p_order_id: orderId,
+      p_completed_at: new Date().toISOString(),
+      p_capacities: CAPACITIES,
+    });
+    if (error || result !== "paid") {
+      await db
+        .from("orders")
+        .update({ status: "CANCELLED", cancelled_at: new Date().toISOString() })
+        .eq("id", orderId);
+      console.error(`[checkout] inscription gratuite ${reference} non validée (${error?.code ?? result})`);
+      return {
+        ok: false,
+        error: "Votre inscription n’a pas pu être enregistrée. Réessayez dans un instant.",
+      };
+    }
+    void sendOrderEmails(orderId).catch((e) =>
+      console.error(
+        `[email] billet de ${reference} non envoyé (${e instanceof Error ? e.message.slice(0, 120) : "erreur"})`,
+      ),
+    );
+    return { ok: true, checkoutUrl: back };
+  }
+
   try {
     const payment = await createPayment({
       amount: total,
@@ -178,6 +218,37 @@ export async function startOrder(
         "Le service de paiement ne répond pas. Aucun montant n’a été prélevé : réessayez dans un instant.",
     };
   }
+}
+
+/**
+ * One free place per person: a valid free ticket already issued to the same
+ * e-mail or the same phone number (test orders included, so a rehearsal with
+ * the sandbox keys behaves like the real sale).
+ */
+async function hasFreeTicket(email: string, phone: string): Promise<boolean> {
+  const db = createServiceClient();
+  const [byEmail, byPhone] = await Promise.all([
+    db.from("participants").select("id").eq("email", email),
+    db.from("participants").select("id").eq("phone", phone),
+  ]);
+  const ids = [
+    ...new Set(
+      [...(byEmail.data ?? []), ...(byPhone.data ?? [])].map((p) => p.id),
+    ),
+  ];
+  if (ids.length === 0) return false;
+  const { count, error } = await db
+    .from("tickets")
+    .select("id", { count: "exact", head: true })
+    .in("participant_id", ids)
+    .eq("pass_id", "free")
+    .neq("status", "CANCELLED");
+  // Unreadable: refuse rather than hand out a second free place.
+  if (error) {
+    console.error(`[checkout] vérification de place gratuite impossible (${error.code})`);
+    return true;
+  }
+  return (count ?? 0) > 0;
 }
 
 /**

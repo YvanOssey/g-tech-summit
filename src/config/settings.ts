@@ -48,7 +48,7 @@ export interface EventSettings {
 
 const DEFAULT_SETTINGS: EventSettings = {
   venue: null,
-  sold: { online: 0, event: 0, hackathon: 0 },
+  sold: { online: 0, free: 0, event: 0, hackathon: 0 },
   soldByTrack: { "01": 0, "02": 0 },
   registrationOpen: false,
   showUpcoming: false,
@@ -74,5 +74,7 @@ const cachedSettings = unstable_cache(() => loadEventSettings(DEFAULT_SETTINGS),
 });
 
 export async function getEventSettings(): Promise<EventSettings> {
-  return cachedSettings();
+  const settings = await cachedSettings();
+  // A copy cached before a pass was added has no count for it: 0, not missing.
+  return { ...settings, sold: { ...DEFAULT_SETTINGS.sold, ...settings.sold } };
 }

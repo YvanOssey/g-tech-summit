@@ -14,7 +14,7 @@ export const FAQ: readonly FaqItem[] = [
   },
   {
     q: "Quel est le prix de l’entrée ?",
-    a: "Un seul billet : le Pass Entrée, à 2 500 FCFA, donne accès sur place aux deux jours (conférences, panels, formations express, ateliers, démonstrations, stands et networking). 50 places seulement.",
+    a: "50 places pour les deux jours. Les 10 premières sont gratuites (une par personne), les 40 suivantes coûtent 2 500 FCFA. Le billet donne accès sur place aux deux jours : conférences, panels, formations express, ateliers, démonstrations, stands et networking.",
   },
   {
     q: "Comment se passe le paiement ?",

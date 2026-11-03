@@ -179,7 +179,7 @@ export function readParticipantFilters(params: Record<string, string | string[] 
   const pass = one("pass");
   return {
     q: one("q")?.slice(0, 100),
-    pass: pass === "online" || pass === "event" || pass === "hackathon" ? pass : undefined,
+    pass: pass === "online" || pass === "free" || pass === "event" || pass === "hackathon" ? pass : undefined,
     statut: ["paye", "attente", "autre"].includes(one("statut") ?? "") ? one("statut") : undefined,
     tests: one("tests") === "1",
   };
