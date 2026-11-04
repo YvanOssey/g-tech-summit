@@ -315,7 +315,10 @@ export async function syncOrder(
 
   const gp = await getPayment(payment.provider_reference);
 
-  await db
+  // Two checks can run at once (webhook + confirmation page): an answer read
+  // while the payment was still pending must not overwrite a completed one
+  // written meanwhile (seen on 2026-11-04: order paid, payment shown pending).
+  let saveStatus = db
     .from("payments")
     .update({
       status: gp.status,
@@ -325,6 +328,8 @@ export async function syncOrder(
       ...(gp.environment ? { environment: gp.environment } : {}),
     })
     .eq("id", payment.id);
+  if (gp.status === "pending") saveStatus = saveStatus.neq("status", "completed");
+  await saveStatus;
 
   if (gp.status === "completed") {
     // Same amount, in CFA francs, for this very order: otherwise the order is not validated.
