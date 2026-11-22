@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { whatsappUrl } from "@/config/event";
-import { EXPECTED_PARTICIPANTS, passesOnSale, type PassId } from "@/config/passes";
+import { EXPECTED_PARTICIPANTS, passesOnSale, withPaidEntries, type PassId } from "@/config/passes";
 import { getEventSettings } from "@/config/settings";
 import { CheckoutStart } from "@/components/ticket/CheckoutStart";
 import { PassSelector } from "@/components/ticket/PassSelector";
@@ -83,7 +83,7 @@ export default async function TicketingPage({
               key={initial.join()}
               available={onSale}
               initial={initial}
-              sold={settings.sold}
+              sold={withPaidEntries(settings.sold)}
               trackSold={settings.soldByTrack}
             />
           ) : (
@@ -92,7 +92,7 @@ export default async function TicketingPage({
                 key={initial.join()}
                 available={onSale}
                 initial={initial}
-                sold={settings.sold}
+                sold={withPaidEntries(settings.sold)}
                 trackSold={settings.soldByTrack}
               />
 

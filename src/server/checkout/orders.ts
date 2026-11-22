@@ -81,6 +81,14 @@ export async function startOrder(
       }
     : null;
 
+  // Free places = participants expected minus the paid entries still valid.
+  const capacities = { ...CAPACITIES };
+  if (input.passes.includes("free")) {
+    const { data: sales } = await db.rpc("pass_sales");
+    const paid = Number(sales?.find((s) => s.pass_id === "event")?.sold ?? 0);
+    capacities.free = Math.max(0, PASSES.free.capacity.total - paid);
+  }
+
   let orderId: string | null = null;
   let reference = "";
   for (let attempt = 0; attempt < 3 && !orderId; attempt++) {
@@ -98,7 +106,7 @@ export async function startOrder(
         })),
         team,
       },
-      p_capacities: CAPACITIES,
+      p_capacities: capacities,
       p_hold_minutes: HOLD_MINUTES,
     });
     if (error?.message.startsWith("SOLD_OUT:")) {

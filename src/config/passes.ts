@@ -92,6 +92,14 @@ export const ALL_PASSES: readonly PassId[] = ["online", "free", "event", "hackat
 /** Participants expected on site (shown on the site; registrations stop there). */
 export const EXPECTED_PARTICIPANTS = PASSES.free.capacity.total;
 
+/**
+ * Counts for the gauges: the paid entries sold before the event became free
+ * (still valid, refunded by hand) take places among the participants expected.
+ */
+export function withPaidEntries(sold: Record<PassId, number>): Record<PassId, number> {
+  return { ...sold, free: sold.free + sold.event };
+}
+
 /** The pass offered on the site: the free Pass Entrée only. */
 export function passesOnSale(): PassId[] {
   return [...PASS_ORDER];

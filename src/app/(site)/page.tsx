@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { EVENT, whatsappUrl } from "@/config/event";
 import { PHOTOS } from "@/config/media";
-import { EXPECTED_PARTICIPANTS, PASSES, passesOnSale } from "@/config/passes";
+import { EXPECTED_PARTICIPANTS, PASSES, passesOnSale, withPaidEntries } from "@/config/passes";
 import { getEventSettings } from "@/config/settings";
 import { EventJsonLd } from "@/components/seo/EventJsonLd";
 import { PANELS } from "@/content/programme";
@@ -421,7 +421,7 @@ export default async function HomePage() {
                     <PassCard
                       pass={PASSES[id]}
                       index={i + 1}
-                      sold={settings.sold[id]}
+                      sold={withPaidEntries(settings.sold)[id]}
                       trackSold={
                         id === "hackathon" ? settings.soldByTrack : undefined
                       }
