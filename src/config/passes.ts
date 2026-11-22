@@ -4,7 +4,7 @@
  * are never trusted.
  *
  * Since 2026-11-22 (organisers): the event is FREE, on registration.
- * - Pass Entrée              0 FCFA — 80 participants expected (id "free"), one per person
+ * - Pass Entrée              0 FCFA — 100 places (2026-11-22, was 80) (id "free"), one per person
  * - Pass Entrée (payant) 2 500 FCFA — no longer on sale (id "event"): sold
  *   from 2026-11-03 after the first 10 free places; kept for those tickets.
  * No online pass and no hackathon this edition (the hackathon moves to the next
@@ -44,7 +44,7 @@ export const PASSES: Record<PassId, Pass> = {
     name: "Pass Entrée",
     price: 0,
     per: "personne",
-    capacity: { total: 80, unit: "places" },
+    capacity: { total: 100, unit: "places" },
     access: "Accès sur place à G-TECH SUMMIT — 2 jours",
     summary: "Entrée gratuite sur inscription, une place par personne. Conférences, panels, formations express, ateliers, démonstrations et networking.",
   },
