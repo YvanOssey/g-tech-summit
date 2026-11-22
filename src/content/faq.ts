@@ -13,16 +13,16 @@ export const FAQ: readonly FaqItem[] = [
     a: "Non. G-TECH SUMMIT s’adresse aussi bien aux personnes qui découvrent la tech qu’aux professionnels. Les formations express sont accessibles aux débutants comme aux initiés, et l’initiation au développement web ne demande aucun prérequis.",
   },
   {
-    q: "Quel est le prix de l’entrée ?",
-    a: "50 places pour les deux jours. Les 10 premières sont gratuites (une par personne), les 40 suivantes coûtent 2 500 FCFA. Le billet donne accès sur place aux deux jours : conférences, panels, formations express, ateliers, démonstrations, stands et networking.",
+    q: "L’entrée est-elle payante ?",
+    a: "Non, l’entrée est gratuite, sur inscription sur ce site (une place par personne). Le billet donne accès sur place aux deux jours : conférences, panels, formations express, ateliers, démonstrations, stands et networking.",
   },
   {
-    q: "Comment se passe le paiement ?",
-    a: "Le paiement se fait en ligne, directement depuis le site, via Genius Pay : Wave, Orange Money, MTN Money, Moov Money ou carte. Aucun frais supplémentaire n’est ajouté au prix affiché.",
+    q: "Comment s’inscrire ?",
+    a: "Sur la page Billetterie : choisissez le Pass Entrée, indiquez vos nom, prénom, e-mail et téléphone, puis confirmez. Aucun paiement n’est demandé.",
   },
   {
     q: "Comment vais-je recevoir mon billet ?",
-    a: "Par e-mail, une fois le paiement réellement confirmé. Le billet est nominatif et contient un QR code unique, scanné à l’entrée.",
+    a: "Par e-mail, dès la confirmation de votre inscription. Le billet est nominatif et contient un QR code unique, scanné à l’entrée.",
   },
   {
     q: "Comment s’inscrire aux formations express ?",
@@ -30,10 +30,10 @@ export const FAQ: readonly FaqItem[] = [
   },
   {
     q: "Où se déroule l’événement ?",
-    a: "À l’Impact Hub Abidjan.",
+    a: "Au Centre Ivoiro-Coréen, à Abidjan.",
   },
   {
     q: "Peut-on annuler ou se faire rembourser ?",
-    a: "La politique d’annulation est en cours de définition. Elle sera publiée avant l’ouverture des inscriptions.",
+    a: "Si vous ne pouvez plus venir, prévenez-nous par e-mail ou sur WhatsApp : votre place pourra être proposée à une autre personne.",
   },
 ];

@@ -35,7 +35,8 @@ export function EventJsonLd({ settings }: { settings: EventSettings }) {
     image: [`${SITE_URL}/opengraph-image`],
     url: SITE_URL,
     organizer: { "@type": "Organization", name: EVENT.organiser.name, email: EVENT.contact.email, url: SITE_URL },
-    offers: passesOnSale(settings.sold).map((id) => ({
+    isAccessibleForFree: true,
+    offers: passesOnSale().map((id) => ({
       "@type": "Offer",
       name: PASSES[id].name,
       price: PASSES[id].price,

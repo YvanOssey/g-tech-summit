@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { EVENT, whatsappUrl } from "@/config/event";
 import { PHOTOS } from "@/config/media";
-import { ON_SITE_PLACES, PASSES, passesOnSale } from "@/config/passes";
+import { EXPECTED_PARTICIPANTS, PASSES, passesOnSale } from "@/config/passes";
 import { getEventSettings } from "@/config/settings";
 import { EventJsonLd } from "@/components/seo/EventJsonLd";
 import { PANELS } from "@/content/programme";
@@ -27,7 +27,6 @@ import { ArrowRight, ChatBubble } from "@/components/ui/icons";
 import { Pending } from "@/components/ui/Pending";
 import { Section } from "@/components/ui/Section";
 import { SectionLabel } from "@/components/ui/SectionLabel";
-import { formatFCFA } from "@/lib/format";
 import {
   getFaq,
   getPartners,
@@ -103,7 +102,7 @@ const FIGURES = [
     detail: "Conférences, panels, formations…",
   },
   { value: PANELS.length, label: "Panels", detail: "Inclusion, cybersécurité, écosystème" },
-  { value: ON_SITE_PLACES, label: "Places", detail: `${PASSES.free.capacity.total} gratuites, puis ${formatFCFA(PASSES.event.price)}` },
+  { value: EXPECTED_PARTICIPANTS, label: "Participants attendus", detail: "Entrée gratuite, sur inscription" },
 ] as const;
 
 export default async function HomePage() {
@@ -406,15 +405,13 @@ export default async function HomePage() {
               />
             </div>
             <p className="col-span-4 self-end text-muted md:col-span-6 lg:col-span-4 lg:col-start-9">
-              {ON_SITE_PLACES} places pour les deux jours : les{" "}
-              {PASSES.free.capacity.total} premières sont gratuites, les{" "}
-              {PASSES.event.capacity.total} suivantes à {formatFCFA(PASSES.event.price)}{" "}
-              (paiement via Wave, sans frais ajoutés). Billet nominatif envoyé par
-              e-mail.
+              Entrée gratuite pour les deux jours, sur inscription :{" "}
+              {EXPECTED_PARTICIPANTS} participants attendus. Billet nominatif envoyé
+              par e-mail, avec un QR code scanné à l’entrée.
             </p>
           </div>
           <RevealGroup className="mt-14 grid max-w-xl gap-4">
-            {passesOnSale(settings.sold).map((id, i) => (
+            {passesOnSale().map((id, i) => (
               <RevealItem key={id}>
                 <Tilt className="h-full">
                   <Link
@@ -526,7 +523,7 @@ export default async function HomePage() {
                 settings.venue || !settings.showUpcoming ? (
                   EVENT.country
                 ) : (
-                  <Pending label="Lieu exact">IMPACT HUB ABIDJAN</Pending>
+                  <Pending label="Lieu exact">CENTRE IVOIRO-CORÉEN</Pending>
                 ),
             },
             {
@@ -543,9 +540,9 @@ export default async function HomePage() {
             },
             {
               icon: "wallet",
-              k: "Paiement",
-              v: "Wave, sans frais ajoutés",
-              note: "Paiement sécurisé par Genius Pay.",
+              k: "Entrée",
+              v: "Gratuite, sur inscription",
+              note: "Une place par personne.",
             },
           ]}
         />

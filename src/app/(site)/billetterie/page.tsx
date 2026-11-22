@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { whatsappUrl } from "@/config/event";
-import { PASSES, passesOnSale, type PassId } from "@/config/passes";
+import { EXPECTED_PARTICIPANTS, passesOnSale, type PassId } from "@/config/passes";
 import { getEventSettings } from "@/config/settings";
 import { CheckoutStart } from "@/components/ticket/CheckoutStart";
 import { PassSelector } from "@/components/ticket/PassSelector";
@@ -8,20 +8,17 @@ import { Accent } from "@/components/ui/Accent";
 import { ButtonLink } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
 import { SectionLabel } from "@/components/ui/SectionLabel";
-import { formatFCFA } from "@/lib/format";
 import { isCheckoutReady } from "@/server/payments/readiness";
 
 export const metadata: Metadata = {
   title: "Billetterie",
   description:
-    "Les 10 premières places sont gratuites, puis Pass Entrée à 2 500 FCFA pour les deux jours (40 places). Billet nominatif envoyé par e-mail.",
+    "Entrée gratuite sur inscription pour les deux jours. Billet nominatif avec QR code envoyé par e-mail.",
 };
 
 const STEPS = [
   "Choisir",
   "Vos informations",
-  "Récapitulatif",
-  "Paiement Wave",
   "Billet par e-mail",
 ] as const;
 
@@ -40,7 +37,7 @@ export default async function TicketingPage({
     searchParams,
     getEventSettings(),
   ]);
-  const onSale = passesOnSale(settings.sold);
+  const onSale = passesOnSale();
   const initial = parsePass(pass, onSale);
   // Online sale only when registrations are open AND payment can be taken.
   const open = settings.registrationOpen && isCheckoutReady();
@@ -79,9 +76,7 @@ export default async function TicketingPage({
         <div className="shell">
           <h2 className="sr-only">Le pass</h2>
           <p className="mb-8 max-w-2xl text-muted">
-            {onSale[0] === "free"
-              ? `Les ${PASSES.free.capacity.total} premières places sont offertes, une par personne. Ensuite, le ${PASSES.event.name} est à ${formatFCFA(PASSES.event.price)} (${PASSES.event.capacity.total} places).`
-              : `Les ${PASSES.free.capacity.total} places gratuites sont parties. Il reste le ${PASSES.event.name}, à ${formatFCFA(PASSES.event.price)}.`}
+            L’entrée est gratuite, sur inscription : une place par personne, {EXPECTED_PARTICIPANTS} participants attendus.
           </p>
           {open ? (
             <CheckoutStart
@@ -107,9 +102,8 @@ export default async function TicketingPage({
                     Les inscriptions en ligne ouvrent prochainement
                   </p>
                   <p className="mt-4 text-muted">
-                    Le paiement se fera directement sur ce site via Wave, sans
-                    frais ajoutés au prix affiché. Votre billet nominatif vous
-                    sera envoyé par e-mail dès la confirmation du paiement. Pour
+                    L’inscription se fera directement sur ce site, gratuitement.
+                    Votre billet nominatif vous sera envoyé par e-mail. Pour
                     être informé de l’ouverture, écrivez-nous.
                   </p>
                 </div>

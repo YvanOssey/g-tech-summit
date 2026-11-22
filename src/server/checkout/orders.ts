@@ -8,7 +8,6 @@ import {
   type PassId,
 } from "@/config/passes";
 import { TRACKS } from "@/content/hackathon";
-import { formatFCFA } from "@/lib/format";
 import { createServiceClient } from "@/server/db/clients";
 import { sendOrderEmails } from "@/server/email/tickets";
 import type { OrderStatus } from "@/server/db/types";
@@ -60,7 +59,7 @@ export async function startOrder(
   if (total === 0 && (await hasFreeTicket(input.buyer.email, input.buyer.phone))) {
     return {
       ok: false,
-      error: `Une place gratuite a déjà été attribuée à cette adresse e-mail ou à ce numéro : une seule par personne. Le ${PASSES.event.name} reste disponible.`,
+      error: "Une place a déjà été attribuée à cette adresse e-mail ou à ce numéro : une seule par personne.",
     };
   }
   await releaseEarlierHolds(input.buyer.email, input.buyer.phone);
@@ -115,7 +114,7 @@ export async function startOrder(
       if (pass === "free") {
         return {
           ok: false,
-          error: `Les ${PASSES.free.capacity.total} places gratuites viennent d’être toutes attribuées. Le ${PASSES.event.name} reste disponible à ${formatFCFA(PASSES.event.price)}.`,
+          error: "Les inscriptions sont complètes : toutes les places ont été attribuées.",
         };
       }
       return {

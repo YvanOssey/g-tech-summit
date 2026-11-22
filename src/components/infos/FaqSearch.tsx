@@ -32,7 +32,7 @@ export function FaqSearch({ items }: { items: readonly FaqItem[] }) {
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Billet, paiement, programme…"
+          placeholder="Billet, inscription, programme…"
           className="min-h-13 w-full bg-transparent py-3 text-body outline-none placeholder:text-muted"
         />
       </div>

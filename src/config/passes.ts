@@ -3,11 +3,10 @@
  * The server computes order totals from this file — amounts sent by the browser
  * are never trusted.
  *
- * On sale since 2026-11-03 (organisers): 50 places on site, in two steps.
- * - Pass Entrée gratuit      0 FCFA — 10 places   (id "free"), one per person
- * - Pass Entrée          2 500 FCFA — 40 places   (id "event", kept so ?pass=event links still work)
- * Only one is offered at a time: the free one until its 10 places are gone,
- * then the paid one (passesOnSale).
+ * Since 2026-11-22 (organisers): the event is FREE, on registration.
+ * - Pass Entrée              0 FCFA — 80 participants expected (id "free"), one per person
+ * - Pass Entrée (payant) 2 500 FCFA — no longer on sale (id "event"): sold
+ *   from 2026-11-03 after the first 10 free places; kept for those tickets.
  * No online pass and no hackathon this edition (the hackathon moves to the next
  * one). Their definitions stay below because orders already paid reference them
  * (tickets, admin, e-mails) and for a future edition: PASS_ORDER, not PASSES,
@@ -42,16 +41,16 @@ export const PASSES: Record<PassId, Pass> = {
   },
   free: {
     id: "free",
-    name: "Pass Entrée gratuit",
+    name: "Pass Entrée",
     price: 0,
     per: "personne",
-    capacity: { total: 10, unit: "places" },
+    capacity: { total: 80, unit: "places" },
     access: "Accès sur place à G-TECH SUMMIT — 2 jours",
-    summary: "Offert aux 10 premiers inscrits, un par personne. Conférences, panels, formations express, ateliers et networking.",
+    summary: "Entrée gratuite sur inscription, une place par personne. Conférences, panels, formations express, ateliers, démonstrations et networking.",
   },
   event: {
     id: "event",
-    name: "Pass Entrée",
+    name: "Pass Entrée (payant)",
     price: 2_500,
     per: "personne",
     capacity: { total: 40, unit: "places" },
@@ -85,21 +84,17 @@ export const HOLD_MINUTES = 10;
 export const TEAM_SIZE = 5;
 
 /** Passes the checkout accepts, in display order. The checkout refuses any other. */
-export const PASS_ORDER: readonly PassId[] = ["free", "event"];
+export const PASS_ORDER: readonly PassId[] = ["free"];
 
 /** Every pass that may appear on an existing order (admin lists, filters, statistics). */
 export const ALL_PASSES: readonly PassId[] = ["online", "free", "event", "hackathon"];
 
-/** Places on site this edition, free and paid together. */
-export const ON_SITE_PLACES = PASSES.free.capacity.total + PASSES.event.capacity.total;
+/** Participants expected on site (shown on the site; registrations stop there). */
+export const EXPECTED_PARTICIPANTS = PASSES.free.capacity.total;
 
-/**
- * The pass offered right now: the free one while it has places left, then the
- * paid one. `sold` comes from getEventSettings() (cached up to 5 minutes): the
- * database still refuses a free place once the 10 are taken.
- */
-export function passesOnSale(sold: Partial<Record<PassId, number>>): PassId[] {
-  return (sold.free ?? 0) < PASSES.free.capacity.total ? ["free"] : ["event"];
+/** The pass offered on the site: the free Pass Entrée only. */
+export function passesOnSale(): PassId[] {
+  return [...PASS_ORDER];
 }
 
 /**
