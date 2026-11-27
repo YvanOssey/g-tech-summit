@@ -52,7 +52,7 @@ export function CapacityGauge({ sold, total, unit, dark = false, className = "" 
         aria-valuemin={0}
         aria-valuemax={total}
         aria-valuenow={taken}
-        className="mt-2 flex h-2.5 gap-[2px]"
+        className="mt-2 flex h-2.5 gap-px"
       >
         {Array.from({ length: segments }, (_, i) => {
           const isLit = i < lit;
